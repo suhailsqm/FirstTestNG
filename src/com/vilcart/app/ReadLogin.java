@@ -64,13 +64,13 @@ public class ReadLogin {
 	{
     	//WebDriverManager.chromedriver().setup();
     	//driver = new ChromeDriver();
-    	 //WebDriverManager.firefoxdriver().setup();
-    	 //driver = new FirefoxDriver();
+    	 WebDriverManager.firefoxdriver().setup();
+    	 driver = new FirefoxDriver();
 
-    	ChromeOptions options = new ChromeOptions();
-    	options.setBinary("C:\\Program Files\\Google\\Chrome Beta\\Application\\chrome.exe");
-    	System.setProperty("webdriver.chrome.driver","C:\\Users\\win10\\Downloads\\chromedriver_win32_104\\chromedriver.exe");
-    	driver = new ChromeDriver(options);
+    	//ChromeOptions options = new ChromeOptions();
+    	//options.setBinary("C:\\Program Files\\Google\\Chrome Beta\\Application\\chrome.exe");
+    	//System.setProperty("webdriver.chrome.driver","C:\\Users\\win10\\Downloads\\chromedriver_win32_104\\chromedriver.exe");
+    	//driver = new ChromeDriver(options);
     	ngWebDriver = new NgWebDriver((JavascriptExecutor) driver);
        // Enter url.
        driver.get("https://vilcart-buy.web.app/");
