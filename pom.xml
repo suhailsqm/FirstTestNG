@@ -57,11 +57,11 @@
 	    <version>2.18.0</version>
 	  </dependency>
 	<!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-devtools -->
-	<dependency>
+	<!-- <dependency>
 	    <groupId>org.seleniumhq.selenium</groupId>
 	    <artifactId>selenium-devtools</artifactId>
 	    <version>4.0.0-rc-1</version>
-	</dependency>
+	</dependency>-->
 	<!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
 	<dependency>
 	    <groupId>com.google.guava</groupId>
