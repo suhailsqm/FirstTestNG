@@ -369,7 +369,8 @@ public class CustomerCreation {
   	WebDriverManager.chromedriver().setup();
   	driver = new ChromeDriver();
   	ngWebDriver = new NgWebDriver((JavascriptExecutor) driver).withRootSelector("\"app-create-customers\"");;
-  	driver.get("http://localhost:4200");
+  	//driver.get("http://localhost:4200");
+  	driver.get("https://vilcart-buy.web.app");
   	driver.manage().window().maximize(); 
   	driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
   	Reporter.log(driver.getTitle(), true);
