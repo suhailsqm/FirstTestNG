@@ -12,6 +12,7 @@ import java.time.Duration;
 
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.Reporter;
 import org.testng.annotations.AfterClass;
@@ -62,7 +63,7 @@ public class CustomerCreation {
     XSSFSheet sheet;
     XSSFCell cell;
     
-    public void waitForAngular() {
+    /*public void waitForAngular() {
     	final String ForAngular = "var rootSelector = arguments[0];"+
     			"var callback = arguments[1];"+
     			"if (window.angular && !(window.angular.version && window.angular.version.major > 1)) {"+
@@ -231,7 +232,7 @@ public class CustomerCreation {
     	
     	((JavascriptExecutor) driver).executeAsyncScript(ForAngular,"\"app-main\"");
     }
-    
+    */
     public void untilAngularFinishHttpCalls() {
         final String javaScriptToLoadAngular =
                 "var injector = window.angular.element('body').injector();" + 
@@ -245,6 +246,93 @@ public class CustomerCreation {
         };
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20)); // timeout = 20 secs
         wait.until(pendingHttpCallsCondition);
+    }
+    private void waitUntilJSReady() {
+        try {
+            ExpectedCondition<Boolean> jsLoad = driver -> ((JavascriptExecutor) this.driver)
+                .executeScript("return document.readyState").toString().equals("complete");
+            boolean jsReady = js.executeScript("return document.readyState").toString().equals("complete");
+            if (!jsReady) {
+                wait.until(jsLoad);
+            }
+        } catch (WebDriverException ignored) {
+        }
+    }
+    private void ajaxComplete() {
+        js.executeScript("var callback = arguments[arguments.length - 1];"
+            + "var xhr = new XMLHttpRequest();" + "xhr.open('GET', '/Ajax_call', true);"
+            + "xhr.onreadystatechange = function() {" + "  if (xhr.readyState == 4) {"
+            + "    callback(xhr.responseText);" + "  }" + "};" + "xhr.send();");
+    }
+    private void waitUntilJQueryReady() {
+        Boolean jQueryDefined = (Boolean) js.executeScript("return typeof jQuery != 'undefined'");
+        if (jQueryDefined) {
+            poll(20);
+            waitForJQueryLoad();
+            poll(20);
+        }
+    }
+    private void waitForJQueryLoad() {
+        try {
+            ExpectedCondition<Boolean> jQueryLoad = driver -> ((Long) ((JavascriptExecutor) this.driver)
+                .executeScript("return jQuery.active") == 0);
+            boolean jqueryReady = (Boolean) js.executeScript("return jQuery.active==0");
+            if (!jqueryReady) {
+                wait.until(jQueryLoad);
+            }
+        } catch (WebDriverException ignored) {
+        }
+    }
+    public void waitUntilAngular5Ready() {
+        try {
+            Object angular5Check = js.executeScript("return getAllAngularRootElements()[0].attributes['ng-version']");
+            if (angular5Check != null) {
+                Boolean angularPageLoaded = (Boolean) js.executeScript("return window.getAllAngularTestabilities().findIndex(x=>!x.isStable()) === -1");
+                if (!angularPageLoaded) {
+                    poll(20);
+                    waitForAngular5Load();
+                    poll(20);
+                }
+            }
+        } catch (WebDriverException ignored) {
+        }
+    }
+    private void waitForAngular5Load() {
+        String angularReadyScript = "return window.getAllAngularTestabilities().findIndex(x=>!x.isStable()) === -1";
+        angularLoads(angularReadyScript);
+    }
+    private void angularLoads(String angularReadyScript) {
+        try {
+        	 ExpectedCondition<Boolean> angularLoad = new ExpectedCondition<Boolean>() {
+                 public Boolean apply(WebDriver driver) {
+                     return ((JavascriptExecutor) driver).executeScript(angularReadyScript).equals(true);
+                 }
+             };
+        	
+            /*ExpectedCondition<Boolean> angularLoad = driver -> Boolean.valueOf(((JavascriptExecutor) driver)
+                .executeScript(angularReadyScript).toString());*/
+            boolean angularReady = Boolean.valueOf(((JavascriptExecutor) driver).executeScript(angularReadyScript).toString());
+            if (!angularReady) {
+            	WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+                wait.until(angularLoad);
+            }
+        } catch (WebDriverException ignored) {
+        }
+    }
+
+    private void poll(long milis) {
+        try {
+            Thread.sleep(milis);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+    public void waitAllRequest() {
+        waitUntilJSReady();
+        ajaxComplete();
+        waitUntilJQueryReady();
+        //waitUntilAngularReady();
+        waitUntilAngular5Ready();
     }
     
   @Test
@@ -284,15 +372,15 @@ public class CustomerCreation {
           driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(5));
           driver.manage().timeouts().scriptTimeout(Duration.ofSeconds(5));
           Thread.sleep(5000);
-          WebElement body = driver.findElement(By.xpath("/html/body"));
-          //js.executeScript("var injector = window.angular.element(document).find('body').injector(); var $http = injector.get('$http'); return ($http.pendingRequests.length === 0);",body);
-          ngWebDriver.waitForAngularRequestsToFinish();
+          //WebElement body = driver.findElement(By.xpath("/html/body"));
+         //js.executeScript("var injector = window.angular.element(arguments[0]).injector(); var $http = injector.get('$http'); return ($http.pendingRequests.length === 0);",body);
+          //ngWebDriver.waitForAngularRequestsToFinish();
           Reporter.log(driver.getTitle(), true);
           //untilAngularFinishHttpCalls();
           //waitForAngular();
-          String angularReady = "return window.angular.element(document).injector().get('$http').pendingRequests.length === 0";
-          boolean isAngularReady = (boolean)js.executeScript(angularReady);
-          
+          //String angularReady = "return angular.element(document).injector().get('$http').pendingRequests.length === 0";
+          //boolean isAngularReady = (boolean)js.executeScript(angularReady);
+          waitAllRequest();
           assertThat(driver.getTitle()).containsIgnoringCase("Home - VILCART");
           
           
@@ -301,63 +389,30 @@ public class CustomerCreation {
           driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li[2]/ul/li[1]/a")).click();
           
           
+          waitAllRequest();
           
-          ngWebDriver.waitForAngularRequestsToFinish();
           WebElement state = driver.findElement(By.xpath("//*[@id=\"customerState\"]"));
           js.executeScript("arguments[0].value='KARNATAKA';arguments[0].click()", state);
-         
+          waitAllRequest();
           WebElement district = driver.findElement(By.xpath("//*[@id=\"customerDistrict\"]"));
-          js.executeScript("var injector = window.angular.element(arguments[0]).injector(); var $http = injector.get('$http'); return ($http.pendingRequests.length === 0);",district);
           js.executeScript("arguments[0].value='MANDYA';arguments[0].click()", district);
           
-          
-          Thread.sleep(2000);
-          js.executeScript("var injector = window.angular.element('body').injector(); var $http = injector.get('$http'); return ($http.pendingRequests.length === 0);");
-          WebElement taluk = driver.findElement(By.xpath("//*[@id=\"customerTaluk\"]"));
+          waitAllRequest();
+          WebElement taluk = driver.findElement(By.xpath("//*[@id=\"customerTaluk\"]/div/div/div[3]/input"));//*[@id="customerTaluk"]/div/div/div[3]/input
           js.executeScript("arguments[0].value='Maddur';arguments[0].click()", taluk);
-          Thread.sleep(2000);
-         // js.executeScript("var injector = window.angular.element('body').injector(); var $http = injector.get('$http'); return ($http.pendingRequests.length === 0);");
-          WebElement postal = driver.findElement(By.xpath("//*[@id=\"customerPostal\"]"));////*[@id="customerPostal"]/div/div/div[3]/input
+          Reporter.log("Maddur", true);
+          waitAllRequest();
+          WebElement postal = driver.findElement(By.xpath("//*[@id=\"customerPostal\"]/div/div/div[3]/input"));//*[@id="customerPostal"]/div/div/div[3]/input
           js.executeScript("arguments[0].value='Alur-maddur B.O';arguments[0].click()", postal);
-          Thread.sleep(2000);
+          //Thread.sleep(2000);
          // js.executeScript("var injector = window.angular.element('body').injector(); var $http = injector.get('$http'); return ($http.pendingRequests.length === 0);");
-          WebElement village = driver.findElement(By.xpath("//*[@id=\"customerVillage\"]"));
+          Reporter.log("Alur-maddur", true);
+          waitAllRequest();
+          WebElement village = driver.findElement(By.xpath("//*[@id=\"customerVillage\"]/div/div/div[3]/input"));//*[@id="customerVillage"]/div/div/div[3]/input
           js.executeScript("arguments[0].value='Alur';arguments[0].click()", village);
-          Thread.sleep(2000);
-         // js.executeScript("var injector = window.angular.element('body').injector(); var $http = injector.get('$http'); return ($http.pendingRequests.length === 0);");
-         
-         // Actions action = new Actions(driver);
-          //state.click();
-          //action.moveToElement(state).click().build().perform();
-          //action.scrollToElement(state).doubleClick();
-          //ngWebDriver.waitForAngularRequestsToFinish();
-          
-          //Reporter.log("Before model state",true);
-          //Thread.sleep(1000);
-          //action.moveToElement(state).sendKeys(Keys.ARROW_UP);
-          //Thread.sleep(1000);
-          //action.sendKeys(Keys.ARROW_UP);
-          //Thread.sleep(1000);
-          //action.sendKeys(Keys.ARROW_UP);
-          //action.sendKeys(Keys.ENTER);
-          //NgWebDriver ngwd = new NgWebDriver((JavascriptExecutor)driver).withRootSelector("\"app-create-customers\"");
-          //NgWebDriver ngwd = new NgWebDriver((JavascriptExecutor)driver).withRootSelector("\"app-main\"");
-          //NgWebDriver ngwd = new NgWebDriver((JavascriptExecutor)driver).withRootSelector("\"app-main\"");
-          //ByAngular.Factory baf = ngwd.makeByAngularFactory();
-          //WebElement stateSelect = driver.findElement(baf.model("state"));
-        //*[@id="name"]
-
-         // WebElement we = driver.findElement(By.xpath("//*[@id=\"name\"]"));
-          //we.clear();
-          //we.sendKeys("Testing angular");
+          Reporter.log("Alur", true);
           
           
-        
-         
-          //Reporter.log(driver.findElement(By.xpath("/html/body/app-root/app-heroes/div[2]")).getText(), true);
-          //stateSelect.click();
-
-
           Thread.sleep(2000);
       }
       finput.close();
@@ -369,12 +424,13 @@ public class CustomerCreation {
   	WebDriverManager.chromedriver().setup();
   	driver = new ChromeDriver();
   	ngWebDriver = new NgWebDriver((JavascriptExecutor) driver).withRootSelector("\"app-create-customers\"");;
-  	//driver.get("http://localhost:4200");
-  	driver.get("https://vilcart-buy.web.app");
+  	driver.get("http://localhost:4200");
+  	//driver.get("https://vilcart-buy.web.app");
   	driver.manage().window().maximize(); 
   	driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
   	Reporter.log(driver.getTitle(), true);
   	js=((JavascriptExecutor) driver);
+  	WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
   	
   }
 
