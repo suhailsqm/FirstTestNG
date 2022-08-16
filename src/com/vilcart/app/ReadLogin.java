@@ -69,6 +69,7 @@ public class ReadLogin {
     	driver = new FirefoxDriver();
     	ngWebDriver = new NgWebDriver((JavascriptExecutor) driver);
     	driver.get("https://angular-tour-of-heroes-1a2a8.web.app/");
+    	//driver.get("http://localhost:62827/");
     	driver.manage().window().maximize(); 
     	driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
     	Reporter.log(driver.getTitle(), true);
@@ -84,9 +85,16 @@ public class ReadLogin {
     	
     	ngWebDriver.waitForAngularRequestsToFinish();
         //WebElement stateSelect = driver.findElement(ByAngular.withRootSelector("\"app-root\"").model("hero.name"));
-        WebElement stateSelect = driver.findElement(ByAngular.withRootSelector("\"app-heroes\"").model("hero.name"));
+        //WebElement stateSelect = driver.findElement(ByAngular.withRootSelector("\"app-heroes\"").model("hero.name"));
         //WebElement stateSelect = driver.findElement(ByAngularModel.name("hero.name"));
-        stateSelect.sendKeys("Testing Angular");
+    	WebElement stateSelect = driver.findElement(By.id("name"));
+    	stateSelect.clear();
+    	stateSelect.click();
+    	Thread.sleep(5000);
+        //stateSelect.sendKeys("Testing Angular");
+    	((JavascriptExecutor) driver).executeScript("arguments[0].value='testing angular interpolation';arguments[0].click();arguments[0].dispatchEvent(new Event('input', { bubbles: true }))", stateSelect);
+        Thread.sleep(10000);
+        driver.findElement(By.tagName("button")).click();
     	
     }
 }
