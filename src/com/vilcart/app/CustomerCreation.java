@@ -399,18 +399,33 @@ public class CustomerCreation {
           
           waitAllRequest();
           WebElement taluk = driver.findElement(By.xpath("//*[@id=\"customerTaluk\"]/div/div/div[3]/input"));//*[@id="customerTaluk"]/div/div/div[3]/input
-          js.executeScript("arguments[0].value='Maddur';arguments[0].dispatchEvent(new Event('click'))", taluk);
+          //js.executeScript("arguments[0].value='Maddur';arguments[0].click();arguments[0].dispatchEvent(new Event('click'))", taluk);
+          taluk.click();
+          WebElement taluk1 = driver.findElement(By.xpath("//*[@id=\"customerTaluk\"]/ng-dropdown-panel/div/div[2]/div[2]/span"));
+          waitAllRequest();
+          //js.executeScript("arguments[0].click()",taluk1);
+          taluk1.click();
           Reporter.log("Maddur", true);
           waitAllRequest();
           
           WebElement postal = driver.findElement(By.xpath("//*[@id=\"customerPostal\"]/div/div/div[3]/input"));//*[@id="customerPostal"]/div/div/div[3]/input
-          js.executeScript("arguments[0].value='Alur-maddur B.O';arguments[0].click();arguments[0].dispatchEvent(new Event('click'))", postal);
+          //js.executeScript("arguments[0].value='Alur-maddur B.O';arguments[0].click();arguments[0].dispatchEvent(new Event('click'))", postal);
+          postal.click();
+          WebElement postal1 = driver.findElement(By.xpath("//*[@id=\"customerPostal\"]/ng-dropdown-panel/div/div[2]/div[2]/span"));
+          waitAllRequest();
+          //js.executeScript("arguments[0].click()",taluk1);
+          postal1.click();
           //Thread.sleep(2000);
          // js.executeScript("var injector = window.angular.element('body').injector(); var $http = injector.get('$http'); return ($http.pendingRequests.length === 0);");
           Reporter.log("Alur-maddur", true);
           waitAllRequest();
           WebElement village = driver.findElement(By.xpath("//*[@id=\"customerVillage\"]/div/div/div[3]/input"));//*[@id="customerVillage"]/div/div/div[3]/input
-          js.executeScript("arguments[0].value='Alur';arguments[0].click();arguments[0].dispatchEvent(new Event('click'))", village);
+          //js.executeScript("arguments[0].value='Alur';arguments[0].click();arguments[0].dispatchEvent(new Event('click'))", village);
+          village.click();
+          WebElement village1 = driver.findElement(By.xpath("//*[@id=\"customerVillage\"]/ng-dropdown-panel/div/div[2]/div[2]/span"));
+          waitAllRequest();
+          //js.executeScript("arguments[0].click()",taluk1);
+          village1.click();
           Reporter.log("Alur", true);
           waitAllRequest();
           WebElement shop = driver.findElement(By.xpath("//*[@id=\"customerShopType\"]/div/div/div[3]/input"));//*[@id="customerShopType"]/div/div/div[3]/input
@@ -434,7 +449,7 @@ public class CustomerCreation {
           js.executeScript("arguments[0].value='village local name';arguments[0].click();arguments[0].dispatchEvent(new Event('input', { bubbles: true }))", villageLocalName);
           
           WebElement phoneNumber = driver.findElement(By.xpath("//*[@id=\"customerPhoneNumber\"]"));
-          js.executeScript("arguments[0].value='8967452301';arguments[0].click;arguments[0].dispatchEvent(new Event('input', { bubbles: true }))", phoneNumber);
+          js.executeScript("arguments[0].value='8967452371';arguments[0].click;arguments[0].dispatchEvent(new Event('input', { bubbles: true }))", phoneNumber);
           phoneNumber.sendKeys(Keys.ENTER);
           
           WebElement phoneNumber2 = driver.findElement(By.xpath("//*[@id=\"customerPhoneNumber2\"]"));
