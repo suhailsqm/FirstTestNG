@@ -16,6 +16,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.Duration;
+import java.util.List;
 
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -82,6 +83,20 @@ public class PlaceOrder {
           testCustomer.click();
           WebElement searchItem = driver.findElement(By.xpath("//*[@id=\"itemName\"]"));
           searchItem.sendKeys("test");
+          List<WebElement> addToCartButton = driver.findElements(By.id("addToCartList"));
+          List<WebElement> itemNameList = driver.findElements(By.id("itemNameList"));
+          for(int i1=0;i1<addToCartButton.size()&&i1<2;i1++) {
+        	  //Reporter.log(addToCartButton.get(i1).toString(), true);
+        	  Reporter.log("\n"+itemNameList.get(i1).getText(), true);
+        	  addToCartButton.get(i1).click();
+          }
+          WebElement placeOrderButton = driver.findElement(By.xpath("//*[@id=\"placeOrderButton\"]"));
+          placeOrderButton.click();
+          WebElement remarksInput = driver.findElement(By.id("swal2-input"));
+          remarksInput.sendKeys("placing order");
+          //WebElement buyAllButton = driver.findElement(By.xpath("/html/body/div/div/div[6]/button[3]"));
+          WebElement buyAllButton = driver.findElement(By.className("swal2-confirm"));
+          buyAllButton.click();
       }
       finput.close();
 	  
@@ -98,7 +113,7 @@ public class PlaceOrder {
 	  	driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
 	  	Reporter.log(driver.getTitle(), true);
 	  	js=((JavascriptExecutor) driver);
-	  	WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+	  	wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 	  	aw = new AngularWait(driver);
   }
 
