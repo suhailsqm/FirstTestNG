@@ -2,7 +2,7 @@ package com.vilcart.app;
 
 import org.testng.annotations.Test;
 
-import com.paulhammant.ngwebdriver.NgWebDriver;
+//import com.paulhammant.ngwebdriver.NgWebDriver;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.testng.annotations.BeforeClass;
 import java.time.Duration;
@@ -53,7 +53,7 @@ import com.vilcart.util.*;
 public class CustomerCreation {
 	
     WebDriver driver;
-    NgWebDriver ngWebDriver;
+    //NgWebDriver ngWebDriver;
     JavascriptExecutor js;
     AngularWait aw;
     WebDriverWait wait;
@@ -242,14 +242,14 @@ public class CustomerCreation {
 	  
   	WebDriverManager.chromedriver().setup();
   	driver = new ChromeDriver();
-  	ngWebDriver = new NgWebDriver((JavascriptExecutor) driver).withRootSelector("\"app-create-customers\"");;
+  	//ngWebDriver = new NgWebDriver((JavascriptExecutor) driver).withRootSelector("\"app-create-customers\"");;
   	driver.get("http://localhost:4200");
   	//driver.get("https://vilcart-buy.web.app");
   	driver.manage().window().maximize(); 
   	driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
   	Reporter.log(driver.getTitle(), true);
   	js=((JavascriptExecutor) driver);
-  	WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+  	wait = new WebDriverWait(driver, Duration.ofSeconds(20));
   	aw = new AngularWait(driver);
   	
   }
