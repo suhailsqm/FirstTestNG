@@ -15,6 +15,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.Duration;
+import java.util.List;
 
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -22,6 +23,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -72,11 +74,59 @@ public class PurchaseFlow {
      js.executeScript("arguments[0].scrollIntoViewIfNeeded();", menuPurchase);
      menuPurchase.click();
      WebElement menuRequestItem = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li[8]/ul/li[5]/a"));
+     js.executeScript("arguments[0].scrollIntoViewIfNeeded();", menuRequestItem);
      menuRequestItem.click();
+     aw.waitAllRequest();
      
      WebElement itemSelectInput = driver.findElement(By.xpath("//*[@id=\"iconLeft1\"]"));
-     itemSelectInput.sendKeys("test");
+     //itemSelectInput.sendKeys("test");
+     //itemSelectInput.sendKeys(Keys.ENTER);
+     js.executeScript("arguments[0].value='test';arguments[0].click();arguments[0].dispatchEvent(new Event('input',{ bubbles : true}));arguments[0].dispatchEvent(new Event('keyup', { bubbles: true }))", itemSelectInput);
      aw.waitAllRequest();
+
+     List<WebElement> listSelectDropDown = driver.findElements(By.xpath("//*[@id=\"dropdownBasic1\"]"));//*[@id="dropdownBasic1"]
+     for(int i1=0;i1<listSelectDropDown.size()&&i1<1;i1++) {
+    	 WebElement varSelectDropDown = listSelectDropDown.get(i1);
+    	 Reporter.log(varSelectDropDown.getText(),true);
+    	 varSelectDropDown.click();
+    	 List<WebElement> listDropDown = driver.findElements(By.xpath("//*[@id=\"listDropdownBasic1\"]//child::button"));
+    	 for(int j1=0;j1<listDropDown.size()&&j1<1;j1++) {
+    		WebElement varListDropDown = listDropDown.get(j1);
+    		Reporter.log(varListDropDown.getText(),true);
+    		varListDropDown.click();
+    	 }	
+     }
+     List<WebElement> inputCount = driver.findElements(By.xpath("//*[@id=\"countNumber\"]"));
+     WebElement varInputCount = inputCount.get(0);
+     varInputCount.sendKeys("2");
+     
+     List<WebElement> addToCart = driver.findElements(By.xpath("//*[@id=\"addToCartButton\"]"));
+     WebElement varAddToCart = addToCart.get(0);
+     varAddToCart.click();
+     
+     WebElement continueButton = driver.findElement(By.xpath("//button[text()='Continue']"));
+     continueButton.click();
+     WebElement orderAllButton = driver.findElement(By.xpath("//button[text()='Order All']"));
+     orderAllButton.click();
+     aw.waitAllRequest();
+     
+     /*
+     WebElement scrollBar = driver.findElement(By.xpath("//*[@id=\"main-menu-content\"]/div[3]/div"));//*[@id="main-menu-content"]/div[3]/div
+     String sj = "arguments[0].setAttribute('style','top: 124px; height: 172px');";
+     js.executeScript(sj, scrollBar);
+     */
+     WebElement menuInput = driver.findElement(By.xpath("//*[@id=\"main-menu-content\"]/div[1]/input"));
+     menuInput.sendKeys("Purchase");
+     menuInput.sendKeys(Keys.ENTER);
+     WebElement menuPurchase1 = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/a/span"));//*[@id="main-menu-navigation"]/li/a/span
+     js.executeScript("arguments[0].click();", menuPurchase1);
+     aw.waitAllRequest();
+     
+     WebElement menuPORequest = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/ul/li[4]/a"));
+     js.executeScript("arguments[0].click();", menuPORequest);
+     aw.waitAllRequest();
+     
+     
      
      
      
@@ -85,8 +135,8 @@ public class PurchaseFlow {
   public void beforePurchaseFlow() {
 	WebDriverManager.chromedriver().setup();
   	driver = new ChromeDriver();
-  	//driver.get("http://localhost:4200");
-  	driver.get("https://vilcart-buy.web.app");
+  	driver.get("http://localhost:4200");
+  	//driver.get("https://vilcart-buy.web.app");
   	driver.manage().window().maximize(); 
   	driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
   	Reporter.log(driver.getTitle(), true);
