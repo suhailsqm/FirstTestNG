@@ -58,7 +58,7 @@ public class PlaceOrder {
           WebElement testCustomer = driver.findElement(By.xpath("//*[@id=\"currCustomer\"]/h2"));
           testCustomer.click();
           WebElement searchItem = driver.findElement(By.xpath("//*[@id=\"itemName\"]"));
-          searchItem.sendKeys("208");
+          searchItem.sendKeys("test");
           
           List<WebElement> liList = driver.findElements(By.id("liList"));//*[@id="liList"]
           for(int i1=0;i1<liList.size()&&i1<2;i1++) {
