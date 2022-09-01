@@ -52,67 +52,28 @@ import com.vilcart.util.*;
 
 public class CustomerCreation {
 	
-    WebDriver driver;
+	private WebDriver driver;
     //NgWebDriver ngWebDriver;
-    JavascriptExecutor js;
-    AngularWait aw;
-    WebDriverWait wait;
-    XSSFWorkbook workbook;
-    XSSFSheet sheet;
-    XSSFCell cell;
-    
+    private JavascriptExecutor js;
+    private AngularWait aw;
+    private WebDriverWait wait;
+    private Login loginObj;
 
   @Test
   public void testCreation() throws IOException, InterruptedException {
-	// Import excel sheet.
-      //File src=new File("C:\\Users\\win10\\eclipse-workspace\\FirstTestNG\\TestData.xlsx");
-  		File src=new File("TestData.xlsx");
-      // Load the file.
-      FileInputStream finput = new FileInputStream(src);
-       
-      // Load he workbook.
-       workbook = new XSSFWorkbook(finput);
-       DataFormatter formatter = new DataFormatter();
-      // Load the sheet in which data is stored.
-      sheet= workbook.getSheetAt(0);
-      for(int i=1; i<=sheet.getLastRowNum(); i++)
-      {
-          // Import data for Email.
-          cell = sheet.getRow(i).getCell(2);
-          String value = formatter.formatCellValue(cell);
-          driver.findElement(By.cssSelector("input[ng-reflect-name=email]")).sendKeys(value);
-           
-          // Import data for password.
-          cell = sheet.getRow(i).getCell(3);
-          value = formatter.formatCellValue(cell);
-          driver.findElement(By.cssSelector("input[ng-reflect-name=password]")).sendKeys(value);
+	  
+	  loginObj.login();
+      
+      driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li[2]/a/span")).click();
           
-          driver.findElement(By.tagName("button")).click();
-          
-          driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
-          
-          /*Wait<WebDriver> wait= new FluentWait<WebDriver>(driver)
-                  .withTimeout(Duration.ofSeconds(30))
-                  .pollingEvery(Duration.ofSeconds(5))
-                  .ignoring(NoSuchElementException.class);*/
-          
-          driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(5));
-          driver.manage().timeouts().scriptTimeout(Duration.ofSeconds(5));          
-          Reporter.log(driver.getTitle(), true);
-          
-          aw.waitAllRequest();
-          assertThat(driver.getTitle()).containsIgnoringCase("Home - VILCART");
-          
-          
-          driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li[2]/a/span")).click();
-          
-          driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li[2]/ul/li[1]/a")).click();
+      driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li[2]/ul/li[1]/a")).click();
           
           
           aw.waitAllRequest();
           
           WebElement state = driver.findElement(By.xpath("//*[@id=\"customerState\"]/div/div/div[3]/input"));//*[@id="customerState"]/div/div/div[3]/input
           js.executeScript("arguments[0].value='KARNATAKA';arguments[0].click();arguments[0].dispatchEvent(new Event('change'))", state);
+          state.getText();
           aw.waitAllRequest();
           WebElement district = driver.findElement(By.xpath("//*[@id=\"customerDistrict\"]/div/div/div[3]/input"));//*[@id="customerDistrict"]/div/div/div[3]/input
           js.executeScript("arguments[0].value='MANDYA';arguments[0].click();arguments[0].dispatchEvent(new Event('change'))", district);
@@ -233,8 +194,7 @@ public class CustomerCreation {
           createCustomerButton.click();
           
           Thread.sleep(2000);
-      }
-      finput.close();
+
 	  
   }
   @BeforeClass
@@ -251,7 +211,7 @@ public class CustomerCreation {
   	js=((JavascriptExecutor) driver);
   	wait = new WebDriverWait(driver, Duration.ofSeconds(20));
   	aw = new AngularWait(driver);
-  	
+  	loginObj = new Login(driver,aw);
   }
 
   @AfterClass

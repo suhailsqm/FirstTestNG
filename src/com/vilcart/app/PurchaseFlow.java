@@ -3,6 +3,7 @@ package com.vilcart.app;
 import org.testng.annotations.Test;
 
 import com.vilcart.util.AngularWait;
+import com.vilcart.util.Login;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
@@ -32,43 +33,16 @@ import org.testng.Reporter;
 import org.testng.annotations.AfterClass;
 
 public class PurchaseFlow {
-    WebDriver driver;
-    JavascriptExecutor js;
-    AngularWait aw;
-    WebDriverWait wait;
-    XSSFWorkbook workbook;
-    XSSFSheet sheet;
-    XSSFCell cell;
+	private WebDriver driver;
+	private JavascriptExecutor js;
+	private AngularWait aw;
+	private WebDriverWait wait;
+    private Login loginObj;
     
   @Test
   public void purchaseFlow() throws IOException {
-	  File src=new File("TestData.xlsx");
-	  FileInputStream finput = new FileInputStream(src);
-	  workbook = new XSSFWorkbook(finput);
-      DataFormatter formatter = new DataFormatter();
-      sheet= workbook.getSheetAt(0);
-      for(int i=1; i<=sheet.getLastRowNum(); i++)
-      {
-          // Import data for Email.
-          cell = sheet.getRow(i).getCell(2);
-          String value = formatter.formatCellValue(cell);
-          driver.findElement(By.cssSelector("input[ng-reflect-name=email]")).sendKeys(value);
-           
-          // Import data for password.
-          cell = sheet.getRow(i).getCell(3);
-          value = formatter.formatCellValue(cell);
-          driver.findElement(By.cssSelector("input[ng-reflect-name=password]")).sendKeys(value);
-          
-          driver.findElement(By.tagName("button")).click();
-          driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
-          driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(5));
-          driver.manage().timeouts().scriptTimeout(Duration.ofSeconds(5));          
-          Reporter.log(driver.getTitle(), true);
-          
-          aw.waitAllRequest();
-          assertThat(driver.getTitle()).containsIgnoringCase("Home - VILCART");
-      }
-      finput.close();
+
+	 loginObj.login();
       
      WebElement menuPurchase = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li[8]/a/span"));
      js.executeScript("arguments[0].scrollIntoViewIfNeeded();", menuPurchase);
@@ -127,9 +101,6 @@ public class PurchaseFlow {
      aw.waitAllRequest();
      
      
-     
-     
-     
   }
   @BeforeClass
   public void beforePurchaseFlow() {
@@ -143,6 +114,7 @@ public class PurchaseFlow {
   	js=((JavascriptExecutor) driver);
   	wait = new WebDriverWait(driver, Duration.ofSeconds(20));
   	aw = new AngularWait(driver);
+  	loginObj = new Login(driver,aw);
   }
 
   @AfterClass

@@ -4,6 +4,7 @@ import org.testng.annotations.Test;
 
 import com.paulhammant.ngwebdriver.NgWebDriver;
 import com.vilcart.util.AngularWait;
+import com.vilcart.util.Login;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
@@ -30,46 +31,21 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Reporter;
 import org.testng.annotations.AfterClass;
+import org.openqa.selenium.support.pagefactory.ByChained;
 
 public class PlaceOrder {
 	
-    WebDriver driver;
-    NgWebDriver ngWebDriver;
-    JavascriptExecutor js;
-    AngularWait aw;
-    WebDriverWait wait;
-    XSSFWorkbook workbook;
-    XSSFSheet sheet;
-    XSSFCell cell;
-    
+	private WebDriver driver;
+	private NgWebDriver ngWebDriver;
+	private JavascriptExecutor js;
+	private AngularWait aw;
+	private WebDriverWait wait;
+	private Login loginObj;
+	
   @Test
   public void placeOrder() throws IOException {
-	  File src=new File("TestData.xlsx");
-	  FileInputStream finput = new FileInputStream(src);
-	  workbook = new XSSFWorkbook(finput);
-      DataFormatter formatter = new DataFormatter();
-      sheet= workbook.getSheetAt(0);
-      for(int i=1; i<=sheet.getLastRowNum(); i++)
-      {
-          // Import data for Email.
-          cell = sheet.getRow(i).getCell(2);
-          String value = formatter.formatCellValue(cell);
-          driver.findElement(By.cssSelector("input[ng-reflect-name=email]")).sendKeys(value);
-           
-          // Import data for password.
-          cell = sheet.getRow(i).getCell(3);
-          value = formatter.formatCellValue(cell);
-          driver.findElement(By.cssSelector("input[ng-reflect-name=password]")).sendKeys(value);
-          
-          driver.findElement(By.tagName("button")).click();
-          
-          driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
-          driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(5));
-          driver.manage().timeouts().scriptTimeout(Duration.ofSeconds(5));          
-          Reporter.log(driver.getTitle(), true);
-          
-          aw.waitAllRequest();
-          assertThat(driver.getTitle()).containsIgnoringCase("Home - VILCART");
+	  
+	  loginObj.login();
           
           
           WebElement placeOrder = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li[11]/a/span"));//*[@id="main-menu-navigation"]/li[11]/a/span
@@ -82,13 +58,24 @@ public class PlaceOrder {
           WebElement testCustomer = driver.findElement(By.xpath("//*[@id=\"currCustomer\"]/h2"));
           testCustomer.click();
           WebElement searchItem = driver.findElement(By.xpath("//*[@id=\"itemName\"]"));
-          searchItem.sendKeys("test");
-          List<WebElement> addToCartButton = driver.findElements(By.id("addToCartList"));
-          List<WebElement> itemNameList = driver.findElements(By.id("itemNameList"));
-          for(int i1=0;i1<addToCartButton.size()&&i1<2;i1++) {
-        	  //Reporter.log(addToCartButton.get(i1).toString(), true);
-        	  Reporter.log("\n"+itemNameList.get(i1).getText(), true);
-        	  addToCartButton.get(i1).click();
+          searchItem.sendKeys("208");
+          
+          List<WebElement> liList = driver.findElements(By.id("liList"));//*[@id="liList"]
+          for(int i1=0;i1<liList.size()&&i1<2;i1++) {
+        	  WebElement liListVar = liList.get(i1);
+        	  String xpath = "//*[@id=\'liList\']["+(i1+1)+"]//following-sibling::span";
+        	  //List<WebElement> temp = driver.findElements(By.xpath("//*[@id=\"liList\"][1]//following-sibling::span"));
+        	  List<WebElement> temp = driver.findElements(By.xpath(xpath));
+        	  List<WebElement> addToCartButton = driver.findElements(By.id("addToCartList"));
+        	  for(int i2=0;i2<temp.size();i2++) {
+        		  temp.get(i2).getText();
+        		  Reporter.log(temp.get(i2).getText(),true);
+        		  temp.get(i2).click();
+        		  addToCartButton.get(i1).click();
+        	  }
+        	  List<WebElement> itemNameList = driver.findElements(By.id("itemNameList"));
+         	  Reporter.log(""+itemNameList.get(i1).getText(), true);
+        	  
           }
           WebElement placeOrderButton = driver.findElement(By.xpath("//*[@id=\"placeOrderButton\"]"));
           placeOrderButton.click();
@@ -97,8 +84,6 @@ public class PlaceOrder {
           //WebElement buyAllButton = driver.findElement(By.xpath("/html/body/div/div/div[6]/button[3]"));
           WebElement buyAllButton = driver.findElement(By.className("swal2-confirm"));
           buyAllButton.click();
-      }
-      finput.close();
 	  
   }
   @BeforeClass
@@ -115,6 +100,7 @@ public class PlaceOrder {
 	  	js=((JavascriptExecutor) driver);
 	  	wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 	  	aw = new AngularWait(driver);
+	  	loginObj = new Login(driver,aw);
   }
 
   @AfterClass
