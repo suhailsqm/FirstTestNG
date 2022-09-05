@@ -70,9 +70,8 @@ public class OrderFlow {
       js.executeScript("arguments[0].value = '"+dtf.format(indiaDateTime)+"';arguments[0].dispatchEvent(new Event('input'))",startDate);
       WebElement endDate = driver.findElement(By.xpath("//*[@id=\"endDate\"]"));
       js.executeScript("arguments[0].value = '"+dtf.format(indiaDateTime)+"';arguments[0].dispatchEvent(new Event('input'))",endDate);
-      aw.waitAllRequest();
       driver.findElement(By.xpath("//button[normalize-space()='Submit']")).click();
-      
+      aw.waitAllRequest();
       WebElement orderCount = driver.findElement(By.xpath("//*[@id=\"orderCount\"]"));
       String temp = orderCount.getText();
       String[] tempIndex = temp.split(":");
@@ -86,11 +85,9 @@ public class OrderFlow {
       WebElement temp1 = driver.findElement(By.xpath("(//*[@id=\"packingButton\"])[1]"));
       temp1.click();
       
+      Reporter.log("orderNumber1: "+driver.findElement(By.xpath("//*[@id=\"orderNumber\"]")).getText(),true);
       //String orderNumber = driver.findElement(By.xpath("//*[@id=\"orderNumber\"]")).getText().trim().split("()")[1];
-      String[] orderNumber = driver.findElement(By.xpath("//*[@id=\"orderNumber\"]")).getText().trim().split("()");
-      for(int i =0;i<orderNumber.length;i++) {
-    	  System.out.println(orderNumber[i]);
-      }
+      String orderNumber = driver.findElement(By.xpath("//*[@id=\"orderNumber\"]")).getText().trim().replaceAll("^.|.$", "");
       Reporter.log("orderNumber: "+orderNumber,true);
       
       List<WebElement> listTuples = driver.findElements(By.xpath("//*[@id=\"orderTuple\"]"));

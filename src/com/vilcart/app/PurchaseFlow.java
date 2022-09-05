@@ -55,30 +55,58 @@ public class PurchaseFlow {
      WebElement itemSelectInput = driver.findElement(By.xpath("//*[@id=\"iconLeft1\"]"));
      //itemSelectInput.sendKeys("test");
      //itemSelectInput.sendKeys(Keys.ENTER);
-     js.executeScript("arguments[0].value='test';arguments[0].click();arguments[0].dispatchEvent(new Event('input',{ bubbles : true}));arguments[0].dispatchEvent(new Event('keyup', { bubbles: true }))", itemSelectInput);
+     js.executeScript("arguments[0].value='208';arguments[0].click();arguments[0].dispatchEvent(new Event('input',{ bubbles : true}));arguments[0].dispatchEvent(new Event('keyup', { bubbles: true }))", itemSelectInput);
      aw.waitAllRequest();
-
-     List<WebElement> listSelectDropDown = driver.findElements(By.xpath("//*[@id=\"dropdownBasic1\"]"));//*[@id="dropdownBasic1"]
-     for(int i1=0;i1<listSelectDropDown.size()&&i1<1;i1++) {
-    	 WebElement varSelectDropDown = listSelectDropDown.get(i1);
-    	 Reporter.log(varSelectDropDown.getText(),true);
-    	 varSelectDropDown.click();
-    	 List<WebElement> listDropDown = driver.findElements(By.xpath("//*[@id=\"listDropdownBasic1\"]//child::button"));
-    	 for(int j1=0;j1<listDropDown.size()&&j1<1;j1++) {
-    		WebElement varListDropDown = listDropDown.get(j1);
-    		Reporter.log(varListDropDown.getText(),true);
-    		varListDropDown.click();
-    	 }	
-     }
-     List<WebElement> inputCount = driver.findElements(By.xpath("//*[@id=\"countNumber\"]"));
-     WebElement varInputCount = inputCount.get(0);
-     varInputCount.sendKeys("2");
      
-     List<WebElement> addToCart = driver.findElements(By.xpath("//*[@id=\"addToCartButton\"]"));
-     WebElement varAddToCart = addToCart.get(0);
-     varAddToCart.click();
+     List<WebElement> tup = driver.findElements(By.xpath("//*[@id=\"tupleRow\"]"));
+     int numberOfTuples = 0;
+     if(tup.size()<2) {
+    	 numberOfTuples = 1;
+     } 
+     else {
+    	 numberOfTuples = 2;
+     }
+     for(int i=0;i<numberOfTuples;i++) {
+    	 String xpath = "//*[@id=\"tupleRow\"]["+(i+1)+"]/td/div/div[1]/div[2]/div/button";
+    	 WebElement list = driver.findElement(By.xpath(xpath));
+    	 Reporter.log("1 "+list.getText(),true);
+    	 list.click();
+    	 String xpath1 = "//*[@id=\"tupleRow\"]["+(i+1)+"]/td/div/div[1]/div[2]/div/div/button";
+    	 List<WebElement> listSelectDropDown = driver.findElements(By.xpath(xpath1));
+    	 int numOfVariations =listSelectDropDown.size();
+    	 Reporter.log(xpath1+" "+numOfVariations, true);
+    	 for(int i1=0;i1<listSelectDropDown.size();i1++) {
+        	 WebElement varSelectDropDown = listSelectDropDown.get(i1);
+        	 Reporter.log(varSelectDropDown.getText(),true);
+        	 varSelectDropDown.click();
+        	 String xpath2 = "//input[@id=\"countNumber\"]";//["+(i+1)+"]";
+             List<WebElement> inputCount = driver.findElements(By.xpath(xpath2));
+             Reporter.log(xpath2+" "+inputCount.size(), true);
+             WebElement varInputCount = inputCount.get(i);
+             varInputCount.clear();
+             varInputCount.sendKeys("20");
+             String xpath3 = "//*[@id=\"addToCartButton\"]";//["+(i+1)+"]";
+             List<WebElement> addToCart = driver.findElements(By.xpath(xpath3));
+             Reporter.log(xpath3+" "+addToCart.size(), true);
+             WebElement varAddToCart = addToCart.get(i);
+             varAddToCart.click();
+             
+             if(i1 != numOfVariations-1) {
+            	 driver.findElement(By.xpath(xpath)).click();
+             }
+             
+         }
+     }
+
      
      WebElement continueButton = driver.findElement(By.xpath("//button[text()='Continue']"));
+     js.executeScript("arguments[0].scrollIntoViewIfNeeded();", continueButton);
+     try {
+		Thread.sleep(5000);
+	} catch (InterruptedException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
      continueButton.click();
      WebElement orderAllButton = driver.findElement(By.xpath("//button[text()='Order All']"));
      orderAllButton.click();
