@@ -39,16 +39,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class OrderFlow {
 	private WebDriver driver;
-    private NgWebDriver ngWebDriver;
     private JavascriptExecutor js;
     private AngularWait aw;
     private WebDriverWait wait;
 	private Login loginObj;
+	private InventoryChangeStock iv;
 	
   @Test
-  public void orderFlow() throws IOException {
+  public void orderFlow() throws IOException, InterruptedException {
 	  loginObj.login();
+	  iv.updateStock("208 test sku", 15);
+	  iv.updateStock("208 test sku 2", 18);
       WebElement menuInput = driver.findElement(By.xpath("//*[@id=\"main-menu-content\"]/div[1]/input"));
+      menuInput.clear();
       menuInput.sendKeys("Orders");
       menuInput.sendKeys(Keys.ENTER);
       WebElement menuOrders = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/a")); 
@@ -131,7 +134,6 @@ public class OrderFlow {
   public void beforeOrderFlow() {
 	  	WebDriverManager.chromedriver().setup();
 	  	driver = new ChromeDriver();
-	  	ngWebDriver = new NgWebDriver((JavascriptExecutor) driver).withRootSelector("\"app-create-customers\"");;
 	  	driver.get("http://localhost:4200");
 	  	//driver.get("https://vilcart-buy.web.app");
 	  	driver.manage().window().maximize(); 
@@ -141,6 +143,7 @@ public class OrderFlow {
 	  	wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 	  	aw = new AngularWait(driver);
 	  	loginObj = new Login(driver,aw);
+	  	iv = new InventoryChangeStock(driver,js,aw,wait);
   }
 
   @AfterClass
