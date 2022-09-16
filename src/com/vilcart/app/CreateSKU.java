@@ -46,7 +46,7 @@ public class CreateSKU {
     XSSFCell cell;
 
   @Test
-  public void createSKU() throws IOException {
+  public void createSKU() throws IOException, InterruptedException {
 	  File src=new File("resources\\SKU.xlsx");
 	  FileInputStream finput = new FileInputStream(src);
 	  workbook = new XSSFWorkbook(finput);
@@ -73,7 +73,7 @@ public class CreateSKU {
       cell.setCellValue(1245);
       
       WebElement name = driver.findElement(By.xpath("//*[@id=\"skuName\"]"));
-      name.sendKeys("test SKU");
+      name.sendKeys("test sku 508");
       row = sheet.createRow(rowKey++);
       cell = row.createCell(0);
       cell.setCellValue("SKU Name");
@@ -96,8 +96,7 @@ public class CreateSKU {
       cell = row.createCell(1);
       cell.setCellValue("This is test SKU");
       
-      WebElement category = driver.findElement(By.xpath("//*[@id=\"category\"]/div/div/div[2]/input"));
-      js.executeScript("arguments[0].scrollIntoViewIfNeeded();", category);
+      WebElement category = driver.findElement(By.xpath("//*[@id=\"category\"]/div/div/div[3]/input"));//*[@id="category"]/div/div/div[3]/input
       category.click();
       WebElement category1 = driver.findElement(By.xpath("//*[@id=\"category\"]/ng-dropdown-panel/div/div[2]/div[3]/span"));
       category1.click();

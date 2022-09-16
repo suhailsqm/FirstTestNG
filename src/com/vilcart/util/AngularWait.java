@@ -197,7 +197,7 @@ public void untilAngularFinishHttpCalls() {
             return ((JavascriptExecutor) driver).executeScript(javaScriptToLoadAngular).equals(true);
         }
     };
-    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20)); // timeout = 20 secs
+    //WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20)); // timeout = 20 secs
     wait.until(pendingHttpCallsCondition);
 }
 private void waitUntilJSReady() {
@@ -266,8 +266,7 @@ private void angularLoads(String angularReadyScript) {
             .executeScript(angularReadyScript).toString());*/
         boolean angularReady = Boolean.valueOf(((JavascriptExecutor) driver).executeScript(angularReadyScript).toString());
         if (!angularReady) {
-        	WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
-            wait.until(angularLoad);
+        	wait.until(angularLoad);
         }
     } catch (WebDriverException ignored) {
     }

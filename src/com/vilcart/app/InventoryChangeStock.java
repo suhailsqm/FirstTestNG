@@ -1,6 +1,7 @@
 package com.vilcart.app;
 
 import java.time.ZoneId;
+import static org.assertj.core.api.Assertions.assertThat;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -27,28 +28,34 @@ public class InventoryChangeStock {
 		this.aw = aw;
 		this.wait = wait;
 	}
-	private void fetchLiveData() {
+
+	private void fetchLiveData() throws InterruptedException {
 		WebElement temp = driver.findElement(By.xpath("(//*[@id=\"cacheLabel\"]/div/div/button)[1]"));
 		js.executeScript("arguments[0].scrollIntoViewIfNeeded();", temp);
 		driver.findElement(By.xpath("(//*[@id=\"cacheLabel\"]/div/div/button)[1]")).click();
 		driver.findElement(By.xpath("(//*[@id=\"cacheLabel\"]/div/div/div/button[1])[1]")).click();
 		aw.waitAllRequest();
 	}
-	private void saveCache() {
+
+	private void saveCache() throws InterruptedException {
 		WebElement temp = driver.findElement(By.xpath("(//*[@id=\"cacheLabel\"]/div/div/button)[1]"));
 		js.executeScript("arguments[0].scrollIntoViewIfNeeded();", temp);
 		driver.findElement(By.xpath("(//*[@id=\"cacheLabel\"]/div/div/button)[1]")).click();
 		driver.findElement(By.xpath("(//*[@id=\"cacheLabel\"]/div/div/div/button[2])[1]")).click();
 		aw.waitAllRequest();
 	}
-	public void updateStock(String sku,int count) throws InterruptedException {
-		Reporter.log("sku",true);
+
+	public void updateStock(String sku, int count) throws InterruptedException {
+
 		WebElement menuInput = driver.findElement(By.xpath("//*[@id=\"main-menu-content\"]/div[1]/input"));
 		menuInput.clear();
 		menuInput.sendKeys("Inventory");
 		menuInput.sendKeys(Keys.ENTER);
+		aw.waitAllRequest();
+
 		WebElement menuInventory = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/a/span"));
 		menuInventory.click();
+		aw.waitAllRequest();
 
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu-MM-dd");
 		ZonedDateTime now = ZonedDateTime.now();
@@ -60,46 +67,57 @@ public class InventoryChangeStock {
 		js.executeScript("arguments[0].value = '" + dtf.format(indiaDateTime)
 				+ "';arguments[0].dispatchEvent(new Event('input', { bubbles: true }))", endDate);
 		WebElement btn = driver.findElement(By.xpath("//button[normalize-space()='Submit']"));
-		try {
-			Thread.sleep(10000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		btn.click();
 		aw.waitAllRequest();
-		Reporter.log("sku1",true);
 		fetchLiveData();
 		
-		WebElement search = driver.findElement(By.xpath("//*[@id=\"demo-2\"]/input"));// *[@id="demo-2"]/input
-		search.click();
+		Thread.sleep(3000);
+		WebElement search = driver.findElement(By.xpath("//*[@id=\"searchInput\"]"));
+		//js.executeScript("arguments[0].click();arguments[0].value='" + sku
+			//	+ "';arguments[0].click();arguments[0].dispatchEvent(new Event('input', { bubbles: true }));arguments[0].dispatchEvent(new Event('keyup', { bubbles: true }));", search);
 		search.clear();
 		search.sendKeys(sku);
-		search.sendKeys(Keys.ENTER);
+		WebElement searchBtn = driver.findElement(By.xpath("//*[@id=\"searchButton\"]"));
+		searchBtn.click();
 		aw.waitAllRequest();
-		Reporter.log("sku2",true);
+
 		List<WebElement> listTuples = driver.findElements(By.xpath("//*[@id=\"skuTuple\"]"));
-		if(listTuples.size() == 0) {
-			Reporter.log("No sku with name:\'"+sku+"\'",true);
+		if (listTuples.size() == 0) {
+			Reporter.log("No sku with name:\'" + sku + "\' in search", true);
 			return;
 		}
-		for(int i=0; i<listTuples.size()&& i<1;i++) {
-			String xpath = "//*[@id=\"skuTuple\"]["+(i+1)+"]/td[7]";
-			WebElement varSku = driver.findElement(By.xpath(xpath));
-			varSku.click();
-			WebElement stockInput = driver.findElement(By.xpath("//*[@id=\"stock\"]"));
-			js.executeScript("arguments[0].value = '"+Integer.toString(count)+"';arguments[0].dispatchEvent(new Event('input', { bubbles: true }))",stockInput);
-			WebElement date = driver.findElement(By.xpath("//*[@id=\"datepicker\"]"));
-			DateTimeFormatter dtf1 = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-			js.executeScript("arguments[0].value = '"+dtf1.format(indiaDateTime)+"';arguments[0].dispatchEvent(new Event('input', { bubbles: true }))",date);
-			Reporter.log(""+dtf1.format(indiaDateTime),true);
-			Reporter.log("date: "+date.getText(), true);
-			Thread.sleep(20000);
-			driver.findElement(By.xpath("//button[normalize-space(.)='Submit'][@class='swal2-confirm btn btn-primary']")).click();
-			aw.waitAllRequest();
-			Thread.sleep(20000);
+		boolean contains = false;
+		for (int i = 0; i < listTuples.size(); i++) {
+			String xp = "//*[@id=\"skuTuple\"][" + (i + 1) + "]/td[5]";
+			WebElement name = driver.findElement(By.xpath(xp));
+			Reporter.log(name.getAccessibleName(), true);
+			Reporter.log(name.getText(), true);
+			assertThat(name.getText().toLowerCase()).containsIgnoringCase(sku);
+			if (name.getText().equalsIgnoreCase(sku)) {
+				contains = true;
+				String xpath = "//*[@id=\"skuTuple\"][" + (i + 1) + "]/td[7]";
+				WebElement varSku = driver.findElement(By.xpath(xpath));
+				varSku.click();
+				WebElement stockInput = driver.findElement(By.xpath("//*[@id=\"stock\"]"));
+				js.executeScript("arguments[0].value = '" + Integer.toString(count)
+						+ "';arguments[0].dispatchEvent(new Event('input', { bubbles: true }))", stockInput);
+
+				Reporter.log("stockInput: " + stockInput.getText(), true);
+				WebElement date = driver.findElement(By.xpath("//*[@id=\"datepicker\"]"));
+				js.executeScript("arguments[0].value = '" + dtf.format(indiaDateTime)
+						+ "';arguments[0].dispatchEvent(new Event('input', { bubbles: true }))", date);
+
+				driver.findElement(
+						By.xpath("//button[normalize-space(.)='Submit'][@class='swal2-confirm btn btn-primary']"))
+						.click();
+				aw.waitAllRequest();
+				Thread.sleep(3000);
+			}
+		}
+		if(contains == false) {
+			System.out.println("SKU is not present with name:"+sku);
+			return;
 		}
 		saveCache();
-		Reporter.log("sku3",true);
 	}
 }
