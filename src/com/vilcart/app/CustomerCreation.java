@@ -21,6 +21,7 @@ import java.time.Duration;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.TimeUnit;
+import com.vilcart.util.*;
 
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -92,7 +93,7 @@ public class CustomerCreation {
 		aw.waitAllRequest();
 		// js.executeScript("arguments[0].click()",taluk1);
 		taluk1.click();
-		Reporter.log("Maddur", true);
+		Reporter.log(LineNumber.getLineNumber()+" "+"Maddur", true);
 		aw.waitAllRequest();
 
 		WebElement postal = driver.findElement(By.xpath("//*[@id=\"customerPostal\"]/div/div/div[3]/input"));// *[@id="customerPostal"]/div/div/div[3]/input
@@ -109,7 +110,7 @@ public class CustomerCreation {
 		// js.executeScript("var injector = window.angular.element('body').injector();
 		// var $http = injector.get('$http'); return ($http.pendingRequests.length ===
 		// 0);");
-		Reporter.log("Alur-maddur", true);
+		Reporter.log(LineNumber.getLineNumber()+" "+"Alur-maddur", true);
 		aw.waitAllRequest();
 		WebElement village = driver.findElement(By.xpath("//*[@id=\"customerVillage\"]/div/div/div[3]/input"));// *[@id="customerVillage"]/div/div/div[3]/input
 		// js.executeScript("arguments[0].value='Alur';arguments[0].click();arguments[0].dispatchEvent(new
@@ -120,7 +121,7 @@ public class CustomerCreation {
 		aw.waitAllRequest();
 		// js.executeScript("arguments[0].click()",taluk1);
 		village1.click();
-		Reporter.log("Alur", true);
+		Reporter.log(LineNumber.getLineNumber()+" "+"Alur", true);
 		aw.waitAllRequest();
 		WebElement shop = driver.findElement(By.xpath("//*[@id=\"customerShopType\"]/div/div/div[3]/input"));// *[@id="customerShopType"]/div/div/div[3]/input
 		js.executeScript(
@@ -137,10 +138,10 @@ public class CustomerCreation {
 				"arguments[0].value='test customer';arguments[0].click;arguments[0].dispatchEvent(new Event('input', { bubbles: true }))",
 				customerName);
 		customerName.sendKeys(Keys.ENTER);
-		// Reporter.log(""+, false)
-		// Reporter.log(""+customerName.getDomAttribute("selected"),true);
-		Reporter.log("" + customerName.isEnabled(), true);
-		// Reporter.log(""+customerName.isSelected(),true);
+		// Reporter.log(LineNumber.getLineNumber()+" "+""+, false)
+		// Reporter.log(LineNumber.getLineNumber()+" "+""+customerName.getDomAttribute("selected"),true);
+		Reporter.log(LineNumber.getLineNumber()+" " + customerName.isEnabled(), true);
+		// Reporter.log(LineNumber.getLineNumber()+" "+customerName.isSelected(),true);
 
 		WebElement customerLocalName = driver.findElement(By.xpath("//*[@id=\"customerLocalName\"]"));
 		js.executeScript(
@@ -159,6 +160,8 @@ public class CustomerCreation {
 						+ "';arguments[0].click;arguments[0].dispatchEvent(new Event('input', { bubbles: true }))",
 				phoneNumber);
 		phoneNumber.sendKeys(Keys.ENTER);
+		this.number = number;
+		Reporter.log(LineNumber.getLineNumber()+" "+number,true);
 
 		WebElement phoneNumber2 = driver.findElement(By.xpath("//*[@id=\"customerPhoneNumber2\"]"));
 		js.executeScript(
@@ -239,8 +242,8 @@ public class CustomerCreation {
 		Thread.sleep(2000);
 
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-		Reporter.log("" + createCustomerButton.isEnabled(), true);
-		Reporter.log("" + createCustomerButton.isDisplayed(), true);
+		Reporter.log(LineNumber.getLineNumber()+" "+"" + createCustomerButton.isEnabled(), true);
+		Reporter.log(LineNumber.getLineNumber()+" " + createCustomerButton.isDisplayed(), true);
 		wait.until(ExpectedConditions.elementToBeClickable(createCustomerButton));
 		js.executeScript("arguments[0].scrollIntoViewIfNeeded();", createCustomerButton);
 		createCustomerButton.click();
@@ -252,20 +255,27 @@ public class CustomerCreation {
 	@Test(priority = 2)
 	public void CustomerDeletion() {
 		driver.findElement(By.xpath("//*[@id=\"main-menu-content\"]/div[1]/input")).sendKeys("Customer");
-		WebElement menu = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li[2]/a/span"));
-
-		driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li[2]/ul/li[2]/a")).click();
+		//WebElement menu = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li[2]/a/span"));
+		aw.waitAllRequest();
+		driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/ul/li[2]/a")).click();
 
 		WebElement search = driver.findElement(By.xpath("//*[@id=\"searchBtn\"]"));
-		search.sendKeys(""+number);
+		Reporter.log(LineNumber.getLineNumber()+" "+number, true);
+		search.sendKeys(""+this.number);
 		
 		List<WebElement> listTuples = driver.findElements(By.xpath("//*[@id=\"customerTuple\"]"));
 
-		for (int i = 0; i < listTuples.size(); i++) {
+		for (int i = 0; i < listTuples.size() && i<1; i++) {
+			WebElement temp = driver.findElement(By.xpath("(//*[@id=\"customerTuple\"])["+i+1+"]/td[3]/span"));//*[@id="customerTuple"]/td[3]/span
+			Reporter.log(LineNumber.getLineNumber()+" "+""+temp.getText());
+			WebElement temp1 = driver.findElement(By.xpath("(//*[@id=\"customerTuple\"])["+i+1+"]/td[7]"));
+			Reporter.log(LineNumber.getLineNumber()+" "+""+temp1.getText());
 //    	  WebElement tuple = listTuples.get(i);
 			String xpath = "(//*[@id=\'customerTuple\'])[" + (i + 1) + "]/td[10]/div/button[2]/i";
 			WebElement btn = driver.findElement(By.xpath(xpath));
 			btn.click();
+			driver.findElement(By.xpath("(//button[normalize-space()='Delete'])[1]")).click();
+			driver.findElement(By.xpath("(//button[normalize-space()='OK'])[1]")).click();
 		}
 
 		
@@ -283,7 +293,7 @@ public class CustomerCreation {
 		// driver.get("https://vilcart-buy.web.app");
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
-		Reporter.log(driver.getTitle(), true);
+		Reporter.log(LineNumber.getLineNumber()+" "+driver.getTitle(), true);
 		js = ((JavascriptExecutor) driver);
 		wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 		aw = new AngularWait(driver);
