@@ -1,4 +1,4 @@
-package com.vilcart.app;
+package app.com.vilcart.app.test;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -41,7 +41,7 @@ import org.testng.Reporter;
 import org.testng.annotations.AfterTest;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import com.vilcart.pom.*;
+import pom.com.vilcart.pom.login.*;
 import org.openqa.selenium.interactions.Actions;
 import com.paulhammant.ngwebdriver.NgWebDriver;
 import com.paulhammant.ngwebdriver.ByAngular;

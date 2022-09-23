@@ -1,9 +1,9 @@
-package com.vilcart.app;
+package app.com.vilcart.app.purchase;
 
 import org.testng.annotations.Test;
 
-import com.vilcart.util.AngularWait;
-import com.vilcart.util.Login;
+import util.com.vilcart.util.AngularWait;
+import util.com.vilcart.util.Login;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 

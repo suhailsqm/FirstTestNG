@@ -1,4 +1,4 @@
-package com.vilcart.app;
+package app.com.vilcart.app.customer;
 
 import org.testng.annotations.Test;
 
@@ -21,7 +21,7 @@ import java.time.Duration;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.TimeUnit;
-import com.vilcart.util.*;
+import util.com.vilcart.util.*;
 
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -49,7 +49,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.slf4j.Logger;
 import org.openqa.selenium.interactions.Actions;
-import com.vilcart.util.*;
+import util.com.vilcart.util.*;
 
 public class CustomerCreation {
 

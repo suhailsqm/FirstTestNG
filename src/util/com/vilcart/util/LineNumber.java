@@ -1,4 +1,4 @@
-package com.vilcart.util;
+package util.com.vilcart.util;
 
 public class LineNumber {
 

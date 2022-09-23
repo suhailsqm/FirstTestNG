@@ -1,4 +1,4 @@
-package com.vilcart.util;
+package util.com.vilcart.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

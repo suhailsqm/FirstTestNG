@@ -1,4 +1,4 @@
-package com.vilcart.app;
+package util.com.vilcart.util;
 
 import java.time.ZoneId;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -14,7 +14,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Reporter;
 
-import com.vilcart.util.AngularWait;
+import util.com.vilcart.util.AngularWait;
 
 public class InventoryChangeStock {
 	private WebDriver driver;

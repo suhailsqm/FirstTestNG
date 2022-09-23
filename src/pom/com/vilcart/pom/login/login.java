@@ -1,4 +1,4 @@
-package com.vilcart.pom;
+package pom.com.vilcart.pom.login;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;

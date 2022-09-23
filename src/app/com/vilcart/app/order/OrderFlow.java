@@ -1,11 +1,12 @@
-package com.vilcart.app;
+package app.com.vilcart.app.order;
 
 import org.testng.annotations.Test;
 
 import com.paulhammant.ngwebdriver.NgWebDriver;
-import com.vilcart.util.AngularWait;
-import com.vilcart.util.LineNumber;
-import com.vilcart.util.Login;
+import util.com.vilcart.util.AngularWait;
+import util.com.vilcart.util.LineNumber;
+import util.com.vilcart.util.Login;
+import util.com.vilcart.util.InventoryChangeStock;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
