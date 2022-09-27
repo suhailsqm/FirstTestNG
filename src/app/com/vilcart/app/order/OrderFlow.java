@@ -4,8 +4,10 @@ import org.testng.annotations.Test;
 
 import com.paulhammant.ngwebdriver.NgWebDriver;
 import util.com.vilcart.util.AngularWait;
+import util.com.vilcart.util.CurrentMethod;
 import util.com.vilcart.util.LineNumber;
 import util.com.vilcart.util.Login;
+import util.com.vilcart.util.TimeStamp;
 import util.com.vilcart.util.InventoryChangeStock;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -13,6 +15,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import org.testng.annotations.BeforeClass;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.testng.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -54,6 +57,7 @@ public class OrderFlow {
 	@Test(priority = 1)
 	public void packing() throws IOException, InterruptedException {
 
+		Reporter.log("=>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		// iv.updateStock("17 test sku", 15);
 		// iv.updateStock("test sku 508", 15);
 
@@ -65,7 +69,12 @@ public class OrderFlow {
 		WebElement menuOrders = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/a"));
 		menuOrders.click();
 		WebElement menuPacking = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/ul/li[1]/a"));
-		menuPacking.click();
+		menuPacking.click();/*
+							 * menuOrders =
+							 * driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/a"));
+							 * menuOrders.click();
+							 */
+		aw.waitAllRequest();
 
 		WebElement startDate = driver.findElement(By.xpath("//*[@id=\"startDate\"]"));// *[@id="startDate"]
 		// DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
@@ -93,6 +102,7 @@ public class OrderFlow {
 					.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"orderCount\"]")));
 		} catch (org.openqa.selenium.TimeoutException e) {
 			Reporter.log(LineNumber.getLineNumber() + " " + "No Orders in Packing", true);
+			assertTrue(false);
 			return;
 		} catch (Exception e) {
 			System.out.println("Some problem occured!!");
@@ -106,7 +116,7 @@ public class OrderFlow {
 			Reporter.log(LineNumber.getLineNumber() + " " + "No orders to dispatch in Packing", true);
 			return;
 		}
-		assertThat(count).isGreaterThan(0);
+		assertThat(count).withFailMessage("No orders in Packing").isGreaterThan(0);
 
 		WebElement temp1 = driver.findElement(By.xpath("(//*[@id=\"packingButton\"])[1]"));
 		temp1.click();
@@ -120,11 +130,13 @@ public class OrderFlow {
 		Reporter.log(LineNumber.getLineNumber() + " " + "orderNumber: " + orderNumber, true);
 		this.orderNumber = orderNumber;
 		if (orderNumber.isEmpty()) {
+			assertThat(orderNumber).withFailMessage("Order Number is empty").isNotEmpty();
 			return;
 		}
 
 		List<WebElement> listTuples = driver.findElements(By.xpath("//*[@id=\"orderTuple\"]"));
 
+		assertThat(listTuples.size()).withFailMessage("No Tuples in Packing").isGreaterThan(0);
 		for (int i = 0; i < listTuples.size(); i++) {
 //    	  WebElement tuple = listTuples.get(i);
 			String xpath = "//*[@id=\'orderTuple\'][" + (i + 1) + "]/td[12]/div/ui-switch/button";
@@ -146,7 +158,7 @@ public class OrderFlow {
 			quantity += Integer.parseInt(temp3.getText());
 		}
 		assertThat(driver.findElement(By.xpath("//*[@id=\"totalQuantity\"]")).getText().split(":")[1].trim())
-				.isEqualTo("" + quantity);
+				.withFailMessage("Total Quantity doesn't tally").isEqualTo("" + quantity);
 		int price = 0;
 		List<WebElement> temp3Elements = driver.findElements(By.xpath("//*[@id=\"OriginalPrice\"]"));
 		for (int i = 0; i < temp3Elements.size(); i++) {
@@ -154,14 +166,16 @@ public class OrderFlow {
 			price += Integer.parseInt(temp4.getText());
 		}
 		assertThat(driver.findElement(By.xpath("//*[@id=\"totalPrice\"]")).getText().split("\\u20B9")[1].trim())
-				.isEqualTo("" + price);
+				.withFailMessage("Total Price not tallying.").isEqualTo("" + price);
 		WebElement moveToInvoice = driver.findElement(By.xpath("//*[@id=\"moveToNext\"]"));
 		js.executeScript("arguments[0].scrollIntoViewIfNeeded();", moveToInvoice);
 		moveToInvoice.click();
+		aw.waitAllRequest();
 	}
 
-	@Test(priority = 2)
+	@Test(priority = 2, dependsOnMethods = { "packing" })
 	public void invoice() throws InterruptedException {
+		Reporter.log("=>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		WebElement menuInput = driver.findElement(By.xpath("//*[@id=\"main-menu-content\"]/div[1]/input"));
 		menuInput.clear();
 		menuInput.sendKeys("Orders");
@@ -169,7 +183,11 @@ public class OrderFlow {
 		WebElement menuOrders = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/a"));
 		menuOrders.click();
 		WebElement menuPacking = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/ul/li[2]/a"));
-		menuPacking.click();
+		menuPacking.click();/*
+							 * menuOrders =
+							 * driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/a"));
+							 * menuOrders.click();
+							 */
 
 		WebElement startDate = driver.findElement(By.xpath("//*[@id=\"startDate\"]"));// *[@id="startDate"]
 		// DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
@@ -188,7 +206,7 @@ public class OrderFlow {
 		aw.waitAllRequest();
 
 		WebElement search = driver.findElement(By.xpath("//*[@id=\"searchInput\"]"));
-		assertThat(orderNumber).isNotBlank();
+		assertThat(orderNumber).withFailMessage("Order Number is Blank").isNotBlank();
 		String temp = orderNumber.substring(7);
 		// temp = "01983";
 		search.sendKeys("" + temp);
@@ -196,11 +214,13 @@ public class OrderFlow {
 		aw.waitAllRequest();
 
 		List<WebElement> listTuples = driver.findElements(By.xpath("//*[@id=\"invoiceTuple\"]"));
+		assertThat(listTuples.size()).withFailMessage("No Tuples in invoice").isGreaterThan(0);
 		for (int i = 0; i < listTuples.size(); i++) {
 			String xpath = "(//*[@id=\"invoiceTuple\"])[" + (i + 1) + "]/td[3]";
 			WebElement orderElement = driver.findElement(By.xpath(xpath));
 			if (orderElement.getText().equalsIgnoreCase(orderNumber)) {
-				assertThat(orderElement.getText()).isEqualToIgnoringCase(orderNumber);
+				assertThat(orderElement.getText()).withFailMessage("orderNumber doesnt match " + orderElement.getText())
+						.isEqualToIgnoringCase(orderNumber);
 				String xpath1 = "(//*[@id=\"actionBtn\"])[" + (i + 1) + "]";
 				driver.findElement(By.xpath(xpath1)).click();
 			}
@@ -221,32 +241,35 @@ public class OrderFlow {
 		driver.findElement(By.cssSelector("button[class='swal2-confirm swal2-styled']")).click();
 		Reporter.log(LineNumber.getLineNumber() + " ", true);
 
-		Reporter.log(LineNumber.getLineNumber() + " "+handle, true);
+		Reporter.log(LineNumber.getLineNumber() + " " + handle, true);
 		Set<String> handles = driver.getWindowHandles();
 		for (String actual : handles) {
 			if (0 != actual.compareToIgnoreCase(handle)) {
-				Reporter.log(LineNumber.getLineNumber() + "close "+actual, true);
+				Reporter.log(LineNumber.getLineNumber() + "close " + actual, true);
 				driver.switchTo().window(actual).close();
 			}
 		}
 		driver.switchTo().window(handle);
 	}
 
-	@Test(priority = 3)
+	@Test(priority = 3, dependsOnMethods = { "invoice" })
 	public void dispatch() throws InterruptedException {
+		Reporter.log("=>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		Reporter.log(LineNumber.getLineNumber() + " ", true);
-		Thread.sleep(5000);
 		WebElement menuInput = driver.findElement(By.xpath("//*[@id=\"main-menu-content\"]/div[1]/input"));
 		menuInput.clear();
 		menuInput.sendKeys("Orders");
 		menuInput.sendKeys(Keys.ENTER);
 		aw.waitAllRequest();
-		WebElement menuOrders = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/a"));
-		menuOrders.click();
-		aw.waitAllRequest();
-		WebElement menudispatch = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li[1]/ul/li[3]/a"));
+
+		/*
+		 * WebElement menuOrders =
+		 * driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/a"));
+		 * menuOrders.click(); aw.waitAllRequest();
+		 */
+
+		WebElement menudispatch = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/ul/li[3]/a"));
 		menudispatch.click();
-		Thread.sleep(5000);
 		aw.waitAllRequest();
 
 		WebElement startDate = driver.findElement(By.xpath("//*[@id=\"startDate\"]"));// *[@id="startDate"]
@@ -262,21 +285,40 @@ public class OrderFlow {
 		driver.findElement(By.xpath("//button[normalize-space()='Submit']")).click();
 		aw.waitAllRequest();
 
-		assertThat(orderNumber).isNotBlank();
+		assertThat(orderNumber).withFailMessage("Order Number is Blank").isNotBlank();
 		String temp = orderNumber.substring(7);
 		WebElement search = driver.findElement(By.xpath("//*[@id=\"searchInput\"]"));
 		search.sendKeys("" + temp);
+		// search.sendKeys("01554");
 		driver.findElement(By.xpath("//*[@id=\"searchButton\"]")).click();
+		aw.waitAllRequest();
 
 		List<WebElement> listTuples = driver.findElements(By.xpath("//*[@id=\"dispatchTuple\"]"));
+		assertThat(listTuples.size()).withFailMessage("No Tuples in dispatch").isGreaterThan(0);
 		for (int i = 0; i < listTuples.size(); i++) {
 			String xpath = "(//*[@id=\"dispatchTuple\"])[" + (i + 1) + "]/td[3]";
 			WebElement orderElement = driver.findElement(By.xpath(xpath));
-			if (orderElement.getText().equalsIgnoreCase(orderNumber)) {
-				assertThat(orderElement.getText()).isEqualToIgnoringCase(orderNumber);
-				String xpath1 = "//*[@id=\"dispatchTuple\"]/td[9]/ng-select/div/div/div[3]/input";
+			String text = orderElement.getText();
+			assertThat(text).withFailMessage("Order Number doesn't tally" + text).isEqualToIgnoringCase(orderNumber);
+			if (text.equalsIgnoreCase(orderNumber)) {
+				String xpath1 = "//*[@id=\"dispatchTuple\"]/td[9]/ng-select/div/div/div[2]/input";
 				WebElement vehicleNumber = driver.findElement(By.xpath(xpath1));
-				vehicleNumber.sendKeys("KA 02 EA 3333");
+				vehicleNumber.click();
+				String xpath2 = "//*[@id=\"selectVehicle\"]/ng-dropdown-panel/div/div[2]/div";
+				List<WebElement> listVehicles = driver.findElements(By.xpath(xpath2));
+				assertThat(listVehicles.size()).withFailMessage("No vehicles in dispatch dropdown").isGreaterThan(0);
+				for (int j = 0; j < listVehicles.size(); j++) {
+					String xpath3 = "//*[@id=\"selectVehicle\"]/ng-dropdown-panel/div/div[2]/div[" + (j + 1) + "]/span";
+					Reporter.log(driver.findElement(By.xpath(xpath3)).getText(), true);
+					if (driver.findElement(By.xpath(xpath3)).getText().equalsIgnoreCase("KA 02 EA 3344")) {
+						driver.findElement(By.xpath(xpath3)).click();
+						break;
+					}
+					if (j == (listVehicles.size() - 1)) {
+						Reporter.log("No option for vehicle, KA 02 EA 3344", true);
+					}
+				}
+				// vehicleNumber.sendKeys("KA 02 EA 3333");
 				driver.findElement(By.xpath("//button[normalize-space()='Update']")).click();
 				driver.findElement(By.xpath("//button[normalize-space()='OK']")).click();
 				String xpath3 = "//*[@id=\"dispatchTuple\"]/td[10]/div/button";
@@ -286,8 +328,10 @@ public class OrderFlow {
 
 	}
 
-	@Test(priority = 4)
+	@Test(priority = 4, dependsOnMethods = { "dispatch" })
+	// @Test
 	public void delivery() {
+		Reporter.log("=>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		WebElement menuInput = driver.findElement(By.xpath("//*[@id=\"main-menu-content\"]/div[1]/input"));
 		menuInput.clear();
 		menuInput.sendKeys("Orders");
@@ -311,31 +355,47 @@ public class OrderFlow {
 		driver.findElement(By.xpath("//button[normalize-space()='Submit']")).click();
 		aw.waitAllRequest();
 
+		assertThat(orderNumber).withFailMessage("Order Number is Blank").isNotBlank();
+		String temp = orderNumber.substring(7);
 		WebElement search = driver.findElement(By.xpath("//*[@id=\"searchInput\"]"));
-		search.sendKeys("" + orderNumber);
+		search.sendKeys(temp);
+//		search.sendKeys("01558");
 		driver.findElement(By.xpath("//*[@id=\"searchButton\"]")).click();
+		aw.waitAllRequest();
 
 		List<WebElement> listTuples = driver.findElements(By.xpath("//*[@id=\"deliveryTuple\"]"));
+		assertThat(listTuples.size()).withFailMessage("No Tuples in delivery").isGreaterThan(0).descriptionText();
 		for (int i = 0; i < listTuples.size(); i++) {
-			String xpath = "(//*[@id=\"deliveryTuple\"])[" + (i + 1) + "]/td[3]";
+			String xpath = "(//*[@id=\"deliveryTuple\"])[" + (i + 1) + "]/td[4]";
 			WebElement orderElement = driver.findElement(By.xpath(xpath));
 			if (orderElement.getText().equalsIgnoreCase(orderNumber)) {
-				assertThat(orderElement.getText()).isEqualToIgnoringCase(orderNumber);
+				assertThat(orderElement.getText())
+						.withFailMessage("order Number doesn't tally" + orderElement.getText())
+						.isEqualToIgnoringCase(orderNumber);
 				String xpath1 = "//*[@id=\"deliveryTuple\"]/td[10]/div/button";
-				WebElement action = driver.findElement(By.xpath(xpath1));
-				action.click();
+				try {
+					WebElement action = driver.findElement(By.xpath(xpath1));
+					action.click();
+				} catch (org.openqa.selenium.StaleElementReferenceException ex) {
+					WebElement action = driver.findElement(By.xpath(xpath1));
+					action.click();
+				}
 			}
 		}
 	}
 
-	@Test(priority = 5)
+	@Test(priority = 5, dependsOnMethods = { "delivery" })
 	public void complete() {
+		Reporter.log("=>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		WebElement menuInput = driver.findElement(By.xpath("//*[@id=\"main-menu-content\"]/div[1]/input"));
 		menuInput.clear();
 		menuInput.sendKeys("Orders");
 		menuInput.sendKeys(Keys.ENTER);
-		WebElement menuOrders = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/a"));
-		menuOrders.click();
+		/*
+		 * WebElement menuOrders =
+		 * driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/a"));
+		 * menuOrders.click();
+		 */
 		WebElement menuComplete = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/ul/li[5]/a"));
 		menuComplete.click();
 
@@ -355,18 +415,20 @@ public class OrderFlow {
 		WebElement search = driver.findElement(By.xpath("//*[@id=\"searchInput\"]"));
 		search.sendKeys("" + orderNumber);
 		List<WebElement> listTuples = driver.findElements(By.xpath("//*[@id=\"completeTuple\"]"));
-
+		assertThat(listTuples.size()).withFailMessage("No tuples in complete").isGreaterThan(0);
 		for (int i = 0; i < listTuples.size(); i++) {
 			String xpath = "(//*[@id=\"completeTuple\"])[" + (i + 1) + "]/td[4]";
 			WebElement orderElement = driver.findElement(By.xpath(xpath));
 			if (orderElement.getText().equalsIgnoreCase(orderNumber)) {
-				assertThat(orderElement.getText()).isEqualToIgnoringCase(orderNumber);
+				assertThat(orderElement.getText()).withFailMessage("orderNumber doesn't tally" + orderElement.getText())
+						.isEqualToIgnoringCase(orderNumber);
 			}
 		}
 	}
 
 	@BeforeClass
 	public void beforeOrderFlow() throws IOException {
+		Reporter.log("=>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		WebDriverManager.chromedriver().setup();
 		driver = new ChromeDriver();
 		driver.get("http://localhost:4200");
@@ -384,7 +446,7 @@ public class OrderFlow {
 
 	@AfterClass
 	public void afterOrderFlow() throws InterruptedException {
-		Thread.sleep(10000);
+		Reporter.log("=>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		driver.quit();
 	}
 }

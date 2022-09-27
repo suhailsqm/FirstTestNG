@@ -4,8 +4,9 @@ import org.testng.annotations.Test;
 
 import com.paulhammant.ngwebdriver.NgWebDriver;
 import util.com.vilcart.util.AngularWait;
+import util.com.vilcart.util.CurrentMethod;
 import util.com.vilcart.util.Login;
-
+import util.com.vilcart.util.TimeStamp;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 import org.testng.annotations.BeforeClass;
@@ -44,6 +45,7 @@ public class PlaceOrder {
 
 	@Test
 	public void placeOrder() throws IOException {
+		Reporter.log(CurrentMethod.methodName()+" "+TimeStamp.CurTimeStamp(), true);
 
 		loginObj.login();
 
@@ -90,7 +92,7 @@ public class PlaceOrder {
 
 	@BeforeClass
 	public void beforePlaceOrder() {
-
+		Reporter.log(CurrentMethod.methodName()+" "+TimeStamp.CurTimeStamp(), true);
 		WebDriverManager.chromedriver().setup();
 		driver = new ChromeDriver();
 		ngWebDriver = new NgWebDriver((JavascriptExecutor) driver).withRootSelector("\"app-create-customers\"");
@@ -108,6 +110,7 @@ public class PlaceOrder {
 
 	@AfterClass
 	public void afterPlaceOrder() throws InterruptedException {
+		Reporter.log(CurrentMethod.methodName()+" "+TimeStamp.CurTimeStamp(), true);
 		Thread.sleep(3000);
 		driver.quit();
 	}
