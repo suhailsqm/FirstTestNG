@@ -84,7 +84,7 @@ public class Packing {
 		aw.waitAllRequest();
 	}
 
-	public void search(String keyword) {
+	public void searchInPacking(String keyword) {
 		searchInput.clear();
 		searchInput.sendKeys(keyword);
 		searchBtn.click();

@@ -215,6 +215,7 @@ public class OrderFlow {
 						.isEqualToIgnoringCase(orderNumber);
 				String xpath1 = "(//*[@id=\"actionBtn\"])[" + (i + 1) + "]";
 				driver.findElement(By.xpath(xpath1)).click();
+				break;
 			}
 		}
 		aw.waitAllRequest();
