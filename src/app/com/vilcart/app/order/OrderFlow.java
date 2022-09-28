@@ -2,11 +2,10 @@ package app.com.vilcart.app.order;
 
 import org.testng.annotations.Test;
 
-import com.paulhammant.ngwebdriver.NgWebDriver;
 import util.com.vilcart.util.AngularWait;
 import util.com.vilcart.util.CurrentMethod;
 import util.com.vilcart.util.LineNumber;
-import util.com.vilcart.util.Login;
+import pom.com.vilcart.pom.login.Login;
 import util.com.vilcart.util.TimeStamp;
 import util.com.vilcart.util.InventoryChangeStock;
 
@@ -17,21 +16,15 @@ import org.testng.annotations.BeforeClass;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertTrue;
 
-import java.io.File;
-import java.io.FileInputStream;
+
 import java.io.IOException;
 import java.time.Duration;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.poi.ss.usermodel.DataFormatter;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
@@ -42,7 +35,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Reporter;
 import org.testng.annotations.AfterClass;
-import static org.assertj.core.api.Assertions.assertThat;
 import org.openqa.selenium.support.ui.Select;
 
 public class OrderFlow {

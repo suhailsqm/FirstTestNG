@@ -2,28 +2,18 @@ package app.com.vilcart.app.order;
 
 import org.testng.annotations.Test;
 
-import com.paulhammant.ngwebdriver.NgWebDriver;
+import pom.com.vilcart.pom.login.Login;
 import util.com.vilcart.util.AngularWait;
 import util.com.vilcart.util.CurrentMethod;
-import util.com.vilcart.util.Login;
 import util.com.vilcart.util.TimeStamp;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 import org.testng.annotations.BeforeClass;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.List;
 
-import org.apache.poi.ss.usermodel.DataFormatter;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -32,12 +22,10 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Reporter;
 import org.testng.annotations.AfterClass;
-import org.openqa.selenium.support.pagefactory.ByChained;
 
-public class PlaceOrder {
+public class PlaceOrderFlow {
 
 	private WebDriver driver;
-	private NgWebDriver ngWebDriver;
 	private JavascriptExecutor js;
 	private AngularWait aw;
 	private WebDriverWait wait;
@@ -95,8 +83,6 @@ public class PlaceOrder {
 		Reporter.log(CurrentMethod.methodName()+" "+TimeStamp.CurTimeStamp(), true);
 		WebDriverManager.chromedriver().setup();
 		driver = new ChromeDriver();
-		ngWebDriver = new NgWebDriver((JavascriptExecutor) driver).withRootSelector("\"app-create-customers\"");
-		;
 		driver.get("http://localhost:4200");
 		// driver.get("https://vilcart-buy.web.app");
 		driver.manage().window().maximize();
