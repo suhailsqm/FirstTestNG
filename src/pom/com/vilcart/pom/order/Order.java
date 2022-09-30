@@ -161,6 +161,7 @@ public class Order {
 			}
 		}
 		driver.switchTo().window(handle);
+		aw.waitAllRequest();
 	}
 
 	private String getDate() {

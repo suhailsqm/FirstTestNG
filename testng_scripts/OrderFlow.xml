@@ -3,7 +3,7 @@
 <suite name="Suite">
 	<test thread-count="1" name="Test">
 		<classes>
-			<class name="app.com.vilcart.app.order.PlaceOrder"></class>
+			<class name="app.com.vilcart.app.order.PlaceOrderFlow"></class>
 			<class name="app.com.vilcart.app.order.OrderFlow">
 				<methods>
 					<include name="packing"/>

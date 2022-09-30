@@ -52,16 +52,23 @@ public class Invoice {
 		PageFactory.initElements(driver, this);
 	}
 
+	private String getDate() {
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu-MM-dd");
+		ZonedDateTime now = ZonedDateTime.now();
+		ZonedDateTime indiaDateTime = now.withZoneSameInstant(ZoneId.of("Asia/Kolkata"));
+		return dtf.format(indiaDateTime);
+	}
+
 	public void getTuplesForCurrentDate() {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		// DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu-MM-dd");
-		ZonedDateTime now = ZonedDateTime.now();
+//		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu-MM-dd");
+//		ZonedDateTime now = ZonedDateTime.now();
 		/*
 		 * System.out.println(dtf.format(now)); // 2021/03/22 16:37:15
 		 * System.out.println(now.getOffset()); // +08:00
 		 */
-		ZonedDateTime indiaDateTime = now.withZoneSameInstant(ZoneId.of("Asia/Kolkata"));
+//		ZonedDateTime indiaDateTime = now.withZoneSameInstant(ZoneId.of("Asia/Kolkata"));
 		/*
 		 * System.out.println(dtf.format(indiaDateTime)); // 2021/03/22 17:37:15
 		 * System.out.println(indiaDateTime.getOffset()); // +09:00
@@ -69,11 +76,11 @@ public class Invoice {
 		 */
 		// js.executeScript("arguments[0].setAttribute('ng-reflect-model','"+dtf.format(indiaDateTime)+"');arguments[0].dispatchEvent(new
 		// Event('ngModelChange'))",startDate);
-		js.executeScript("arguments[0].value = '" + dtf.format(indiaDateTime)
-				+ "';arguments[0].dispatchEvent(new Event('input'))", startDate);
+		js.executeScript("arguments[0].value = '" + getDate() + "';arguments[0].dispatchEvent(new Event('input'))",
+				startDate);
 
-		js.executeScript("arguments[0].value = '" + dtf.format(indiaDateTime)
-				+ "';arguments[0].dispatchEvent(new Event('input'))", endDate);
+		js.executeScript("arguments[0].value = '" + getDate() + "';arguments[0].dispatchEvent(new Event('input'))",
+				endDate);
 		submit.click();
 		aw.waitAllRequest();
 	}

@@ -243,6 +243,7 @@ public class OrderFlow {
 			}
 		}
 		driver.switchTo().window(handle);
+		aw.waitAllRequest();
 	}
 
 	@Test(priority = 3, dependsOnMethods = { "invoice" })
