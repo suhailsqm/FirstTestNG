@@ -23,7 +23,9 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import pom.com.vilcart.pom.customer.NewCustomer;
 import pom.com.vilcart.pom.login.Login;
+import pom.com.vilcart.pom.menu.Menu;
 import util.com.vilcart.util.AngularWait;
 import util.com.vilcart.util.CurrentMethod;
 import util.com.vilcart.util.InventoryChangeStock;
@@ -39,7 +41,15 @@ public class TestXpath {
 	private Login loginObj;
 	private InventoryChangeStock iv;
 	private String orderNumber;
+	private NewCustomer nc;
+	private Menu m;
 
+	@Test
+	public void createCustomer() {
+		m.goToNewCustomer();
+		nc.createCustomer();
+	}
+	
 	@Test(priority = 1)
 	public void packing() throws IOException, InterruptedException {
 
@@ -191,6 +201,8 @@ public class TestXpath {
 		aw = new AngularWait(driver);
 		loginObj = new Login(driver, aw);
 		iv = new InventoryChangeStock(driver, js, aw, wait);
+		nc = new NewCustomer(driver,aw);
+		m = new Menu(driver,aw);
 		loginObj.login();
 	}
 

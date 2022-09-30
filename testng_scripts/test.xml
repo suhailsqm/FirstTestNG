@@ -3,9 +3,10 @@
 <suite name="Suite">
 	<test thread-count="1" name="Test">
 		<classes>
-			<class name="app.com.vilcart.app.order.PlaceOrderFlow"></class>
+			<!--class name="app.com.vilcart.app.order.PlaceOrderFlow"></class-->
 			<class name="app.com.vilcart.app.test.TestXpath">
 				<methods>
+					<exclude name="packing" />
 					<include name="packing" />
 				</methods>
 			</class>
