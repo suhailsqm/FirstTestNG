@@ -169,6 +169,7 @@ public class Sku {
 	}
 
 	public void searchSku(String keyword) {
+		Reporter.log("===>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		search.clear();
 		search.sendKeys(keyword);
 		aw.waitAllRequest();
@@ -291,6 +292,7 @@ public class Sku {
 	}
 
 	public void deleteFirstSku(String skuName) {
+		Reporter.log("===>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		searchSku(skuName);
 		assertThat(skuListTuples.size()).withFailMessage("No Tuples in sku List for the search criteria " + skuName)
 				.isGreaterThan(0);

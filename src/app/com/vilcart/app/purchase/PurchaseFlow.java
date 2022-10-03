@@ -52,13 +52,13 @@ public class PurchaseFlow {
      menuRequestItem.click();
      aw.waitAllRequest();
      
-     WebElement itemSelectInput = driver.findElement(By.xpath("//*[@id=\"iconLeft1\"]"));
+     WebElement itemSelectInput = driver.findElement(By.xpath("//*[@id=\"searchInput\"]"));
      //itemSelectInput.sendKeys("test");
      //itemSelectInput.sendKeys(Keys.ENTER);
      js.executeScript("arguments[0].value='208';arguments[0].click();arguments[0].dispatchEvent(new Event('input',{ bubbles : true}));arguments[0].dispatchEvent(new Event('keyup', { bubbles: true }))", itemSelectInput);
      aw.waitAllRequest();
      
-     List<WebElement> tup = driver.findElements(By.xpath("//*[@id=\"tupleRow\"]"));
+     List<WebElement> tup = driver.findElements(By.xpath("//*[@id=\"requestItemTuple\"]"));
      int numberOfTuples = 0;
      if(tup.size()<2) {
     	 numberOfTuples = 1;
@@ -67,11 +67,11 @@ public class PurchaseFlow {
     	 numberOfTuples = 2;
      }
      for(int i=0;i<numberOfTuples;i++) {
-    	 String xpath = "//*[@id=\"tupleRow\"]["+(i+1)+"]/td/div/div[1]/div[2]/div/button";
+    	 String xpath = "//*[@id=\"requestItemTuple\"]["+(i+1)+"]/td/div/div[1]/div[2]/div/button";
     	 WebElement list = driver.findElement(By.xpath(xpath));
     	 Reporter.log("1 "+list.getText(),true);
     	 list.click();
-    	 String xpath1 = "//*[@id=\"tupleRow\"]["+(i+1)+"]/td/div/div[1]/div[2]/div/div/button";
+    	 String xpath1 = "//*[@id=\"requestItemTuple\"]["+(i+1)+"]/td/div/div[1]/div[2]/div/div/button";
     	 List<WebElement> listSelectDropDown = driver.findElements(By.xpath(xpath1));
     	 int numOfVariations =listSelectDropDown.size();
     	 Reporter.log(xpath1+" "+numOfVariations, true);
