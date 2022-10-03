@@ -47,7 +47,7 @@ public class CreateSKU {
 
   @Test
   public void createSKU() throws IOException, InterruptedException {
-	  File src=new File("resources\\SKU.xlsx");
+	  File src=new File("resources\\SKUDummy.xlsx");
 	  FileInputStream finput = new FileInputStream(src);
 	  workbook = new XSSFWorkbook(finput);
       DataFormatter formatter = new DataFormatter();
@@ -60,6 +60,8 @@ public class CreateSKU {
       menuInput.sendKeys(Keys.ENTER);
       WebElement clickSKU = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/a/span"));
       clickSKU.click();
+      
+      
       WebElement clickAddSKU =  driver.findElement(By.xpath("//button[normalize-space(.)='Add SKU']"));
       clickAddSKU.click();
       aw.waitAllRequest();
@@ -78,7 +80,7 @@ public class CreateSKU {
       cell = row.createCell(0);
       cell.setCellValue("SKU Name");
       cell = row.createCell(1);
-      cell.setCellValue("test SKU");
+      cell.setCellValue("test sku 508");
       
       WebElement localName = driver.findElement(By.xpath("//*[@id=\"localName\"]"));
       localName.sendKeys("test SKU local");
@@ -155,11 +157,11 @@ public class CreateSKU {
       cell = row.createCell(1);
       cell.setCellValue(brandName.getAttribute("value"));
       
-      WebElement variationButton = driver.findElement(By.xpath("//*[@id=\"variationButton\"]"));
+		WebElement variationButton = driver.findElement(By.xpath("//*[@id=\"variationButton\"]"));
       js.executeScript("arguments[0].scrollIntoViewIfNeeded();", variationButton);
       variationButton.click();
     		  
-      WebElement nameVariation = driver.findElement(By.xpath("//*[@id=\"textbox2\"]"));
+      WebElement nameVariation = driver.findElement(By.xpath("//*[@id=\"variationName\"]"));
       nameVariation.sendKeys("test SKU automation");
       row = sheet.createRow(rowKey++);
       cell = row.createCell(0);
@@ -190,7 +192,7 @@ public class CreateSKU {
       Reporter.log(value.getAttribute("value"), true);
       cell.setCellValue(value.getAttribute("value"));
       
-      FileOutputStream fos = new FileOutputStream("resources\\SKU.xlsx");
+      FileOutputStream fos = new FileOutputStream("resources\\SKUDummy.xlsx");
       workbook.write(fos);
       fos.close();
       finput.close();
