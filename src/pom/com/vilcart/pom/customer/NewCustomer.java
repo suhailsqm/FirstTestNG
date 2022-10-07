@@ -185,7 +185,7 @@ public class NewCustomer {
 				taluk1.get(i).findElement(By.xpath("//span")).click();
 				break;
 			}
-			if (i == taluk1.size()) {
+			if (i == taluk1.size() - 1) {
 				assertThat(false)
 						.withFailMessage("No specific '" + fetchFeild("customerTaluk") + "' in workbook resource.")
 						.isEqualTo(true);
@@ -203,7 +203,7 @@ public class NewCustomer {
 				postal1.get(i).findElement(By.xpath("//span")).click();
 				break;
 			}
-			if (i == postal1.size()) {
+			if (i == postal1.size() - 1) {
 				assertThat(false)
 						.withFailMessage("No specific '" + fetchFeild("customerPostal") + "' in workbook resource.")
 						.isEqualTo(true);
@@ -221,7 +221,7 @@ public class NewCustomer {
 				village1.get(i).findElement(By.xpath("//span")).click();
 				break;
 			}
-			if (i == village1.size()) {
+			if (i == village1.size() - 1) {
 				assertThat(false)
 						.withFailMessage("No specific '" + fetchFeild("customerVillage") + "' in workbook resource.")
 						.isEqualTo(true);

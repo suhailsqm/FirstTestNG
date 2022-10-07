@@ -113,19 +113,19 @@ public class RequestItem {
 	}
 
 
-	private void writeFeild(String feild, String feildVariation, int feildValue, int price) {
+	private void writeSku(String sku, String skuVariation, int skuValue, int price) {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		XSSFSheet sheet;
 		sheet = workbook.getSheetAt(0);
 		Row row = sheet.createRow(writeRowKey++);
 		Cell cell = row.createCell(0);
-		cell.setCellValue(feild);
+		cell.setCellValue(sku);
 		cell = row.createCell(1);
-		cell.setCellValue(feildVariation);
+		cell.setCellValue(skuVariation);
 		cell = row.createCell(2);
-		cell.setCellValue(feildValue);
+		cell.setCellValue(skuValue);
 		cell = row.createCell(3);
-		cell.setCellValue(feildValue);
+		cell.setCellValue(price);
 		try {
 			workbook.write(fos);
 		} catch (IOException e) {
@@ -176,7 +176,7 @@ public class RequestItem {
 
 				WebElement varAddToCart = addToCartButton.get(i);
 				varAddToCart.click();
-				writeFeild(varFeild, varFeildVariation, varFeildValue, randNumber.nextInt(90) + 10);
+				writeSku(varFeild, varFeildVariation, varFeildValue, randNumber.nextInt(90) + 10);
 
 				if (i1 != numOfVariations - 1) {
 					requestItemTuples.get(i).findElement(By.xpath(xpath)).click();

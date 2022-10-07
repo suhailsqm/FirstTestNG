@@ -186,6 +186,7 @@ public class SelectVendor {
 		aw.waitAllRequest();
 		js.executeScript("arguments[0].scrollIntoViewIfNeeded();", updateBtn);
 		updateBtn.click();
+		aw.waitAllRequest();
 	}
 
 	public void closeFileInputStream() {
