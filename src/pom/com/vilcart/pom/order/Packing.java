@@ -28,6 +28,7 @@ public class Packing {
 	private AngularWait aw;
 	private JavascriptExecutor js;
 	private WebDriverWait wait;
+	private Order or;
 
 	@FindBy(xpath = "//*[@id=\"searchInput\"]")
 	private WebElement searchInput;
@@ -48,7 +49,6 @@ public class Packing {
 
 	@FindBy(xpath = "(//*[@id=\\\"packingTuple\\\"])[1]")
 	private WebElement firstTuple;
-	
 
 	public Packing(WebDriver driver, AngularWait aw) {
 		this.driver = driver;
@@ -56,6 +56,7 @@ public class Packing {
 		this.js = ((JavascriptExecutor) this.driver);
 		this.wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 		PageFactory.initElements(driver, this);
+		or = new Order(driver, aw);
 	}
 
 	public void getTuplesForCurrentDate() {
@@ -110,15 +111,18 @@ public class Packing {
 		Reporter.log(LineNumber.getLineNumber() + " " + "order count: " + count, true);
 		if (count == 0) {
 			Reporter.log(LineNumber.getLineNumber() + " " + "No orders to dispatch in Packing", true);
+			assertThat(count).withFailMessage("No orders in Packing").isGreaterThan(0);
 			return;
 		}
-		assertThat(count).withFailMessage("No orders in Packing").isGreaterThan(0);
+
 	}
 
-	public void evaluateFirstTuple() {
+	public String evaluateFirstTuple() {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		firstTuple.findElement(By.xpath("//td[9]/div/button[1]")).click();
 		aw.waitAllRequest();
+		or.evaluateOrderInPacking();
+		return or.getOrderNumber();
 	}
 
 }

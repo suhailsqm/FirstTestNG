@@ -33,12 +33,18 @@ public class PoApproved {
 
 	@FindBy(id = "searchBtn")
 	WebElement searchBtn;
-	
+
 	@FindBy(id = "poApproveTuple")
 	List<WebElement> poApproveTuples;
 
 	@FindBy(id = "poApproveSubItem")
-	List<WebElement> poApproveSubItem;
+	List<WebElement> poApproveSubItems;
+
+	@FindBy(id = "grnButton")
+	WebElement grnButton;
+
+	@FindBy(id = "cancelBtn")
+	WebElement cancelBtn;
 
 	public PoApproved(WebDriver driver, AngularWait aw) {
 		this.driver = driver;
@@ -64,12 +70,28 @@ public class PoApproved {
 		assertThat(poApproveTuples.size()).withFailMessage("NO orders with PO Number " + poNumber).isGreaterThan(0);
 		for (int i = 0; i < poApproveTuples.size(); i++) {
 			if (poApproveTuples.get(i).findElement(By.xpath("//td[2]")).getText().equalsIgnoreCase(poNumber)) {
-				poApproveTuples.get(i).findElement(By.xpath("//td[9]/div/button")).click();
+				WebElement temp = poApproveTuples.get(i).findElement(By.xpath("//td[9]/div/button"));
+				js.executeScript("arguments[0].scrollIntoViewIfNeeded();", temp);
+				temp.click();
 				aw.waitAllRequest();
 				break;
 			}
 		}
-//		js.executeScript("arguments[0].scrollIntoViewIfNeeded();", approveBtn);
-//		approveBtn.click();
+
+		assertThat(poApproveSubItems.size()).withFailMessage("No Tuples in Po Approved/ Category/ GRN")
+				.isGreaterThan(0);
+		for (int i = 0; i < poApproveSubItems.size(); i++) {
+			WebElement tuple = poApproveSubItems.get(i);
+			WebElement grnRowBtn = tuple.findElement(By.xpath("//td[9]/div/ui-switch/button"));
+			String value = grnRowBtn.getAttribute("aria-checked");
+			if (value.contains("false")) {
+				WebElement test = tuple.findElement(By.xpath("//td[9]/div/ui-switch"));
+				test.click();
+			}
+		}
+		aw.waitAllRequest();
+		
+		grnButton.click();
+		
 	}
 }
