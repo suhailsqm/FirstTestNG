@@ -99,8 +99,8 @@ public class PurchaseReturnList {
 				assertThat(true).withFailMessage("po Number matches in purchase Return List").isEqualTo(true);
 				break;
 			}
-			if (i == purchaseReturnTuples.size()) {
-				assertThat(true).withFailMessage("po Number doesn't in purchase Return List " + poNumber)
+			if (i == purchaseReturnTuples.size() - 1) {
+				assertThat(true).withFailMessage("po Number doesn't exist in purchase Return List " + poNumber)
 						.isEqualTo(false);
 			}
 		}

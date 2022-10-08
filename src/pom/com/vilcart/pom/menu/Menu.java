@@ -72,6 +72,9 @@ public class Menu {
 
 	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/ul/li[1]/a")
 	private WebElement purchaseList;
+	
+	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/a/span")
+	private WebElement inventory;
 
 	public Menu(WebDriver driver, AngularWait aw) {
 		this.driver = driver;
@@ -81,6 +84,7 @@ public class Menu {
 
 	public void goToNewCustomer() {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		menuSearch.clear();
 		menuSearch.sendKeys("Customer");
 		menuSearch.sendKeys(Keys.ENTER);
 		aw.waitAllRequest();
@@ -92,6 +96,7 @@ public class Menu {
 
 	public void goToCustomerList() {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		menuSearch.clear();
 		menuSearch.sendKeys("Customer");
 		menuSearch.sendKeys(Keys.ENTER);
 		aw.waitAllRequest();
@@ -101,6 +106,7 @@ public class Menu {
 
 	public void goToPlaceOrder() {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		menuSearch.clear();
 		menuSearch.sendKeys("Place Order");
 		menuSearch.sendKeys(Keys.ENTER);
 		aw.waitAllRequest();
@@ -110,6 +116,7 @@ public class Menu {
 
 	public void goToPacking() {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		menuSearch.clear();
 		menuSearch.sendKeys("Orders");
 		menuSearch.sendKeys(Keys.ENTER);
 		aw.waitAllRequest();
@@ -123,6 +130,7 @@ public class Menu {
 
 	public void goToInvoice() {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		menuSearch.clear();
 		menuSearch.sendKeys("Orders");
 		menuSearch.sendKeys(Keys.ENTER);
 		aw.waitAllRequest();
@@ -136,6 +144,7 @@ public class Menu {
 
 	public void goToDispatch() {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		menuSearch.clear();
 		menuSearch.sendKeys("Orders");
 		menuSearch.sendKeys(Keys.ENTER);
 		aw.waitAllRequest();
@@ -149,6 +158,7 @@ public class Menu {
 
 	public void goToDelivery() {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		menuSearch.clear();
 		menuSearch.sendKeys("Orders");
 		menuSearch.sendKeys(Keys.ENTER);
 		aw.waitAllRequest();
@@ -162,6 +172,7 @@ public class Menu {
 
 	public void goToComplete() {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		menuSearch.clear();
 		menuSearch.sendKeys("Orders");
 		menuSearch.sendKeys(Keys.ENTER);
 		aw.waitAllRequest();
@@ -175,6 +186,7 @@ public class Menu {
 
 	public void goToSKU() {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		menuSearch.clear();
 		menuSearch.sendKeys("SKU");
 		menuSearch.sendKeys(Keys.ENTER);
 		aw.waitAllRequest();
@@ -184,6 +196,7 @@ public class Menu {
 
 	public void goToAutoPo() {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		menuSearch.clear();
 		menuSearch.sendKeys("Purchase");
 		menuSearch.sendKeys(Keys.ENTER);
 		aw.waitAllRequest();
@@ -197,6 +210,7 @@ public class Menu {
 
 	public void goToRequestItem() {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		menuSearch.clear();
 		menuSearch.sendKeys("Purchase");
 		menuSearch.sendKeys(Keys.ENTER);
 		aw.waitAllRequest();
@@ -210,6 +224,7 @@ public class Menu {
 
 	public void goToPoRequest() {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		menuSearch.clear();
 		menuSearch.sendKeys("Purchase");
 		menuSearch.sendKeys(Keys.ENTER);
 		aw.waitAllRequest();
@@ -223,6 +238,7 @@ public class Menu {
 
 	public void goToPoApproved() {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		menuSearch.clear();
 		menuSearch.sendKeys("Purchase");
 		menuSearch.sendKeys(Keys.ENTER);
 		aw.waitAllRequest();
@@ -235,6 +251,7 @@ public class Menu {
 
 	public void goToPurchaseReturnList() {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		menuSearch.clear();
 		menuSearch.sendKeys("Purchase");
 		menuSearch.sendKeys(Keys.ENTER);
 		aw.waitAllRequest();
@@ -248,6 +265,7 @@ public class Menu {
 
 	public void goToPurchaseList() {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		menuSearch.clear();
 		menuSearch.sendKeys("Purchase");
 		menuSearch.sendKeys(Keys.ENTER);
 		aw.waitAllRequest();
@@ -256,6 +274,16 @@ public class Menu {
 		purchaseList.click();
 		aw.waitAllRequest();
 		purchaseMenu.click();
+		aw.waitAllRequest();
+	}
+	
+	public void goToInventory() {
+		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		menuSearch.clear();
+		menuSearch.sendKeys("Inventory");
+		menuSearch.sendKeys(Keys.ENTER);
+		aw.waitAllRequest();
+		inventory.click();
 		aw.waitAllRequest();
 	}
 }
