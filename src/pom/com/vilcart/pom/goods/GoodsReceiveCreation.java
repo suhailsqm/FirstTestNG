@@ -34,7 +34,7 @@ import util.com.vilcart.util.TimeStamp;
  * @author win10
  *
  */
-public class goodsTransferCreation {
+public class GoodsReceiveCreation {
 	private WebDriver driver;
 	private AngularWait aw;
 	private JavascriptExecutor js;
@@ -44,13 +44,13 @@ public class goodsTransferCreation {
 	private DataFormatter formatter;
 	private XSSFWorkbook workbook;
 	private String[][] data;
-	
+
 	@FindBy(id = "searchItem")
 	private WebElement searchItem;
-	
+
 	@FindBy(id = "itemTuple")
 	private List<WebElement> itemTuples;
-	
+
 	@FindBy(xpath = "//*[@id=\"addToCartButton\"]")
 	List<WebElement> addToCartButton;
 
@@ -59,22 +59,25 @@ public class goodsTransferCreation {
 
 	@FindBy(xpath = "//button[text()='Continue']")
 	WebElement continueButton;
-	
-	@FindBy(id = "transferToDc")
-	private WebElement transferToDc;
+
+	@FindBy(id = "receiveFromDc")
+	private WebElement receiveFromDc;
 
 	@FindBy(id = "transferVehicle")
 	private WebElement transferVehicle;
 
-	@FindBy(xpath = "//button[text()='Transfer']")
-	WebElement transferButton;
-	
-	public goodsTransferCreation(WebDriver driver, AngularWait aw) {
+	@FindBy(id = "challanNo")
+	private WebElement challanNo;
+
+	@FindBy(xpath = "//button[text()='Receive']")
+	WebElement receiveBtn;
+
+	public GoodsReceiveCreation(WebDriver driver, AngularWait aw) {
 		this.driver = driver;
 		this.aw = aw;
 		this.js = ((JavascriptExecutor) this.driver);
 		PageFactory.initElements(driver, this);
-		file = new File("resources\\GoodsTransfer.xlsx");
+		file = new File("resources\\GoodsReceive.xlsx");
 		try {
 			finput = new FileInputStream(file);
 			formatter = new DataFormatter();
@@ -87,7 +90,7 @@ public class goodsTransferCreation {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void closeFileInputStream() {
 		try {
 			finput.close();
@@ -122,23 +125,23 @@ public class goodsTransferCreation {
 		closeFileInputStream();
 		return sheet.getLastRowNum() + 1;
 	}
-	
-	private void searchCreatePurchaseReturn(String skuName) {
+
+	private void searchCreateReceiveGoods(String skuName) {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		searchItem.clear();
 		searchItem.sendKeys(skuName);
 		searchItem.sendKeys(Keys.ENTER);
 		aw.waitAllRequest();
 	}
-	
-	public void createGoodsTransfer(String dc, String vehicle) {
+
+	public void createGoodsReceive(String dc, String vehicle, String challanNoArg) {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		int items = fetchData();
 		for (int i = 0; i < items; i++) {
-			searchCreatePurchaseReturn(data[i][0]);
+			searchCreateReceiveGoods(data[i][0]);
 			// only First tuple is considered.
-			String skuName = itemTuples.get(0).findElement(By.xpath("//td/div/div[1]/div[1]")).getText()
-					.split("\n")[0].trim();
+			String skuName = itemTuples.get(0).findElement(By.xpath("//td/div/div[1]/div[1]")).getText().split("\n")[0]
+					.trim();
 			assertThat(data[i][0]).withFailMessage("No tuple with search Criteria " + data[i][0])
 					.isEqualToIgnoringCase(skuName);
 			String xpath = "//td/div/div[1]/div[2]/div/button";
@@ -164,6 +167,10 @@ public class goodsTransferCreation {
 					varInputCount.sendKeys("" + data[i][2]);
 					aw.waitAllRequest();
 
+					WebElement receivePrice = itemTuples.get(0).findElement(By.xpath("//td/div/div[2]/div[1]/input"));
+					receivePrice.clear();
+					receivePrice.sendKeys("" + data[i][3]);
+
 					WebElement varAddToCart = addToCartButton.get(0);
 					varAddToCart.click();
 					aw.waitAllRequest();
@@ -177,23 +184,22 @@ public class goodsTransferCreation {
 		}
 		continueButton.click();
 		aw.waitAllRequest();
-		
-		WebElement input = transferToDc.findElement(By.xpath("//div/div/div[3]/input"));
+
+		WebElement input = receiveFromDc.findElement(By.xpath("//div/div/div[3]/input"));
 		input.click();
 		aw.waitAllRequest();
-		List<WebElement> input1 = transferToDc.findElements(By.xpath("//ng-dropdown-panel/div/div[2]/div"));
+		List<WebElement> input1 = receiveFromDc.findElements(By.xpath("//ng-dropdown-panel/div/div[2]/div"));
 		for (int i = 0; i < input1.size(); i++) {
 			if (input1.get(i).findElement(By.xpath("//span")).getText().equalsIgnoreCase(dc)) {
 				input1.get(i).findElement(By.xpath("//span")).click();
 				break;
 			}
 			if (i == input1.size() - 1) {
-				assertThat(false).withFailMessage("No specific '" + dc + "' in list.")
-						.isEqualTo(true);
+				assertThat(false).withFailMessage("No specific '" + dc + "' in list.").isEqualTo(true);
 			}
 		}
 		aw.waitAllRequest();
-		
+
 		WebElement number = transferVehicle.findElement(By.xpath("//div/div/div[3]/input"));
 		number.click();
 		aw.waitAllRequest();
@@ -204,13 +210,16 @@ public class goodsTransferCreation {
 				break;
 			}
 			if (i == number1.size() - 1) {
-				assertThat(false).withFailMessage("No specific '" + vehicle + "' in list.")
-						.isEqualTo(true);
+				assertThat(false).withFailMessage("No specific '" + vehicle + "' in list.").isEqualTo(true);
 			}
 		}
 		aw.waitAllRequest();
+		
+		challanNo.clear();
+		challanNo.sendKeys(challanNoArg);
+		
 		String handle = driver.getWindowHandle();
-		transferButton.click();
+		receiveBtn.click();
 		aw.waitAllRequest();
 		Set<String> handles = driver.getWindowHandles();
 		for (String actual : handles) {
@@ -222,4 +231,5 @@ public class goodsTransferCreation {
 		driver.switchTo().window(handle);
 		aw.waitAllRequest();
 	}
+
 }

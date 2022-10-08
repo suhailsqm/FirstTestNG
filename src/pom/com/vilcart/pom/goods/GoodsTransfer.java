@@ -30,7 +30,7 @@ public class GoodsTransfer {
 	private WebDriver driver;
 	private AngularWait aw;
 	private JavascriptExecutor js;
-	private goodsTransferCreation gtc;
+	private GoodsTransferCreation gtc;
 
 	@FindBy(xpath = "//*[@id=\"demo-2\"]/input")
 	private WebElement searchInput;
@@ -58,7 +58,7 @@ public class GoodsTransfer {
 		this.aw = aw;
 		this.js = ((JavascriptExecutor) this.driver);
 		PageFactory.initElements(driver, this);
-		gtc = new goodsTransferCreation(driver, aw);
+		gtc = new GoodsTransferCreation(driver, aw);
 	}
 
 	public void searchInGoodsTransfer(String key) {
@@ -89,6 +89,8 @@ public class GoodsTransfer {
 	}
 
 	public void transferGoods(String dc, String vehicle) {
+		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		createGoodsTransfer.click();
 		gtc.createGoodsTransfer(dc, vehicle);
 		getTuplesForCurrentDate();
 		searchInGoodsTransfer(vehicle);
