@@ -24,7 +24,8 @@ import org.testng.annotations.Test;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import pom.com.vilcart.pom.customer.NewCustomer;
-import pom.com.vilcart.pom.login.Login;
+//import pom.com.vilcart.pom.login.Login;
+import util.com.vilcart.util.*;
 import pom.com.vilcart.pom.menu.Menu;
 import util.com.vilcart.util.AngularWait;
 import util.com.vilcart.util.CurrentMethod;
@@ -45,12 +46,17 @@ public class TestXpath {
 	private Menu m;
 
 	@Test
+	public void print() {
+		Reporter.log("print ");
+	}
+
+	@Test(enabled = false)
 	public void createCustomer() {
 		m.goToNewCustomer();
 		nc.createCustomer();
 	}
-	
-	@Test(priority = 1)
+
+	@Test(priority = 1, enabled = false)
 	public void packing() throws IOException, InterruptedException {
 
 		Reporter.log("=>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
@@ -114,20 +120,13 @@ public class TestXpath {
 		}
 		assertThat(count).withFailMessage("No orders in Packing").isGreaterThan(0);
 
-	
-		
-		
-		
 		Thread.sleep(3000);
 		String xpat = "//*[@id=\"packingTuple\"]";
 		WebElement l = driver.findElement(By.xpath(xpat));
 		l.findElement(By.xpath("//td[9]/div/button[1]"));
 		l.click();
 		Thread.sleep(3000);
-		
-		
-		
-		
+
 		/*
 		 * WebElement temp1 =
 		 * driver.findElement(By.xpath("(//*[@id=\"packingButton\"])[1]"));
@@ -184,6 +183,7 @@ public class TestXpath {
 		js.executeScript("arguments[0].scrollIntoViewIfNeeded();", moveToInvoice);
 		moveToInvoice.click();
 		aw.waitAllRequest();
+
 	}
 
 	@BeforeClass
@@ -201,8 +201,8 @@ public class TestXpath {
 		aw = new AngularWait(driver);
 		loginObj = new Login(driver, aw);
 		iv = new InventoryChangeStock(driver, js, aw, wait);
-		nc = new NewCustomer(driver,aw);
-		m = new Menu(driver,aw);
+		nc = new NewCustomer(driver, aw);
+		m = new Menu(driver, aw);
 		loginObj.login();
 	}
 

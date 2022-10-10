@@ -19,6 +19,8 @@ import org.openqa.selenium.support.PageFactory;
 import org.testng.Reporter;
 
 import util.com.vilcart.util.AngularWait;
+import util.com.vilcart.util.CurrentMethod;
+import util.com.vilcart.util.TimeStamp;
 
 public class Login {
 	private XSSFWorkbook workbook;
@@ -46,7 +48,7 @@ public class Login {
 	}
 
 	public void login() throws IOException {
-
+		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		aw.waitAllRequest();
 		File src = new File("resources\\Login.xlsx");
 		FileInputStream finput = new FileInputStream(src);

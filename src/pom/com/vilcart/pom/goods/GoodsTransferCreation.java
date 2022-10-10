@@ -24,6 +24,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.Reporter;
+import org.testng.SkipException;
 
 import util.com.vilcart.util.AngularWait;
 import util.com.vilcart.util.CurrentMethod;
@@ -106,7 +107,7 @@ public class GoodsTransferCreation {
 		XSSFCell cell4;
 		sheet = workbook.getSheetAt(0);
 		data = new String[sheet.getLastRowNum() + 1][4];
-		for (int i = 0; i <= sheet.getLastRowNum(); i++) {
+		for (int i = 1; i <= sheet.getLastRowNum(); i++) {
 			cell1 = sheet.getRow(i).getCell(0);
 			data[i][0] = formatter.formatCellValue(cell1);
 
@@ -120,7 +121,7 @@ public class GoodsTransferCreation {
 			data[i][3] = formatter.formatCellValue(cell2);
 		}
 		closeFileInputStream();
-		return sheet.getLastRowNum() + 1;
+		return sheet.getLastRowNum() - 1;
 	}
 
 	private void searchCreateTransferGoods(String skuName) {
@@ -134,6 +135,8 @@ public class GoodsTransferCreation {
 	public void createGoodsTransfer(String dc, String vehicle) {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		int items = fetchData();
+		if (items == 0)
+			throw new SkipException("Skipping this exception No data in resources\\\\GoodsTransfer.xlsx");
 		for (int i = 0; i < items; i++) {
 			searchCreateTransferGoods(data[i][0]);
 			// only First tuple is considered.

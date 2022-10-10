@@ -36,7 +36,9 @@ public class Login {
 		workbook = new XSSFWorkbook(finput);
 		DataFormatter formatter = new DataFormatter();
 		sheet = workbook.getSheetAt(0);
+		Reporter.log("-> "+sheet.getLastRowNum(),true);
 		for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+			Reporter.log(""+i+" "+sheet.getLastRowNum(),true);
 			// Import data for Email.
 			cell = sheet.getRow(i).getCell(2);
 			String value = formatter.formatCellValue(cell);

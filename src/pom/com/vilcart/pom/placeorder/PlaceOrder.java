@@ -1,4 +1,4 @@
-package pom.com.vilcart.pom.order;
+package pom.com.vilcart.pom.placeorder;
 
 import java.util.List;
 

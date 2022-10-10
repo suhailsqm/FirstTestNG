@@ -8,6 +8,11 @@ import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+/**
+ * @author win10
+ * https://www.swtestacademy.com/selenium-wait-javascript-angular-ajax/
+ *
+ */
 public class AngularWait {
 	WebDriver driver;
 	WebDriverWait wait;
