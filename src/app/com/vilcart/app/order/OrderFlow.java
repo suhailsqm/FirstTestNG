@@ -16,7 +16,6 @@ import org.testng.annotations.BeforeClass;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertTrue;
 
-
 import java.io.IOException;
 import java.time.Duration;
 import java.time.ZoneId;
@@ -28,14 +27,18 @@ import java.util.Set;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.WindowType;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Reporter;
 import org.testng.annotations.AfterClass;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.chrome.ChromeDriverService;
 
 public class OrderFlow {
 	private WebDriver driver;
@@ -52,7 +55,6 @@ public class OrderFlow {
 		Reporter.log("=>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		// iv.updateStock("17 test sku", 15);
 		// iv.updateStock("test sku 508", 15);
-
 		// iv.updateStock("208 test sku 2", 18);
 		WebElement menuInput = driver.findElement(By.xpath("//*[@id=\"main-menu-content\"]/div[1]/input"));
 		menuInput.clear();
@@ -61,11 +63,16 @@ public class OrderFlow {
 		WebElement menuOrders = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/a"));
 		menuOrders.click();
 		WebElement menuPacking = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/ul/li[1]/a"));
-		menuPacking.click();/*
-							 * menuOrders =
-							 * driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/a"));
-							 * menuOrders.click();
-							 */
+		menuPacking.click();
+		aw.waitAllRequest();
+		menuInput = driver.findElement(By.xpath("//*[@id=\"main-menu-content\"]/div[1]/input"));
+		js.executeScript("arguments[0].scrollIntoViewIfNeeded();", menuInput);
+		menuInput.clear();
+		menuInput.sendKeys("Orders");
+		menuInput.sendKeys(Keys.ENTER);
+		menuOrders = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/a"));
+		menuOrders.click();
+
 		aw.waitAllRequest();
 
 		WebElement startDate = driver.findElement(By.xpath("//*[@id=\"startDate\"]"));// *[@id="startDate"]
@@ -175,11 +182,12 @@ public class OrderFlow {
 		WebElement menuOrders = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/a"));
 		menuOrders.click();
 		WebElement menuPacking = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/ul/li[2]/a"));
-		menuPacking.click();/*
-							 * menuOrders =
-							 * driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/a"));
-							 * menuOrders.click();
-							 */
+		menuPacking.click();
+		menuInput.clear();
+		menuInput.sendKeys("Orders");
+		menuInput.sendKeys(Keys.ENTER);
+		menuOrders = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/a"));
+		menuOrders.click();
 
 		WebElement startDate = driver.findElement(By.xpath("//*[@id=\"startDate\"]"));// *[@id="startDate"]
 		// DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
@@ -232,9 +240,17 @@ public class OrderFlow {
 		drpVehicle.selectByVisibleText("KA 01 XE 6692");
 		Reporter.log(LineNumber.getLineNumber() + " ", true);
 		driver.findElement(By.cssSelector("button[class='swal2-confirm swal2-styled']")).click();
+		/* dont use the below line it's not working */
+//		aw.waitAllRequest();
 		Reporter.log(LineNumber.getLineNumber() + " ", true);
 
 		Reporter.log(LineNumber.getLineNumber() + " " + handle, true);
+		// Thread.sleep(20000);
+
+//		driver.switchTo().newWindow(WindowType.TAB);
+//		// Opens LambdaTest homepage in the newly opened tab
+//		driver.navigate().to("https://www.google.com/");
+
 		Set<String> handles = driver.getWindowHandles();
 		for (String actual : handles) {
 			if (0 != actual.compareToIgnoreCase(handle)) {
@@ -256,14 +272,20 @@ public class OrderFlow {
 		menuInput.sendKeys(Keys.ENTER);
 		aw.waitAllRequest();
 
-		/*
-		 * WebElement menuOrders =
-		 * driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/a"));
-		 * menuOrders.click(); aw.waitAllRequest();
-		 */
+		WebElement menuOrders = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/a"));
+		menuOrders.click();
+		aw.waitAllRequest();
 
 		WebElement menudispatch = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/ul/li[3]/a"));
 		menudispatch.click();
+		aw.waitAllRequest();
+
+		menuInput.clear();
+		menuInput.sendKeys("Orders");
+		menuInput.sendKeys(Keys.ENTER);
+
+		menuOrders = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/a"));
+		menuOrders.click();
 		aw.waitAllRequest();
 
 		WebElement startDate = driver.findElement(By.xpath("//*[@id=\"startDate\"]"));// *[@id="startDate"]
@@ -293,7 +315,7 @@ public class OrderFlow {
 			String xpath = "(//*[@id=\"dispatchTuple\"])[" + (i + 1) + "]/td[3]";
 			WebElement orderElement = driver.findElement(By.xpath(xpath));
 			String text = orderElement.getText();
-			assertThat(text).withFailMessage("Order Number doesn't tally" + text).isEqualToIgnoringCase(orderNumber);
+
 			if (text.equalsIgnoreCase(orderNumber)) {
 				String xpath1 = "//*[@id=\"dispatchTuple\"]/td[9]/ng-select/div/div/div[2]/input";
 				WebElement vehicleNumber = driver.findElement(By.xpath(xpath1));
@@ -318,6 +340,10 @@ public class OrderFlow {
 				String xpath3 = "//*[@id=\"dispatchTuple\"]/td[10]/div/button";
 				driver.findElement(By.xpath(xpath3)).click();
 			}
+			if (i == listTuples.size() - 1) {
+				assertThat(text).withFailMessage("Order Number doesn't tally for " + orderNumber)
+						.isEqualToIgnoringCase(orderNumber);
+			}
 		}
 
 	}
@@ -334,6 +360,11 @@ public class OrderFlow {
 		menuOrders.click();
 		WebElement menuDelivery = driver.findElement(By.xpath(" //*[@id=\"main-menu-navigation\"]/li/ul/li[4]/a"));
 		menuDelivery.click();
+		menuInput.clear();
+		menuInput.sendKeys("Orders");
+		menuInput.sendKeys(Keys.ENTER);
+		menuOrders = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/a"));
+		menuOrders.click();
 
 		WebElement startDate = driver.findElement(By.xpath("//*[@id=\"startDate\"]"));// *[@id="startDate"]
 
@@ -385,13 +416,18 @@ public class OrderFlow {
 		menuInput.clear();
 		menuInput.sendKeys("Orders");
 		menuInput.sendKeys(Keys.ENTER);
-		/*
-		 * WebElement menuOrders =
-		 * driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/a"));
-		 * menuOrders.click();
-		 */
+
+		WebElement menuOrders = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/a"));
+		menuOrders.click();
+
 		WebElement menuComplete = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/ul/li[5]/a"));
 		menuComplete.click();
+		menuInput.clear();
+		menuInput.sendKeys("Orders");
+		menuInput.sendKeys(Keys.ENTER);
+		menuOrders = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/a"));
+		menuOrders.click();
+		
 
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu-MM-dd");
 		ZonedDateTime now = ZonedDateTime.now();
@@ -423,8 +459,51 @@ public class OrderFlow {
 	@BeforeClass
 	public void beforeOrderFlow() throws IOException {
 		Reporter.log("=>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+
 		WebDriverManager.chromedriver().setup();
-		driver = new ChromeDriver();
+		ChromeOptions options = new ChromeOptions();
+		// ChromeDriver is just AWFUL because every version or two it breaks unless you
+		// pass cryptic arguments
+		// AGRESSIVE: options.setPageLoadStrategy(PageLoadStrategy.NONE); //
+		// https://www.skptricks.com/2018/08/timed-out-receiving-message-from-renderer-selenium.html
+//		options.addArguments("start-maximized"); // https://stackoverflow.com/a/26283818/1689770
+		options.addArguments("enable-automation"); // https://stackoverflow.com/a/43840128/1689770
+//		options.addArguments("--headless"); // only if you are ACTUALLY running headless
+//		options.addArguments("--no-sandbox"); // https://stackoverflow.com/a/50725918/1689770
+//		options.addArguments("--disable-dev-shm-usage"); // https://stackoverflow.com/a/50725918/1689770
+//		options.addArguments("--disable-browser-side-navigation"); // https://stackoverflow.com/a/49123152/1689770
+//		options.addArguments("--disable-gpu"); // https://stackoverflow.com/questions/51959986/how-to-solve-selenium-chromedriver-timed-out-receiving-message-from-renderer-exc
+//		driver = new ChromeDriver(options);
+
+		// This option was deprecated, see
+		// https://sqa.stackexchange.com/questions/32444/how-to-disable-infobar-from-chrome
+		// options.addArguments("--disable-infobars");
+		// //https://stackoverflow.com/a/43840128/1689770
+
+		// options.addArguments("--window-size=1366,768");
+//		options.addArguments("--no-sandbox");
+//		options.addArguments("--disable-gpu");
+//		options.addArguments("--enable-javascript");
+//		options.addArguments("disable-infobars");
+//		options.addArguments("--disable-infobars");
+//		options.addArguments("--single-process");
+//		options.addArguments("--disable-extensions");
+//		options.addArguments("--disable-dev-shm-usage");
+//		options.addArguments("--headless");
+//		options.addArguments("enable-automation");
+//		options.addArguments("--disable-browser-side-navigation");
+
+//		options.addArguments("enable-automation");
+//		options.addArguments("--headless");
+		// options.addArguments("--window-size=1920,1080");
+//		options.addArguments("--no-sandbox");
+//		options.addArguments("--disable-extensions");
+//		options.addArguments("--dns-prefetch-disable");
+//		options.addArguments("--disable-gpu");
+		options.setPageLoadStrategy(PageLoadStrategy.NORMAL);
+//		System.setProperty(ChromeDriverService.CHROME_DRIVER_SILENT_OUTPUT_PROPERTY,"true");
+		driver = new ChromeDriver(options);
+//		driver = new ChromeDriver();
 		driver.get("http://localhost:4200");
 		// driver.get("https://vilcart-buy.web.app");
 		driver.manage().window().maximize();

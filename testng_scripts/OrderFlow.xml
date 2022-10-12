@@ -3,14 +3,14 @@
 <suite name="Suite">
 	<test thread-count="1" name="Test">
 		<classes>
-			<class name="app.com.vilcart.app.order.PlaceOrderFlow"></class>
+			<class name="app.com.vilcart.app.placeorder.PlaceOrderFlow"></class>
 			<class name="app.com.vilcart.app.order.OrderFlow">
 				<methods>
 					<include name="packing"/>
-					<exclude name="invoice"/>
-					<exclude name="dispatch"/>
-					<exclude name="delivery"/>
-					<exclude name="complete"/>
+					<include name="invoice"/>
+					<include name="dispatch"/>
+					<include name="delivery"/>
+					<include name="complete"/>
 				</methods>
 			</class>
 		</classes>

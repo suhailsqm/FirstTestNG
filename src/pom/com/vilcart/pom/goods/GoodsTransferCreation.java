@@ -105,23 +105,26 @@ public class GoodsTransferCreation {
 		XSSFCell cell2;
 		XSSFCell cell3;
 		XSSFCell cell4;
+		int rowKey = 0;
 		sheet = workbook.getSheetAt(0);
 		data = new String[sheet.getLastRowNum() + 1][4];
 		for (int i = 1; i <= sheet.getLastRowNum(); i++) {
 			cell1 = sheet.getRow(i).getCell(0);
-			data[i][0] = formatter.formatCellValue(cell1);
+			data[rowKey][0] = formatter.formatCellValue(cell1);
 
 			cell2 = sheet.getRow(i).getCell(1);
-			data[i][1] = formatter.formatCellValue(cell2);
+			data[rowKey][1] = formatter.formatCellValue(cell2);
 
 			cell3 = sheet.getRow(i).getCell(2);
-			data[i][2] = formatter.formatCellValue(cell1);
+			data[rowKey][2] = formatter.formatCellValue(cell3);
 
 			cell4 = sheet.getRow(i).getCell(3);
-			data[i][3] = formatter.formatCellValue(cell2);
+			data[rowKey][3] = formatter.formatCellValue(cell4);
+			
+			rowKey++;
 		}
 		closeFileInputStream();
-		return sheet.getLastRowNum() - 1;
+		return sheet.getLastRowNum();
 	}
 
 	private void searchCreateTransferGoods(String skuName) {
