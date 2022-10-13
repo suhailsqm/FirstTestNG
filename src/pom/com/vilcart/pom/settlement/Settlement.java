@@ -84,7 +84,9 @@ public class Settlement {
 			cumAmtReceived += Integer.parseInt(temp);
 		}
 
-		for (; next.isEnabled(); next.click()) {
+		for (; next.isEnabled();) {
+			next.click();
+			aw.waitAllRequest();
 			for (int i = 0; i < settlementTuples.size(); i++) {
 				String temp = settlementTuples.get(i).findElement(By.xpath("//td[4]")).getText().trim();
 				cumInvoiceAmt += Integer.parseInt(temp);
