@@ -56,7 +56,7 @@ public class OrderFlow {
 	private String invoiceNumber;
 	private WebDriverManager wdm;
 
-	private boolean docker = false;
+	private boolean docker = true;
 
 	@Test(priority = 1)
 	public void packing() throws IOException, InterruptedException {
@@ -277,7 +277,11 @@ public class OrderFlow {
 			if (0 != actual.compareToIgnoreCase(handle)) {
 				Reporter.log(LineNumber.getLineNumber() + "close " + actual, true);
 				try {
-					driver.switchTo().window(actual).close();
+					driver.switchTo().window(actual);
+					Reporter.log(driver.getTitle(), true);
+					driver.close();
+//					driver.switchTo().window(actual).close();
+					
 				} catch (org.openqa.selenium.WebDriverException e) {
 					Reporter.log("unknown error: failed to close window in 20 seconds Exception", true);
 					js.executeScript("window.close();");
@@ -368,8 +372,10 @@ public class OrderFlow {
 			// vehicleNumber.sendKeys("KA 02 EA 3333");
 			driver.findElement(By.xpath("//button[normalize-space()='Update']")).click();
 			driver.findElement(By.xpath("//button[normalize-space()='OK']")).click();
+			aw.waitAllRequest();
 			String xpath3 = "//*[@id=\"dispatchTuple\"][" + (i + 1) + "]/td[10]/div/button";
 			driver.findElement(By.xpath(xpath3)).click();
+			aw.waitAllRequest();
 			break;
 //			}
 //			if (i == listTuples.size() - 1) {
@@ -437,9 +443,13 @@ public class OrderFlow {
 				try {
 					WebElement action = driver.findElement(By.xpath(xpath1));
 					action.click();
+					aw.waitAllRequest();
+					break;
 				} catch (org.openqa.selenium.StaleElementReferenceException ex) {
 					WebElement action = driver.findElement(By.xpath(xpath1));
 					action.click();
+					aw.waitAllRequest();
+					break;
 				}
 			}
 		}

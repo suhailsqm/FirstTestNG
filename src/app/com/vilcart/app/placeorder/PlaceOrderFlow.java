@@ -38,7 +38,7 @@ public class PlaceOrderFlow {
 	private WebDriverWait wait;
 	private Login loginObj;
 	private WebDriverManager wdm;
-	private boolean docker = false;
+	private boolean docker = true;
 
 	@Test
 	public void placeOrder() throws IOException {
