@@ -45,19 +45,39 @@ public class CustomerList {
 		PageFactory.initElements(this.driver, this);
 	}
 
-	public void searchCustomer(String phoneNumber) {
+	private void searchCustomer(String phoneNumber) {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		searchBtn.clear();
 		searchBtn.sendKeys(phoneNumber);
+		aw.waitAllRequest();
+	}
+
+	public boolean verifyCustomer(String phoneNumber) {
+		searchCustomer(phoneNumber);
+
+		WebElement temp1 = customerTuples.get(0).findElement(By.xpath("//td[7]"));
+		Reporter.log(LineNumber.getLineNumber() + " " + "" + temp1.getText());
+		assertThat(temp1.getText())
+				.withFailMessage("First entry for the search of the phone Number (" + phoneNumber + ") Doesn't match")
+				.isEqualTo(phoneNumber);
+		if (temp1.getText().equalsIgnoreCase(phoneNumber)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public void deleteCustomer(String phoneNumber) {
+		searchCustomer(phoneNumber);
+
 		for (int i = 0; i < customerTuples.size() && i < 1; i++) {
 			WebElement temp = customerTuples.get(i).findElement(By.xpath("//td[3]/span"));
 			Reporter.log(LineNumber.getLineNumber() + " " + "" + temp.getText());
 			WebElement temp1 = customerTuples.get(i).findElement(By.xpath("//td[7]"));
 			Reporter.log(LineNumber.getLineNumber() + " " + "" + temp1.getText());
-			assertThat(temp1.getText()).withFailMessage("More Than one entry for this phone Number " + phoneNumber)
+			assertThat(temp1.getText())
+					.withFailMessage(
+							"First entry for the search of the phone Number (" + phoneNumber + ") Doesn't match")
 					.isEqualTo(phoneNumber);
 			String xpath = "//td[10]/div/button[2]/i";
 			WebElement btn = customerTuples.get(i).findElement(By.xpath(xpath));

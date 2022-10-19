@@ -164,7 +164,7 @@ public class NewCustomer {
 		return null;
 	}
 
-	public void createCustomer() {
+	public String createCustomer() {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		WebElement stateInput = customerState.findElement(By.xpath("//div/div/div[3]/input"));// *[@id="customerState"]/div/div/div[3]/input
 		js.executeScript("arguments[0].value='" + fetchFeild("customerState")
@@ -369,5 +369,6 @@ public class NewCustomer {
 		aw.waitAllRequest();
 
 		closeFileInputStream();
+		return Long.toString(phoneNumber);
 	}
 }

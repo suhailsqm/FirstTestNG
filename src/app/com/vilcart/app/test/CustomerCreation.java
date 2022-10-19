@@ -1,4 +1,4 @@
-package app.com.vilcart.app.customer;
+package app.com.vilcart.app.test;
 
 import org.testng.annotations.Test;
 
