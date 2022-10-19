@@ -10,7 +10,12 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 
 import org.testng.annotations.BeforeClass;
 
+import static io.github.bonigarcia.wdm.WebDriverManager.isDockerAvailable;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assumptions.assumeThat;
+
 import java.io.IOException;
+import java.net.URL;
 import java.time.Duration;
 import java.util.List;
 
@@ -19,6 +24,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Reporter;
 import org.testng.annotations.AfterClass;
@@ -26,14 +32,17 @@ import org.testng.annotations.AfterClass;
 public class PlaceOrderFlow {
 
 	private WebDriver driver;
+	private WebDriver driver1;
 	private JavascriptExecutor js;
 	private AngularWait aw;
 	private WebDriverWait wait;
 	private Login loginObj;
+	private WebDriverManager wdm;
+	private boolean docker = false;
 
 	@Test
 	public void placeOrder() throws IOException {
-		Reporter.log(CurrentMethod.methodName()+" "+TimeStamp.CurTimeStamp(), true);
+		Reporter.log(CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 
 		loginObj.login();
 
@@ -75,18 +84,48 @@ public class PlaceOrderFlow {
 		// driver.findElement(By.xpath("/html/body/div/div/div[6]/button[3]"));
 		WebElement buyAllButton = driver.findElement(By.className("swal2-confirm"));
 		buyAllButton.click();
+		aw.waitAllRequest();
 
 	}
 
+	/**
+	 * 
+	 */
 	@BeforeClass
 	public void beforePlaceOrder() {
-		Reporter.log(CurrentMethod.methodName()+" "+TimeStamp.CurTimeStamp(), true);
-		WebDriverManager.chromedriver().setup();
-		driver = new ChromeDriver();
-		driver.get("http://localhost:4200");
+		Reporter.log("=>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+//		WebDriverManager.firefoxdriver().setup();
+		if (docker) {
+			WebDriverManager.chromedriver().setup();
+			driver1 = new ChromeDriver();
+			wdm = WebDriverManager.chromedriver().browserInDocker().enableVnc();
+			assumeThat(isDockerAvailable()).isTrue();
+			driver = wdm.create();
+
+			URL noVncUrl = wdm.getDockerNoVncUrl();
+			assertThat(noVncUrl).isNotNull();
+			Reporter.log(noVncUrl + "", true);
+
+			driver1.get(noVncUrl + "");
+		} else {
+			WebDriverManager.chromedriver().setup();
+			driver = new ChromeDriver();
+		}
+
+//		driver = new FirefoxDriver();
+		/*
+		 * The following command should be run to see this. ng serve --host=0.0.0.0
+		 * --disable-host-check
+		 */
+
+		driver.get("http://192.168.1.48:4200");
 		// driver.get("https://vilcart-buy.web.app");
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
+//		driver.manage().window().maximize();
+//		driver.manage().deleteAllCookies();
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(40));
+//		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 		Reporter.log(driver.getTitle(), true);
 		js = ((JavascriptExecutor) driver);
 		wait = new WebDriverWait(driver, Duration.ofSeconds(20));
@@ -96,9 +135,14 @@ public class PlaceOrderFlow {
 
 	@AfterClass
 	public void afterPlaceOrder() throws InterruptedException {
-		Reporter.log(CurrentMethod.methodName()+" "+TimeStamp.CurTimeStamp(), true);
-		Thread.sleep(3000);
+		Reporter.log("=>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		Thread.sleep(1000);
+
 		driver.quit();
+		if (docker) {
+			driver1.quit();
+			wdm.quit();
+		}
 	}
 
 }

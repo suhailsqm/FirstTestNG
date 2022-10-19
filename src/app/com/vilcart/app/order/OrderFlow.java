@@ -13,10 +13,13 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 
 import org.testng.annotations.BeforeClass;
 
+import static io.github.bonigarcia.wdm.WebDriverManager.isDockerAvailable;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assumptions.assumeThat;
 import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
+import java.net.URL;
 import java.time.Duration;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -33,6 +36,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.WindowType;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Reporter;
@@ -42,12 +46,17 @@ import org.openqa.selenium.chrome.ChromeDriverService;
 
 public class OrderFlow {
 	private WebDriver driver;
+	private WebDriver driver1;
 	private JavascriptExecutor js;
 	private AngularWait aw;
 	private WebDriverWait wait;
 	private Login loginObj;
 	private InventoryChangeStock iv;
 	private String orderNumber;
+	private String invoiceNumber;
+	private WebDriverManager wdm;
+
+	private boolean docker = false;
 
 	@Test(priority = 1)
 	public void packing() throws IOException, InterruptedException {
@@ -245,6 +254,18 @@ public class OrderFlow {
 		Reporter.log(LineNumber.getLineNumber() + " ", true);
 
 		Reporter.log(LineNumber.getLineNumber() + " " + handle, true);
+
+		try {
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(60));
+			WebElement cancel = wait.until(ExpectedConditions.presenceOfElementLocated(
+					By.xpath("//*[@id=\"sidebar\"]//print-preview-button-strip//div/cr-button[2]")));
+			cancel.click();
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
+		} catch (org.openqa.selenium.TimeoutException e) {
+			Reporter.log("timeOut Exception", true);
+			js.executeScript("window.stop();");
+		}
+
 		// Thread.sleep(20000);
 
 //		driver.switchTo().newWindow(WindowType.TAB);
@@ -255,7 +276,12 @@ public class OrderFlow {
 		for (String actual : handles) {
 			if (0 != actual.compareToIgnoreCase(handle)) {
 				Reporter.log(LineNumber.getLineNumber() + "close " + actual, true);
-				driver.switchTo().window(actual).close();
+				try {
+					driver.switchTo().window(actual).close();
+				} catch (org.openqa.selenium.WebDriverException e) {
+					Reporter.log("unknown error: failed to close window in 20 seconds Exception", true);
+					js.executeScript("window.close();");
+				}
 			}
 		}
 		driver.switchTo().window(handle);
@@ -308,42 +334,49 @@ public class OrderFlow {
 		// search.sendKeys("01554");
 		driver.findElement(By.xpath("//*[@id=\"searchButton\"]")).click();
 		aw.waitAllRequest();
+		Thread.sleep(3000);
 
 		List<WebElement> listTuples = driver.findElements(By.xpath("//*[@id=\"dispatchTuple\"]"));
 		assertThat(listTuples.size()).withFailMessage("No Tuples in dispatch").isGreaterThan(0);
+		assertThat(listTuples.size()).withFailMessage("criteria only one invoice for one order doesn't match")
+				.isEqualTo(1);
 		for (int i = 0; i < listTuples.size(); i++) {
 			String xpath = "(//*[@id=\"dispatchTuple\"])[" + (i + 1) + "]/td[3]";
 			WebElement orderElement = driver.findElement(By.xpath(xpath));
 			String text = orderElement.getText();
-
-			if (text.equalsIgnoreCase(orderNumber)) {
-				String xpath1 = "//*[@id=\"dispatchTuple\"]/td[9]/ng-select/div/div/div[2]/input";
-				WebElement vehicleNumber = driver.findElement(By.xpath(xpath1));
-				vehicleNumber.click();
-				String xpath2 = "//*[@id=\"selectVehicle\"]/ng-dropdown-panel/div/div[2]/div";
-				List<WebElement> listVehicles = driver.findElements(By.xpath(xpath2));
-				assertThat(listVehicles.size()).withFailMessage("No vehicles in dispatch dropdown").isGreaterThan(0);
-				for (int j = 0; j < listVehicles.size(); j++) {
-					String xpath3 = "//*[@id=\"selectVehicle\"]/ng-dropdown-panel/div/div[2]/div[" + (j + 1) + "]/span";
-					Reporter.log(driver.findElement(By.xpath(xpath3)).getText(), true);
-					if (driver.findElement(By.xpath(xpath3)).getText().equalsIgnoreCase("KA 02 EA 3344")) {
-						driver.findElement(By.xpath(xpath3)).click();
-						break;
-					}
-					if (j == (listVehicles.size() - 1)) {
-						Reporter.log("No option for vehicle, KA 02 EA 3344", true);
-					}
+			this.invoiceNumber = text;
+//			Reporter.log("actual " + text + " " + i + " " + listTuples.size() + " " + orderNumber, true);
+//			if (text.equalsIgnoreCase(orderNumber)) {
+			Reporter.log("invoice Found " + text, true);
+			String xpath1 = "//*[@id=\"dispatchTuple\"][" + (i + 1) + "]/td[9]/ng-select/div/div/div[2]/input";
+			WebElement vehicleNumber = driver.findElement(By.xpath(xpath1));
+			vehicleNumber.click();
+			String xpath2 = "//*[@id=\"selectVehicle\"]/ng-dropdown-panel/div/div[2]/div";
+			List<WebElement> listVehicles = driver.findElements(By.xpath(xpath2));
+			assertThat(listVehicles.size()).withFailMessage("No vehicles in dispatch dropdown").isGreaterThan(0);
+			for (int j = 0; j < listVehicles.size(); j++) {
+				String xpath3 = "//*[@id=\"selectVehicle\"]/ng-dropdown-panel/div/div[2]/div[" + (j + 1) + "]/span";
+				Reporter.log(driver.findElement(By.xpath(xpath3)).getText(), true);
+				if (driver.findElement(By.xpath(xpath3)).getText().equalsIgnoreCase("KA 02 EA 3344")) {
+					driver.findElement(By.xpath(xpath3)).click();
+					break;
 				}
-				// vehicleNumber.sendKeys("KA 02 EA 3333");
-				driver.findElement(By.xpath("//button[normalize-space()='Update']")).click();
-				driver.findElement(By.xpath("//button[normalize-space()='OK']")).click();
-				String xpath3 = "//*[@id=\"dispatchTuple\"]/td[10]/div/button";
-				driver.findElement(By.xpath(xpath3)).click();
+				if (j == (listVehicles.size() - 1)) {
+					Reporter.log("No option for vehicle, KA 02 EA 3344", true);
+				}
 			}
-			if (i == listTuples.size() - 1) {
-				assertThat(text).withFailMessage("Order Number doesn't tally for " + orderNumber)
-						.isEqualToIgnoringCase(orderNumber);
-			}
+			// vehicleNumber.sendKeys("KA 02 EA 3333");
+			driver.findElement(By.xpath("//button[normalize-space()='Update']")).click();
+			driver.findElement(By.xpath("//button[normalize-space()='OK']")).click();
+			String xpath3 = "//*[@id=\"dispatchTuple\"][" + (i + 1) + "]/td[10]/div/button";
+			driver.findElement(By.xpath(xpath3)).click();
+			break;
+//			}
+//			if (i == listTuples.size() - 1) {
+//				assertThat(text).withFailMessage(
+//						"Order Number " + text + "doesn't tally for " + orderNumber)
+//						.isEqualToIgnoringCase(orderNumber);
+//			}
 		}
 
 	}
@@ -356,8 +389,11 @@ public class OrderFlow {
 		menuInput.clear();
 		menuInput.sendKeys("Orders");
 		menuInput.sendKeys(Keys.ENTER);
-		WebElement menuOrders = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/a"));
-		menuOrders.click();
+		
+		  WebElement menuOrders; /*=
+		  driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/a"));
+		  menuOrders.click();*/
+		 
 		WebElement menuDelivery = driver.findElement(By.xpath(" //*[@id=\"main-menu-navigation\"]/li/ul/li[4]/a"));
 		menuDelivery.click();
 		menuInput.clear();
@@ -393,10 +429,10 @@ public class OrderFlow {
 		for (int i = 0; i < listTuples.size(); i++) {
 			String xpath = "(//*[@id=\"deliveryTuple\"])[" + (i + 1) + "]/td[4]";
 			WebElement orderElement = driver.findElement(By.xpath(xpath));
-			if (orderElement.getText().equalsIgnoreCase(orderNumber)) {
+			if (orderElement.getText().equalsIgnoreCase(invoiceNumber)) {
 				assertThat(orderElement.getText())
-						.withFailMessage("order Number doesn't tally" + orderElement.getText())
-						.isEqualToIgnoringCase(orderNumber);
+						.withFailMessage("invoice Number doesn't tally" + orderElement.getText())
+						.isEqualToIgnoringCase(invoiceNumber);
 				String xpath1 = "//*[@id=\"deliveryTuple\"]/td[10]/div/button";
 				try {
 					WebElement action = driver.findElement(By.xpath(xpath1));
@@ -427,7 +463,6 @@ public class OrderFlow {
 		menuInput.sendKeys(Keys.ENTER);
 		menuOrders = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/a"));
 		menuOrders.click();
-		
 
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu-MM-dd");
 		ZonedDateTime now = ZonedDateTime.now();
@@ -459,15 +494,15 @@ public class OrderFlow {
 	@BeforeClass
 	public void beforeOrderFlow() throws IOException {
 		Reporter.log("=>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+//		WebDriverManager.firefoxdriver().setup();
 
-		WebDriverManager.chromedriver().setup();
-		ChromeOptions options = new ChromeOptions();
+//		ChromeOptions options = new ChromeOptions();
 		// ChromeDriver is just AWFUL because every version or two it breaks unless you
 		// pass cryptic arguments
 		// AGRESSIVE: options.setPageLoadStrategy(PageLoadStrategy.NONE); //
 		// https://www.skptricks.com/2018/08/timed-out-receiving-message-from-renderer-selenium.html
 //		options.addArguments("start-maximized"); // https://stackoverflow.com/a/26283818/1689770
-		options.addArguments("enable-automation"); // https://stackoverflow.com/a/43840128/1689770
+//		options.addArguments("enable-automation"); // https://stackoverflow.com/a/43840128/1689770
 //		options.addArguments("--headless"); // only if you are ACTUALLY running headless
 //		options.addArguments("--no-sandbox"); // https://stackoverflow.com/a/50725918/1689770
 //		options.addArguments("--disable-dev-shm-usage"); // https://stackoverflow.com/a/50725918/1689770
@@ -500,17 +535,35 @@ public class OrderFlow {
 //		options.addArguments("--disable-extensions");
 //		options.addArguments("--dns-prefetch-disable");
 //		options.addArguments("--disable-gpu");
-		options.setPageLoadStrategy(PageLoadStrategy.NORMAL);
+//		options.setPageLoadStrategy(PageLoadStrategy.NORMAL);
 //		System.setProperty(ChromeDriverService.CHROME_DRIVER_SILENT_OUTPUT_PROPERTY,"true");
-		driver = new ChromeDriver(options);
+//		driver = new ChromeDriver(options);
 //		driver = new ChromeDriver();
-		driver.get("http://localhost:4200");
+//		driver = new FirefoxDriver();
+
+		if (docker) {
+			WebDriverManager.chromedriver().setup();
+			driver1 = new ChromeDriver();
+			wdm = WebDriverManager.chromedriver().browserInDocker().enableVnc();
+			assumeThat(isDockerAvailable()).isTrue();
+			driver = wdm.create();
+			// Verify URL for remote session
+			URL noVncUrl = wdm.getDockerNoVncUrl();
+			assertThat(noVncUrl).isNotNull();
+			Reporter.log(noVncUrl + "", true);
+			driver1.get(noVncUrl + "");
+		} else {
+			WebDriverManager.chromedriver().setup();
+			driver = new ChromeDriver();
+		}
+		driver.get("http://192.168.1.48:4200");
 		// driver.get("https://vilcart-buy.web.app");
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
 		Reporter.log(LineNumber.getLineNumber() + " " + driver.getTitle(), true);
 		js = ((JavascriptExecutor) driver);
-		wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+		wait = new WebDriverWait(driver, Duration.ofSeconds(40));
 		aw = new AngularWait(driver);
 		loginObj = new Login(driver, aw);
 		iv = new InventoryChangeStock(driver, js, aw, wait);
@@ -520,6 +573,12 @@ public class OrderFlow {
 	@AfterClass
 	public void afterOrderFlow() throws InterruptedException {
 		Reporter.log("=>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+
 		driver.quit();
+		if (docker) {
+			driver1.quit();
+			wdm.quit();
+		}
+
 	}
 }
