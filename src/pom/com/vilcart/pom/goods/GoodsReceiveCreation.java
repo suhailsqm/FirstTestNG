@@ -24,6 +24,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.Reporter;
+import org.testng.SkipException;
 
 import util.com.vilcart.util.AngularWait;
 import util.com.vilcart.util.CurrentMethod;
@@ -107,23 +108,26 @@ public class GoodsReceiveCreation {
 		XSSFCell cell2;
 		XSSFCell cell3;
 		XSSFCell cell4;
+		int rowKey = 0;
 		sheet = workbook.getSheetAt(0);
 		data = new String[sheet.getLastRowNum() + 1][4];
-		for (int i = 0; i <= sheet.getLastRowNum(); i++) {
+		for (int i = 1; i <= sheet.getLastRowNum(); i++) {
 			cell1 = sheet.getRow(i).getCell(0);
-			data[i][0] = formatter.formatCellValue(cell1);
+			data[rowKey][0] = formatter.formatCellValue(cell1);
 
 			cell2 = sheet.getRow(i).getCell(1);
-			data[i][1] = formatter.formatCellValue(cell2);
+			data[rowKey][1] = formatter.formatCellValue(cell2);
 
 			cell3 = sheet.getRow(i).getCell(2);
-			data[i][2] = formatter.formatCellValue(cell1);
+			data[rowKey][2] = formatter.formatCellValue(cell3);
 
 			cell4 = sheet.getRow(i).getCell(3);
-			data[i][3] = formatter.formatCellValue(cell2);
+			data[rowKey][3] = formatter.formatCellValue(cell4);
+			
+			rowKey++;
 		}
 		closeFileInputStream();
-		return sheet.getLastRowNum() + 1;
+		return sheet.getLastRowNum();
 	}
 
 	private void searchCreateReceiveGoods(String skuName) {
@@ -137,6 +141,8 @@ public class GoodsReceiveCreation {
 	public void createGoodsReceive(String dc, String vehicle, String challanNoArg) {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		int items = fetchData();
+		if (items == 0)
+			throw new SkipException("Skipping this exception No data in resources\\\\GoodsReceive.xlsx");
 		for (int i = 0; i < items; i++) {
 			searchCreateReceiveGoods(data[i][0]);
 			// only First tuple is considered.
@@ -214,10 +220,10 @@ public class GoodsReceiveCreation {
 			}
 		}
 		aw.waitAllRequest();
-		
+
 		challanNo.clear();
 		challanNo.sendKeys(challanNoArg);
-		
+
 		String handle = driver.getWindowHandle();
 		receiveBtn.click();
 		aw.waitAllRequest();

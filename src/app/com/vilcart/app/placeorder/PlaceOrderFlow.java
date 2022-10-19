@@ -1,4 +1,4 @@
-package app.com.vilcart.app.order;
+package app.com.vilcart.app.placeorder;
 
 import org.testng.annotations.Test;
 
