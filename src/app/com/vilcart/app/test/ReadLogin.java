@@ -43,9 +43,9 @@ import org.testng.annotations.AfterTest;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import pom.com.vilcart.pom.login.*;
 import org.openqa.selenium.interactions.Actions;
-import com.paulhammant.ngwebdriver.NgWebDriver;
-import com.paulhammant.ngwebdriver.ByAngular;
-import com.paulhammant.ngwebdriver.ByAngularModel;
+//import com.paulhammant.ngwebdriver.NgWebDriver;
+//import com.paulhammant.ngwebdriver.ByAngular;
+//import com.paulhammant.ngwebdriver.ByAngularModel;
 
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -54,7 +54,7 @@ public class ReadLogin {
 	static final Logger log = getLogger(lookup().lookupClass());
 
     WebDriver driver;
-    NgWebDriver ngWebDriver;
+//    NgWebDriver ngWebDriver;
     //WebDriverWait wait;
     //XSSFWorkbook workbook;
     //XSSFSheet sheet;
@@ -67,7 +67,7 @@ public class ReadLogin {
 
     	WebDriverManager.firefoxdriver().setup();
     	driver = new FirefoxDriver();
-    	ngWebDriver = new NgWebDriver((JavascriptExecutor) driver);
+//    	ngWebDriver = new NgWebDriver((JavascriptExecutor) driver);
     	driver.get("https://angular-tour-of-heroes-1a2a8.web.app/");
     	//driver.get("http://localhost:62827/");
     	driver.manage().window().maximize(); 
@@ -83,7 +83,7 @@ public class ReadLogin {
     @Test
     public void ReadData() throws FileNotFoundException, IOException, NoSuchElementException, InterruptedException, JavascriptException {
     	
-    	ngWebDriver.waitForAngularRequestsToFinish();
+//    	ngWebDriver.waitForAngularRequestsToFinish();
         //WebElement stateSelect = driver.findElement(ByAngular.withRootSelector("\"app-root\"").model("hero.name"));
         //WebElement stateSelect = driver.findElement(ByAngular.withRootSelector("\"app-heroes\"").model("hero.name"));
         //WebElement stateSelect = driver.findElement(ByAngularModel.name("hero.name"));

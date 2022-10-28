@@ -3,8 +3,8 @@
 <suite name="Suite">
 	<test thread-count="1" name="Test">
 		<classes>
-			<class name="app.com.vilcart.app.placeorder.PlaceOrderFlow"></class>
-			<class name="app.com.vilcart.app.order.OrderFlow">
+			<class name="app.com.vilcart.app.test.PlaceOrderFlow"></class>
+			<!--class name="app.com.vilcart.app.test.OrderFlow">
 				<methods>
 					<include name="packing"/>
 					<include name="invoice"/>
@@ -12,7 +12,7 @@
 					<include name="delivery"/>
 					<include name="complete"/>
 				</methods>
-			</class>
+			</class-->
 		</classes>
 	</test> <!-- Test -->
 </suite> <!-- Suite -->
