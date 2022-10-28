@@ -26,6 +26,7 @@ import org.testng.Reporter;
 
 import util.com.vilcart.util.AngularWait;
 import util.com.vilcart.util.CurrentMethod;
+import util.com.vilcart.util.ReadPropertiesFile;
 import util.com.vilcart.util.TimeStamp;
 
 public class Sku {
@@ -100,8 +101,8 @@ public class Sku {
 		this.aw = aw;
 		this.js = ((JavascriptExecutor) this.driver);
 		PageFactory.initElements(driver, this);
-		file = new File("resources\\SKU.xlsx");
 		try {
+			file = new File(ReadPropertiesFile.readPropertiesFile().getProperty("resources.sku"));
 			finput = new FileInputStream(file);
 			formatter = new DataFormatter();
 			workbook = new XSSFWorkbook(finput);

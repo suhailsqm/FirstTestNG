@@ -26,6 +26,7 @@ import org.testng.SkipException;
 
 import util.com.vilcart.util.AngularWait;
 import util.com.vilcart.util.CurrentMethod;
+import util.com.vilcart.util.ReadPropertiesFile;
 import util.com.vilcart.util.TimeStamp;
 
 /**
@@ -73,8 +74,8 @@ public class CreateAssetsManagement {
 		this.aw = aw;
 		this.js = ((JavascriptExecutor) this.driver);
 		PageFactory.initElements(driver, this);
-		file = new File("resources\\CreateAssetMgmt.xlsx");
 		try {
+			file = new File(ReadPropertiesFile.readPropertiesFile().getProperty("resources.createAssetMgmt"));
 			finput = new FileInputStream(file);
 			formatter = new DataFormatter();
 			workbook = new XSSFWorkbook(finput);

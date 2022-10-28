@@ -25,6 +25,7 @@ import org.testng.SkipException;
 
 import util.com.vilcart.util.AngularWait;
 import util.com.vilcart.util.CurrentMethod;
+import util.com.vilcart.util.ReadPropertiesFile;
 import util.com.vilcart.util.TimeStamp;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -73,8 +74,8 @@ public class CreatePurchaseReturn {
 		this.aw = aw;
 		this.js = ((JavascriptExecutor) this.driver);
 		PageFactory.initElements(driver, this);
-		file = new File("resources\\purchaseDummy.xlsx");
 		try {
+			file = new File(ReadPropertiesFile.readPropertiesFile().getProperty("resources.purchaseDummy"));
 			finput = new FileInputStream(file);
 			formatter = new DataFormatter();
 			workbook = new XSSFWorkbook(finput);

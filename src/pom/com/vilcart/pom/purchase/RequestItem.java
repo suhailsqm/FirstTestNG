@@ -27,6 +27,7 @@ import org.testng.Reporter;
 
 import util.com.vilcart.util.AngularWait;
 import util.com.vilcart.util.CurrentMethod;
+import util.com.vilcart.util.ReadPropertiesFile;
 import util.com.vilcart.util.TimeStamp;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -72,10 +73,10 @@ public class RequestItem {
 		this.writeRowKey = 0;
 		randNumber = new Random();
 		PageFactory.initElements(this.driver, this);
-		file = new File("resources\\purchaseDummy.xlsx");
 		try {
+			file = new File(ReadPropertiesFile.readPropertiesFile().getProperty("resources.purchaseDummy"));
 			finput = new FileInputStream(file);
-			fos = new FileOutputStream("resources\\purchaseDummy.xlsx");
+			fos = new FileOutputStream(ReadPropertiesFile.readPropertiesFile().getProperty("resources.purchaseDummy"));
 			formatter = new DataFormatter();
 			workbook = new XSSFWorkbook(finput);
 		} catch (FileNotFoundException e) {
@@ -111,7 +112,6 @@ public class RequestItem {
 		searchInput.sendKeys(skuName);
 		aw.waitAllRequest();
 	}
-
 
 	private void writeSku(String sku, String skuVariation, int skuValue, int price) {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);

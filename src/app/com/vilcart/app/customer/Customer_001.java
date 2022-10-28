@@ -7,6 +7,7 @@ import pom.com.vilcart.pom.customer.CustomerList;
 import pom.com.vilcart.pom.customer.NewCustomer;
 import util.com.vilcart.util.AngularWait;
 import util.com.vilcart.util.Login;
+import util.com.vilcart.util.ReadPropertiesFile;
 
 import org.testng.annotations.BeforeClass;
 
@@ -58,10 +59,10 @@ public class Customer_001 {
 	}
 
 	@BeforeSuite
-	public void beforeSuite() {
+	public void beforeSuite() throws IOException {
 		WebDriverManager.chromedriver().setup();
 		driver = new ChromeDriver();
-		driver.get("http://localhost:4200");
+		driver.get(ReadPropertiesFile.readPropertiesFile().getProperty("vilcart.deployed.url"));
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
 	}

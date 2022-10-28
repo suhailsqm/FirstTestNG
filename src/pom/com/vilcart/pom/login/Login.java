@@ -20,6 +20,7 @@ import org.testng.Reporter;
 
 import util.com.vilcart.util.AngularWait;
 import util.com.vilcart.util.CurrentMethod;
+import util.com.vilcart.util.ReadPropertiesFile;
 import util.com.vilcart.util.TimeStamp;
 
 public class Login {
@@ -50,7 +51,7 @@ public class Login {
 	public void login() throws IOException {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		aw.waitAllRequest();
-		File src = new File("resources\\Login.xlsx");
+		File src = new File(ReadPropertiesFile.readPropertiesFile().getProperty("resources.login"));
 		FileInputStream finput = new FileInputStream(src);
 		workbook = new XSSFWorkbook(finput);
 		DataFormatter formatter = new DataFormatter();

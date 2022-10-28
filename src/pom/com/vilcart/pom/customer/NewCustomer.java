@@ -29,6 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import util.com.vilcart.util.AngularWait;
 import util.com.vilcart.util.CurrentMethod;
 import util.com.vilcart.util.LineNumber;
+import util.com.vilcart.util.ReadPropertiesFile;
 import util.com.vilcart.util.TimeStamp;
 
 /**
@@ -122,8 +123,8 @@ public class NewCustomer {
 		this.aw = aw;
 		this.js = ((JavascriptExecutor) this.driver);
 		PageFactory.initElements(driver, this);
-		file = new File("resources\\Customer.xlsx");
 		try {
+			file = new File(ReadPropertiesFile.readPropertiesFile().getProperty("resources.customer"));
 			finput = new FileInputStream(file);
 			formatter = new DataFormatter();
 			workbook = new XSSFWorkbook(finput);

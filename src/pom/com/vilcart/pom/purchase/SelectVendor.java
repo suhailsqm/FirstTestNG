@@ -30,6 +30,7 @@ import org.testng.SkipException;
 
 import util.com.vilcart.util.AngularWait;
 import util.com.vilcart.util.CurrentMethod;
+import util.com.vilcart.util.ReadPropertiesFile;
 import util.com.vilcart.util.TimeStamp;
 
 /**
@@ -85,8 +86,8 @@ public class SelectVendor {
 		this.aw = aw;
 		this.js = ((JavascriptExecutor) this.driver);
 		PageFactory.initElements(driver, this);
-		file = new File("resources\\purchaseDummy.xlsx");
 		try {
+			file = new File(ReadPropertiesFile.readPropertiesFile().getProperty("resources.purchaseDummy"));
 			finput = new FileInputStream(file);
 			formatter = new DataFormatter();
 			workbook = new XSSFWorkbook(finput);
@@ -119,7 +120,7 @@ public class SelectVendor {
 		XSSFCell cell2;
 		XSSFCell cell3;
 		XSSFCell cell4;
-		
+
 		int rowKey = 0;
 		sheet = workbook.getSheetAt(0);
 		data = new String[sheet.getLastRowNum() + 1][4];
@@ -135,7 +136,7 @@ public class SelectVendor {
 
 			cell4 = sheet.getRow(i).getCell(3);
 			data[rowKey][3] = formatter.formatCellValue(cell4);
-			
+
 			rowKey++;
 		}
 		closeFileInputStream();
