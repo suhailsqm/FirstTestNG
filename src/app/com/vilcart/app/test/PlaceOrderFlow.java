@@ -14,7 +14,7 @@ import static io.github.bonigarcia.wdm.WebDriverManager.isDockerAvailable;
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assumptions.assumeThat;
-import static org.slf4j.LoggerFactory.getLogger;
+//import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.IOException;
 import java.net.URL;
@@ -28,7 +28,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
+//import org.slf4j.Logger;
 import org.testng.Reporter;
 import org.testng.annotations.AfterClass;
 
@@ -42,11 +42,11 @@ public class PlaceOrderFlow {
 	private Login loginObj;
 	private WebDriverManager wdm;
 	private boolean docker = false;
-	static final Logger log = getLogger(lookup().lookupClass());
+//	static final Logger log = getLogger(lookup().lookupClass());
 //	static final Logger log = getLogger(PlaceOrderFlow.class);
 	@Test
 	public void placeOrder() throws IOException {
-		log.debug(CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp());
+		Reporter.log(CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 
 		loginObj.login();
 
@@ -72,12 +72,12 @@ public class PlaceOrderFlow {
 			List<WebElement> addToCartButton = driver.findElements(By.id("addToCartList"));
 			for (int i2 = 0; i2 < temp.size(); i2++) {
 				temp.get(i2).getText();
-				log.debug(temp.get(i2).getText());
+				Reporter.log(temp.get(i2).getText());
 				temp.get(i2).click();
 				addToCartButton.get(i1).click();
 			}
 			List<WebElement> itemNameList = driver.findElements(By.id("itemNameList"));
-			log.debug("" + itemNameList.get(i1).getText());
+			Reporter.log("" + itemNameList.get(i1).getText());
 
 		}
 		WebElement placeOrderButton = driver.findElement(By.xpath("//*[@id=\"placeOrderButton\"]"));
@@ -97,7 +97,7 @@ public class PlaceOrderFlow {
 	 */
 	@BeforeClass
 	public void beforePlaceOrder() {
-		log.info("=>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp());
+		Reporter.log("=>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp());
 //		WebDriverManager.firefoxdriver().setup();
 		if (docker) {
 			WebDriverManager.chromedriver().setup();
@@ -108,7 +108,7 @@ public class PlaceOrderFlow {
 
 			URL noVncUrl = wdm.getDockerNoVncUrl();
 			assertThat(noVncUrl).isNotNull();
-			log.debug(noVncUrl + "");
+			Reporter.log(noVncUrl + "");
 
 			driver1.get(noVncUrl + "");
 		} else {
@@ -130,7 +130,7 @@ public class PlaceOrderFlow {
 //		driver.manage().deleteAllCookies();
 		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(40));
 //		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-		log.debug(driver.getTitle(), true);
+		Reporter.log(driver.getTitle(), true);
 		js = ((JavascriptExecutor) driver);
 		wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 		aw = new AngularWait(driver);
@@ -139,7 +139,7 @@ public class PlaceOrderFlow {
 
 	@AfterClass
 	public void afterPlaceOrder() throws InterruptedException {
-		log.info("=>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp());
+		Reporter.log("=>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp());
 		Thread.sleep(1000);
 
 		driver.quit();

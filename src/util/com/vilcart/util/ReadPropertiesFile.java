@@ -18,7 +18,7 @@ public class ReadPropertiesFile {
 		FileInputStream fis = null;
 		Properties prop = null;
 		try {
-			fis = new FileInputStream("config\\FirstTestNG.properties");
+			fis = new FileInputStream("FirstTestNG.properties");
 			prop = new Properties();
 			prop.load(fis);
 		} catch (FileNotFoundException fnfe) {

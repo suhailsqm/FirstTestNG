@@ -6,6 +6,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import pom.com.vilcart.pom.customer.CustomerList;
 import pom.com.vilcart.pom.customer.NewCustomer;
 import util.com.vilcart.util.AngularWait;
+import util.com.vilcart.util.BaseSuiteMethods;
 import util.com.vilcart.util.Login;
 import util.com.vilcart.util.ReadPropertiesFile;
 
@@ -20,8 +21,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.AfterSuite;
 
-public class Customer_001 {
-	private WebDriver driver;
+public class Customer_001 extends BaseSuiteMethods{
 	private AngularWait aw;
 	private Login loginObj;
 	private NewCustomer nc;
@@ -45,6 +45,9 @@ public class Customer_001 {
 
 	@BeforeClass
 	public void beforeClass() throws IOException {
+		driver.get(ReadPropertiesFile.readPropertiesFile().getProperty("vilcart.deployed.url"));
+		driver.manage().window().maximize();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
 		aw = new AngularWait(driver);
 		loginObj = new Login(driver, aw);
 		nc = new NewCustomer(driver, aw);
@@ -56,20 +59,6 @@ public class Customer_001 {
 
 	@AfterClass
 	public void afterClass() {
-	}
-
-	@BeforeSuite
-	public void beforeSuite() throws IOException {
-		WebDriverManager.chromedriver().setup();
-		driver = new ChromeDriver();
-		driver.get(ReadPropertiesFile.readPropertiesFile().getProperty("vilcart.deployed.url"));
-		driver.manage().window().maximize();
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
-	}
-
-	@AfterSuite
-	public void afterSuite() {
-		driver.quit();
 	}
 
 }

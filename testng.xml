@@ -4,8 +4,8 @@
 	<test thread-count="1" name="Test">
 		<classes>
 			<!--class name="app.com.vilcart.app.ReadLogin"/-->
-			<!--class name="app.com.vilcart.app.test.CustomerCreation" /-->
-			<class name="app.com.vilcart.app.test.PlaceOrderFlow"></class>
+			<class name="app.com.vilcart.app.test.CustomerCreation" />
+			<!--class name="app.com.vilcart.app.test.PlaceOrderFlow"></class-->
 		</classes>
 	</test> <!-- Test -->
 </suite> <!-- Suite -->

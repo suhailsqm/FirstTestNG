@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 import util.com.vilcart.util.*;
 
 import static java.lang.invoke.MethodHandles.lookup;
-import static org.slf4j.LoggerFactory.getLogger;
+//import static org.slf4j.LoggerFactory.getLogger;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -47,7 +47,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.slf4j.Logger;
+//import org.slf4j.Logger;
 import org.openqa.selenium.interactions.Actions;
 import util.com.vilcart.util.*;
 
@@ -283,13 +283,13 @@ public class CustomerCreation {
 	}
 
 	@BeforeClass
-	public void TestSetup() {
+	public void TestSetup() throws IOException {
 
 		WebDriverManager.chromedriver().setup();
 		driver = new ChromeDriver();
 		// ngWebDriver = new NgWebDriver((JavascriptExecutor)
 		// driver).withRootSelector("\"app-create-customers\"");;
-		driver.get("http://localhost:4200");
+		driver.get(ReadPropertiesFile.readPropertiesFile().getProperty("vilcart.deployed.url"));
 		// driver.get("https://vilcart-buy.web.app");
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));

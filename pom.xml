@@ -64,6 +64,8 @@
 				<configuration>
 					<suiteXmlFiles>
 						<suiteXmlFile>testng.xml</suiteXmlFile>
+						<!--suiteXmlFile>src/test/resources/unit-testng.xml</suiteXmlFile-->
+         				<!--suiteXmlFile>src/test/resources/api-testng.xml</suiteXmlFile-->
 						<!--file>testng-scripts/OrderFlow.xml</file-->
 						<!--file>src/test/resources/testng2.xml</file-->
 						<!--testErrorIgnore>true</testErrorIgnore-->

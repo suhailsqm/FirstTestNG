@@ -5,7 +5,7 @@ import org.testng.annotations.Test;
 //import com.paulhammant.ngwebdriver.NgWebDriver;
 import util.com.vilcart.util.AngularWait;
 import util.com.vilcart.util.Login;
-
+import util.com.vilcart.util.ReadPropertiesFile;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 import org.testng.annotations.BeforeTest;
@@ -47,7 +47,7 @@ public class CreateSKU {
 
   @Test
   public void createSKU() throws IOException, InterruptedException {
-	  File src=new File("resources\\SKUDummy.xlsx");
+	  File src=new File(ReadPropertiesFile.readPropertiesFile().getProperty("resources.SKUDummy"));
 	  FileInputStream finput = new FileInputStream(src);
 	  workbook = new XSSFWorkbook(finput);
       DataFormatter formatter = new DataFormatter();
@@ -192,7 +192,7 @@ public class CreateSKU {
       Reporter.log(value.getAttribute("value"), true);
       cell.setCellValue(value.getAttribute("value"));
       
-      FileOutputStream fos = new FileOutputStream("resources\\SKUDummy.xlsx");
+      FileOutputStream fos = new FileOutputStream(ReadPropertiesFile.readPropertiesFile().getProperty("resources.SKUDummy"));
       workbook.write(fos);
       fos.close();
       finput.close();
