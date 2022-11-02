@@ -46,13 +46,18 @@ public class CustomerList {
 	}
 
 	private void searchCustomer(String phoneNumber) {
-		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		Reporter.log(
+				"==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp() + " " + LineNumber.getLineNumber(),
+				true);
 		searchBtn.clear();
 		searchBtn.sendKeys(phoneNumber);
 		aw.waitAllRequest();
 	}
 
 	public boolean verifyCustomer(String phoneNumber) {
+		Reporter.log(
+				"==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp() + " " + LineNumber.getLineNumber(),
+				true);
 		searchCustomer(phoneNumber);
 
 		WebElement temp1 = customerTuples.get(0).findElement(By.xpath("//td[7]"));
@@ -68,6 +73,9 @@ public class CustomerList {
 	}
 
 	public void deleteCustomer(String phoneNumber) {
+		Reporter.log(
+				"==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp() + " " + LineNumber.getLineNumber(),
+				true);
 		searchCustomer(phoneNumber);
 
 		for (int i = 0; i < customerTuples.size() && i < 1; i++) {

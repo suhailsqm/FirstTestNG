@@ -1,46 +1,50 @@
 package app.com.vilcart.app.customer;
 
-import org.testng.annotations.Test;
-
-import io.github.bonigarcia.wdm.WebDriverManager;
 import pom.com.vilcart.pom.customer.CustomerList;
 import pom.com.vilcart.pom.customer.NewCustomer;
+import pom.com.vilcart.pom.menu.Menu;
 import util.com.vilcart.util.AngularWait;
 import util.com.vilcart.util.BaseSuiteMethods;
+import util.com.vilcart.util.CurrentMethod;
 import util.com.vilcart.util.Login;
 import util.com.vilcart.util.ReadPropertiesFile;
+import util.com.vilcart.util.TimeStamp;
 
+import org.testng.annotations.Test;
+import org.testng.Reporter;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 
 import java.io.IOException;
 import java.time.Duration;
 
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeSuite;
-import org.testng.annotations.AfterSuite;
-
-public class Customer_001 extends BaseSuiteMethods{
+public class Customer_001 extends BaseSuiteMethods {
 	private AngularWait aw;
 	private Login loginObj;
-	private NewCustomer nc;
-	private CustomerList cl;
+	private NewCustomer newCustomer;
+	private CustomerList customerList;
+	private Menu menu;
 	private String phoneNumber;
 
 	@Test(priority = 1)
-	public void createCustomer() {
-		phoneNumber = nc.createCustomer();
+	public void createCustomerFlow() throws InterruptedException {
+		Reporter.log("=>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		menu.goToNewCustomer();
+		phoneNumber = newCustomer.createCustomer();
 	}
 
-	@Test(priority = 2)
-	public void verifyCustomerList() {
-		cl.verifyCustomer(phoneNumber);
+	@Test(priority = 2, dependsOnMethods = { "createCustomer" })
+	public void verifyCustomerListFlow() {
+		Reporter.log("=>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		menu.goToCustomerList();
+		customerList.verifyCustomer(phoneNumber);
 	}
 
-	@Test(priority = 3)
-	public void deleteCustomer() {
-		cl.deleteCustomer(phoneNumber);
+	@Test(priority = 3, dependsOnMethods = { "verifyCustomerList" })
+	public void deleteCustomerFlow() {
+		Reporter.log("=>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		menu.goToCustomerList();
+		customerList.deleteCustomer(phoneNumber);
 	}
 
 	@BeforeClass
@@ -50,11 +54,12 @@ public class Customer_001 extends BaseSuiteMethods{
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
 		aw = new AngularWait(driver);
 		loginObj = new Login(driver, aw);
-		nc = new NewCustomer(driver, aw);
-		cl = new CustomerList(driver, aw);
+		newCustomer = new NewCustomer(driver, aw);
+		customerList = new CustomerList(driver, aw);
 		loginObj = new Login(driver, aw);
+		menu = new Menu(driver, aw);
 		loginObj.login();
-		
+
 	}
 
 	@AfterClass

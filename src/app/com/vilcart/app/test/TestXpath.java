@@ -51,7 +51,7 @@ public class TestXpath {
 	}
 
 	@Test(enabled = false)
-	public void createCustomer() {
+	public void createCustomer() throws InterruptedException {
 		m.goToNewCustomer();
 		nc.createCustomer();
 	}

@@ -73,7 +73,7 @@ public class PlaceOrder {
 	public void placeOrderFirstTwoTuple() {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		for (int i1 = 0; i1 < liList.size() && i1 < 2; i1++) {
-			List<WebElement> temp = liList.get(i1).findElements(By.xpath("//following-sibling::span"));
+			List<WebElement> temp = liList.get(i1).findElements(By.xpath(".//following-sibling::span"));
 				
 			for (int i2 = 0; i2 < temp.size(); i2++) {
 				temp.get(i2).getText();

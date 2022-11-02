@@ -11,7 +11,7 @@ import java.util.NoSuchElementException;
 import java.util.concurrent.TimeUnit;
 
 import static java.lang.invoke.MethodHandles.lookup;
-import static org.slf4j.LoggerFactory.getLogger;
+//import static org.slf4j.LoggerFactory.getLogger;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -33,7 +33,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.slf4j.Logger;
+//import org.slf4j.Logger;
 
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeTest;
@@ -51,7 +51,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class ReadLogin {
 
-	static final Logger log = getLogger(lookup().lookupClass());
+//	static final Logger log = getLogger(lookup().lookupClass());
 
     WebDriver driver;
 //    NgWebDriver ngWebDriver;

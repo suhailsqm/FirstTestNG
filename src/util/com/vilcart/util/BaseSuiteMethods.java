@@ -33,6 +33,7 @@ public class BaseSuiteMethods {
 			WebDriverManager.chromedriver().setup();
 			driver1 = new ChromeDriver();
 			wdm = WebDriverManager.chromedriver().browserInDocker().enableVnc();
+			wdm.dockerShmSize("2g");
 			assumeThat(isDockerAvailable()).isTrue();
 			driver = wdm.create();
 

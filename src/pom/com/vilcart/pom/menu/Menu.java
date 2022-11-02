@@ -72,25 +72,25 @@ public class Menu {
 
 	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/ul/li[1]/a")
 	private WebElement purchaseList;
-	
+
 	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/a/span")
 	private WebElement inventory;
-	
+
 	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/a/span")
 	private WebElement managementMenu;
-	
+
 	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/ul/li[1]/a")
 	private WebElement assetsManagement;
-	
+
 	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/ul/li[2]/a")
 	private WebElement routeManagement;
-	
+
 	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/ul/li[3]/a")
 	private WebElement masterManagement;
-	
+
 	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/ul/li[4]/a")
 	private WebElement categoryManagement;
-	
+
 	public Menu(WebDriver driver, AngularWait aw) {
 		this.driver = driver;
 		this.aw = aw;
@@ -103,9 +103,9 @@ public class Menu {
 		menuSearch.sendKeys("Customer");
 		menuSearch.sendKeys(Keys.ENTER);
 		aw.waitAllRequest();
-		newCustomer.click();
+		customerMenu.click();
 		aw.waitAllRequest();
-		menuSearch.click();
+		newCustomer.click();
 		aw.waitAllRequest();
 	}
 
@@ -291,7 +291,7 @@ public class Menu {
 		purchaseMenu.click();
 		aw.waitAllRequest();
 	}
-	
+
 	public void goToInventory() {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		menuSearch.clear();
@@ -301,7 +301,7 @@ public class Menu {
 		inventory.click();
 		aw.waitAllRequest();
 	}
-	
+
 	public void goToAssetsManagement() {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		menuSearch.clear();
@@ -315,7 +315,7 @@ public class Menu {
 		managementMenu.click();
 		aw.waitAllRequest();
 	}
-	
+
 	public void goToRouteManagement() {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		menuSearch.clear();
@@ -329,6 +329,7 @@ public class Menu {
 		managementMenu.click();
 		aw.waitAllRequest();
 	}
+
 	public void goToMasterManagement() {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		menuSearch.clear();
@@ -342,6 +343,7 @@ public class Menu {
 		managementMenu.click();
 		aw.waitAllRequest();
 	}
+
 	public void goToCategoryManagement() {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		menuSearch.clear();
