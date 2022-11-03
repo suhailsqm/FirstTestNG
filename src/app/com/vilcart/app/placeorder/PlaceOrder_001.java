@@ -1,8 +1,11 @@
-package app.com.vilcart.app.customer;
+package app.com.vilcart.app.placeorder;
+
+import org.testng.annotations.Test;
 
 import pom.com.vilcart.pom.customer.CustomerList;
 import pom.com.vilcart.pom.customer.NewCustomer;
 import pom.com.vilcart.pom.menu.Menu;
+import pom.com.vilcart.pom.placeorder.PlaceOrder;
 import util.com.vilcart.util.AngularWait;
 import util.com.vilcart.util.BaseSuiteMethods;
 import util.com.vilcart.util.CurrentMethod;
@@ -10,20 +13,21 @@ import util.com.vilcart.util.Login;
 import util.com.vilcart.util.ReadPropertiesFile;
 import util.com.vilcart.util.TimeStamp;
 
-import org.testng.annotations.Test;
-import org.testng.Reporter;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 
 import java.io.IOException;
 import java.time.Duration;
 
-public class Customer_001 extends BaseSuiteMethods {
+import org.testng.Reporter;
+import org.testng.annotations.AfterClass;
+
+public class PlaceOrder_001 extends BaseSuiteMethods {
 	private AngularWait aw;
 	private Login loginObj;
 	private NewCustomer newCustomer;
 	private CustomerList customerList;
 	private Menu menu;
+	private PlaceOrder placeOrder;
 	private String phoneNumber;
 
 	@Test(priority = 1)
@@ -39,8 +43,15 @@ public class Customer_001 extends BaseSuiteMethods {
 		menu.goToCustomerList();
 		customerList.verifyCustomer(phoneNumber);
 	}
-
+	
 	@Test(priority = 3, dependsOnMethods = { "verifyCustomerListFlow" })
+	public void placeOrderFlow() {
+		Reporter.log("=>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		menu.goToPlaceOrder();
+		placeOrder.placeOrderFromFile(phoneNumber);
+	}
+	
+	@Test(priority = 4, dependsOnMethods = { "verifyCustomerListFlow" })
 	public void deleteCustomerFlow() {
 		Reporter.log("=>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		menu.goToCustomerList();
@@ -58,8 +69,8 @@ public class Customer_001 extends BaseSuiteMethods {
 		customerList = new CustomerList(driver, aw);
 		loginObj = new Login(driver, aw);
 		menu = new Menu(driver, aw);
+		placeOrder = new PlaceOrder(driver, aw);
 		loginObj.login();
-
 	}
 
 	@AfterClass

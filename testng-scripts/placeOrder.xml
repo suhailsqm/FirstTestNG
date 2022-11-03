@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Suite">
+	<test thread-count="1" name="Test">
+		<classes>
+			<class name="app.com.vilcart.app.placeorder.PlaceOrder_001">
+				<methods>
+					<exclude name="createCustomerFlow" />
+					<exclude name="verifyCustomerListFlow" />
+					<include name="placeOrderFlow" />
+					<exclude name="deleteCustomerFlow" />
+				</methods>
+			</class>
+		</classes>
+	</test> <!-- Test -->
+</suite> <!-- Suite -->
