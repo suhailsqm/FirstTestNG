@@ -6,10 +6,11 @@ import pom.com.vilcart.pom.customer.CustomerList;
 import pom.com.vilcart.pom.customer.NewCustomer;
 import pom.com.vilcart.pom.menu.Menu;
 import pom.com.vilcart.pom.placeorder.PlaceOrder;
+import pom.com.vilcart.pom.login.Login;
 import util.com.vilcart.util.AngularWait;
 import util.com.vilcart.util.BaseSuiteMethods;
 import util.com.vilcart.util.CurrentMethod;
-import util.com.vilcart.util.Login;
+//import util.com.vilcart.util.Login;
 import util.com.vilcart.util.ReadPropertiesFile;
 import util.com.vilcart.util.TimeStamp;
 
@@ -75,6 +76,8 @@ public class PlaceOrder_001 extends BaseSuiteMethods {
 
 	@AfterClass
 	public void afterClass() {
+		Reporter.log("=>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		loginObj.logout();
 	}
 
 }

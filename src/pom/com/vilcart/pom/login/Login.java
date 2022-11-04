@@ -42,6 +42,12 @@ public class Login {
 	@FindBy(tagName = "button")
 	private WebElement loginButton;
 
+	@FindBy(xpath = "//*[@id=\"navbar-mobile\"]/ul[3]/li/a/span[2]/img")
+	private WebElement logoutbar;
+
+	@FindBy(xpath = "//*[@id=\"navbar-mobile\"]/ul[3]/li/div/a[2]")
+	private WebElement logoutButton;
+
 	public Login(WebDriver driver, AngularWait aw) {
 		this.driver = driver;
 		this.aw = aw;
@@ -56,29 +62,37 @@ public class Login {
 		workbook = new XSSFWorkbook(finput);
 		DataFormatter formatter = new DataFormatter();
 		sheet = workbook.getSheetAt(0);
-		for (int i = 1; i <= sheet.getLastRowNum(); i++) {
-			// Import data for Email.
-			cell = sheet.getRow(i).getCell(2);
-			String value = formatter.formatCellValue(cell);
-			email.clear();
-			email.sendKeys(value);
+//		for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+		// Import data for Email.
+		cell = sheet.getRow(1).getCell(2);
+		String value = formatter.formatCellValue(cell);
+		email.clear();
+		email.sendKeys(value);
 
-			// Import data for password.
-			cell = sheet.getRow(i).getCell(3);
-			value = formatter.formatCellValue(cell);
-			pass.clear();
-			pass.sendKeys(value);
+		// Import data for password.
+		cell = sheet.getRow(1).getCell(3);
+		value = formatter.formatCellValue(cell);
+		pass.clear();
+		pass.sendKeys(value);
 
-			loginButton.click();
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
-			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(5));
-			driver.manage().timeouts().scriptTimeout(Duration.ofSeconds(5));
-			Reporter.log(driver.getTitle(), true);
+		loginButton.click();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(5));
+		driver.manage().timeouts().scriptTimeout(Duration.ofSeconds(5));
+		Reporter.log(driver.getTitle(), true);
 
-			aw.waitAllRequest();
-			assertThat(driver.getTitle()).containsIgnoringCase("Home - VILCART");
-		}
+		aw.waitAllRequest();
+		assertThat(driver.getTitle()).containsIgnoringCase("Home - VILCART");
+//		}
 		finput.close();
+	}
+
+	public void logout() {
+		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		logoutbar.click();
+		aw.waitAllRequest();
+		logoutButton.click();
+		aw.waitAllRequest();
 	}
 
 }

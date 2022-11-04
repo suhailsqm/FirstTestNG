@@ -1,10 +1,10 @@
-package app.com.vilcart.app.sku;
+package app.com.vilcart.app.test;
 
 import org.testng.annotations.Test;
 
 //import com.paulhammant.ngwebdriver.NgWebDriver;
 import util.com.vilcart.util.AngularWait;
-import util.com.vilcart.util.Login;
+import util.com.vilcart.util.LoginTemp;
 import util.com.vilcart.util.ReadPropertiesFile;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
@@ -40,7 +40,7 @@ public class CreateSKU {
     private JavascriptExecutor js;
     private AngularWait aw;
     private WebDriverWait wait;
-	private Login loginObj;
+	private LoginTemp loginObj;
     XSSFWorkbook workbook;
     XSSFSheet sheet;
     XSSFCell cell;
@@ -216,7 +216,7 @@ public class CreateSKU {
 	  	js=((JavascriptExecutor) driver);
 	  	wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 	  	aw = new AngularWait(driver);
-	  	loginObj = new Login(driver,aw);
+	  	loginObj = new LoginTemp(driver,aw);
   }
 
   @AfterTest

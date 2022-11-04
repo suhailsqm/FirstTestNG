@@ -377,7 +377,8 @@ public class NewCustomer {
 		}
 
 		if (fetchFeild("customerHasCooler").equalsIgnoreCase("Yes")) {
-			js.executeScript("arguments[0].scrollIntoViewIfNeeded();", customerHasCooler);
+			js.executeScript("arguments[0].scrollIntoView(true);", customerHasCooler);
+//			js.executeScript("arguments[0].scrollIntoViewIfNeeded();", customerHasCooler);
 			customerHasCooler.click();
 			WebElement customerHasCooler1 = customerHasCooler
 					.findElement(By.xpath(".//ng-dropdown-panel/div/div[2]/div[1]"));
@@ -388,7 +389,8 @@ public class NewCustomer {
 					+ "';arguments[0].click();arguments[0].dispatchEvent(new Event('input', { bubbles: true }))",
 					customerCoolerType1);
 		} else if (fetchFeild("customerHasCooler").equalsIgnoreCase("No")) {
-			js.executeScript("arguments[0].scrollIntoViewIfNeeded();", customerHasCooler);
+			js.executeScript("arguments[0].scrollIntoView(true);", customerHasCooler);
+//			js.executeScript("arguments[0].scrollIntoViewIfNeeded();", customerHasCooler);
 			customerHasCooler.click();
 			WebElement customerHasCooler1 = customerHasCooler
 					.findElement(By.xpath(".//ng-dropdown-panel/div/div[2]/div[2]"));

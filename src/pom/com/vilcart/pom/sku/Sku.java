@@ -95,6 +95,9 @@ public class Sku {
 
 	@FindBy(id = "skuListTuple")
 	List<WebElement> skuListTuples;
+	
+	@FindBy(xpath = "(//button[normalize-space()='Yes, delete it!'])[1]")
+	WebElement deleteConfirmation;
 
 	public Sku(WebDriver driver, AngularWait aw) {
 		this.driver = driver;
@@ -194,10 +197,10 @@ public class Sku {
 		description.clear();
 		description.sendKeys(fetchFeild("description"));
 
-		category.findElement(By.xpath("//div/div/div[3]/input")).click();
-		List<WebElement> categoryList = category.findElements(By.xpath("//ng-dropdown-panel/div/div[2]/div"));
+		category.findElement(By.xpath(".//div/div/div[3]/input")).click();
+		List<WebElement> categoryList = category.findElements(By.xpath(".//ng-dropdown-panel/div/div[2]/div"));
 		for (int j = 0; j < categoryList.size(); j++) {
-			WebElement option = categoryList.get(j).findElement(By.xpath("//span"));
+			WebElement option = categoryList.get(j).findElement(By.xpath(".//span"));
 			if (option.getText().equalsIgnoreCase(fetchFeild("category"))) {
 				option.click();
 				break;
@@ -211,11 +214,11 @@ public class Sku {
 		aw.waitAllRequest();
 
 		js.executeScript("arguments[0].scrollIntoViewIfNeeded();", subCategory);
-		subCategory.findElement(By.xpath("//div/div/div[2]/input")).click();
-		List<WebElement> subCategoryList = subCategory.findElements(By.xpath("//ng-dropdown-panel/div/div[2]/div"));
+		subCategory.findElement(By.xpath(".//div/div/div[2]/input")).click();
+		List<WebElement> subCategoryList = subCategory.findElements(By.xpath(".//ng-dropdown-panel/div/div[2]/div"));
 		int j;
 		for (j = 0; j < subCategoryList.size(); j++) {
-			WebElement option = subCategoryList.get(j).findElement(By.xpath("//span"));
+			WebElement option = subCategoryList.get(j).findElement(By.xpath(".//span"));
 			if (option.getText().equalsIgnoreCase(fetchFeild("subCategory"))) {
 				option.click();
 				break;
@@ -232,12 +235,12 @@ public class Sku {
 		gstRate.sendKeys(fetchFeild("gstRate"));
 
 		cessAmount.clear();
-		cessAmount.sendKeys(fetchFeild("fetchFeild"));
+		cessAmount.sendKeys(fetchFeild("cessAmount"));
 
-		amountType.findElement(By.xpath("//div/div/div[3]/input")).click();
-		List<WebElement> subAmountType = amountType.findElements(By.xpath("//ng-dropdown-panel/div/div[2]/div"));
+		amountType.findElement(By.xpath(".//div/div/div[3]/input")).click();
+		List<WebElement> subAmountType = amountType.findElements(By.xpath(".//ng-dropdown-panel/div/div[2]/div"));
 		for (j = 0; j < subAmountType.size(); j++) {
-			WebElement option = subAmountType.get(j).findElement(By.xpath("//span"));
+			WebElement option = subAmountType.get(j).findElement(By.xpath(".//span"));
 			if (option.getText().equalsIgnoreCase(fetchFeild("amountType"))) {
 				option.click();
 				break;
@@ -249,15 +252,16 @@ public class Sku {
 					.isEqualTo(true);
 		}
 
-		brandName.findElement(By.xpath("//div/div/div[2]/input"));
+		brandName.findElement(By.xpath(".//div/div/div[2]/input"));
 		js.executeScript(
 				"arguments[0].value='" + fetchFeild("amountType")
 						+ "';arguments[0].click();arguments[0].dispatchEvent(new Event('input', { bubbles: true }))",
 				brandName);
 
-		this.numberOfVariations = Integer.parseInt("numberOfVariations");
+		this.numberOfVariations = Integer.parseInt(fetchFeild("numberOfVariations"));
+		Reporter.log("Number of Variations " + numberOfVariations, true);
 		assertThat(this.numberOfVariations).withFailMessage("Number of variations cannot be greater than 4")
-				.isGreaterThan(numberOfVariations);
+				.isLessThanOrEqualTo(maxNumberOfVariations);
 		for (int k = 0; k < this.numberOfVariations; k++) {
 			WebElement variationButton = driver.findElement(By.xpath("//*[@id=\"variationButton\"]"));
 			js.executeScript("arguments[0].scrollIntoViewIfNeeded();", variationButton);
@@ -292,20 +296,32 @@ public class Sku {
 		return fetchFeild("skuName");
 	}
 
-	public void deleteFirstSku(String skuName) {
+	public void skuList(String skuName) {
 		Reporter.log("===>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		assertThat(skuName).withFailMessage("skuName is null").isNotBlank();
 		searchSku(skuName);
 		assertThat(skuListTuples.size()).withFailMessage("No Tuples in sku List for the search criteria " + skuName)
 				.isGreaterThan(0);
-		int i;
-		for (i = 0; i < skuListTuples.size(); i++) {
-			if (skuListTuples.get(i).findElement(By.xpath("//td[6]")).getText().equalsIgnoreCase(skuName)) {
 
+	}
+
+	public void deleteFirstSku(String skuName) {
+		Reporter.log("===>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		assertThat(skuName).withFailMessage("skuName is null").isNotBlank();
+		searchSku(skuName.trim());
+		assertThat(skuListTuples.size()).withFailMessage("No Tuples in sku List for the search criteria " + skuName)
+				.isGreaterThan(0);
+
+		for (int i = 0; i < skuListTuples.size(); i++) {
+			if (skuListTuples.get(i).findElement(By.xpath(".//td[6]")).getText().equalsIgnoreCase(skuName.trim())) {
+				skuListTuples.get(i).findElement(By.xpath("./td[11]/div/button[2]")).click();
+				deleteConfirmation.click();
+				break;
 			}
-		}
-		if (i == skuListTuples.size()) {
-			assertThat(false).withFailMessage("No Sku with name " + skuName + " in the searched tuples")
-					.isEqualTo(true);
+			if (i == skuListTuples.size() - 1) {
+				assertThat(false).withFailMessage("No Sku with name " + skuName + " in the searched tuples")
+						.isEqualTo(true);
+			}
 		}
 	}
 }

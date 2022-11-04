@@ -3,7 +3,7 @@ package app.com.vilcart.app.purchase;
 import org.testng.annotations.Test;
 
 import util.com.vilcart.util.AngularWait;
-import util.com.vilcart.util.Login;
+import util.com.vilcart.util.LoginTemp;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
@@ -37,7 +37,7 @@ public class PurchaseFlow {
 	private JavascriptExecutor js;
 	private AngularWait aw;
 	private WebDriverWait wait;
-    private Login loginObj;
+    private LoginTemp loginObj;
     
   @Test
   public void purchaseFlow() throws IOException {
@@ -142,7 +142,7 @@ public class PurchaseFlow {
   	js=((JavascriptExecutor) driver);
   	wait = new WebDriverWait(driver, Duration.ofSeconds(20));
   	aw = new AngularWait(driver);
-  	loginObj = new Login(driver,aw);
+  	loginObj = new LoginTemp(driver,aw);
   }
 
   @AfterClass

@@ -6,6 +6,7 @@
 			<!--class name="app.com.vilcart.app.ReadLogin"/-->
 			<!--class name="app.com.vilcart.app.test.CustomerCreation" /-->
 			<class name="app.com.vilcart.app.customer.Customer_001"></class>
+			<class name="app.com.vilcart.app.sku.Sku_001"></class>
 		</classes>
 	</test> <!-- Test -->
 </suite> <!-- Suite -->

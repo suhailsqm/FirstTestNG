@@ -39,7 +39,7 @@ public class TestXpath {
 	private JavascriptExecutor js;
 	private WebDriverWait wait;
 	private AngularWait aw;
-	private Login loginObj;
+	private LoginTemp loginObj;
 	private InventoryChangeStock iv;
 	private String orderNumber;
 	private NewCustomer nc;
@@ -199,7 +199,7 @@ public class TestXpath {
 		js = ((JavascriptExecutor) driver);
 		wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 		aw = new AngularWait(driver);
-		loginObj = new Login(driver, aw);
+		loginObj = new LoginTemp(driver, aw);
 		iv = new InventoryChangeStock(driver, js, aw, wait);
 		nc = new NewCustomer(driver, aw);
 		m = new Menu(driver, aw);

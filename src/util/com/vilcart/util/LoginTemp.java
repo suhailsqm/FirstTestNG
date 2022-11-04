@@ -15,7 +15,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.testng.Reporter;
 
-public class Login {
+public class LoginTemp {
 
 	XSSFWorkbook workbook;
 	XSSFSheet sheet;
@@ -23,7 +23,7 @@ public class Login {
 	WebDriver driver;
 	AngularWait aw;
 
-	public Login(WebDriver driver, AngularWait aw) {
+	public LoginTemp(WebDriver driver, AngularWait aw) {
 		this.driver = driver;
 		this.aw = aw;
 	}

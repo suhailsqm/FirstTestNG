@@ -15,6 +15,7 @@ import java.net.URL;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.ITestContext;
 import org.testng.Reporter;
 import org.testng.annotations.AfterSuite;
 
@@ -27,8 +28,8 @@ public class BaseSuiteMethods {
 //  public void f() {
 //  }
 	@BeforeSuite
-	public void beforeSuite() throws IOException {
-		Reporter.log("=>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp());
+	public void beforeSuite(ITestContext context) throws IOException {
+		Reporter.log("=>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		if (ReadPropertiesFile.readPropertiesFile().getProperty("vilcart.docker.enabled").contentEquals("true")) {
 			WebDriverManager.chromedriver().setup();
 			driver1 = new ChromeDriver();
@@ -39,18 +40,20 @@ public class BaseSuiteMethods {
 
 			URL noVncUrl = wdm.getDockerNoVncUrl();
 			assertThat(noVncUrl).isNotNull();
-			Reporter.log(noVncUrl + "");
+			Reporter.log(noVncUrl + "", true);
 
 			driver1.get(noVncUrl + "");
+			context.setAttribute("WebDriver", driver);
 		} else {
 			WebDriverManager.chromedriver().setup();
 			driver = new ChromeDriver();
+			context.setAttribute("WebDriver", driver);
 		}
 	}
 
 	@AfterSuite
 	public void afterSuite() throws IOException, InterruptedException {
-		Reporter.log("=>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp());
+		Reporter.log("=>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		Thread.sleep(1000);
 
 		driver.quit();

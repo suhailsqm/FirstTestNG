@@ -58,7 +58,7 @@ public class CustomerCreation {
 	private JavascriptExecutor js;
 	private AngularWait aw;
 	private WebDriverWait wait;
-	private Login loginObj;
+	private LoginTemp loginObj;
 	private long number;
 
 	@Test(priority = 1)
@@ -297,7 +297,7 @@ public class CustomerCreation {
 		js = ((JavascriptExecutor) driver);
 		wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 		aw = new AngularWait(driver);
-		loginObj = new Login(driver, aw);
+		loginObj = new LoginTemp(driver, aw);
 	}
 
 	@AfterClass
