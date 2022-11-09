@@ -91,6 +91,16 @@ public class Menu {
 	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/ul/li[4]/a")
 	private WebElement categoryManagement;
 
+	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/a")
+	private WebElement goodsMenu;
+	
+	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/ul/li[2]/a")
+	private WebElement goodsReceive;
+	
+	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/ul/li[1]/a")
+	private WebElement goodsTransfer;
+	
+	
 	public Menu(WebDriver driver, AngularWait aw) {
 		this.driver = driver;
 		this.aw = aw;
@@ -355,6 +365,31 @@ public class Menu {
 		categoryManagement.click();
 		aw.waitAllRequest();
 		managementMenu.click();
+		aw.waitAllRequest();
+	}
+
+	public void goToGoodsReceive() {
+		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		menuSearch.clear();
+		menuSearch.sendKeys("Goods");
+		menuSearch.sendKeys(Keys.ENTER);
+		aw.waitAllRequest();
+		goodsMenu.click();
+		aw.waitAllRequest();
+		goodsReceive.click();
+		aw.waitAllRequest();
+		
+	}
+
+	public void goToGoodsTransfer() {
+		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		menuSearch.clear();
+		menuSearch.sendKeys("Goods");
+		menuSearch.sendKeys(Keys.ENTER);
+		aw.waitAllRequest();
+		goodsMenu.click();
+		aw.waitAllRequest();
+		goodsTransfer.click();
 		aw.waitAllRequest();
 	}
 }

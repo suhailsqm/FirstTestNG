@@ -87,7 +87,7 @@ public class Login {
 		finput.close();
 	}
 
-	public void logout() {
+	public void logout() throws InterruptedException {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		logoutbar.click();
 		aw.waitAllRequest();

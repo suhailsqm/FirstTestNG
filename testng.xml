@@ -3,10 +3,36 @@
 <suite name="Suite">
 	<test thread-count="1" name="Test">
 		<classes>
-			<!--class name="app.com.vilcart.app.ReadLogin"/-->
-			<!--class name="app.com.vilcart.app.test.CustomerCreation" /-->
-			<class name="app.com.vilcart.app.customer.Customer_001"></class>
-			<class name="app.com.vilcart.app.sku.Sku_001"></class>
+			<class name="app.com.vilcart.app.customer.Customer_001">
+				<methods>
+					<include name="createCustomerFlow" />
+					<include name="verifyCustomerListFlow" />
+					<include name="deleteCustomerFlow" />
+				</methods>
+			</class>
+			<!--class name="app.com.vilcart.app.sku.Sku_001">
+				<methods>
+					<exclude name="createSku" />
+					<exclude name="skuInList" />
+					<exclude name="deleteSku" />
+				</methods>
+			</class>
+			<class name="app.com.vilcart.app.goods.GoodsReceive_001">
+				<methods>
+					<include name="createSku" />
+					<include name="skuInList" />
+					<include name="GoodsReceive" />
+					<include name="deleteSku" />
+				</methods>
+			</class>
+			<class name="app.com.vilcart.app.goods.GoodsTransfer_001">
+				<methods>
+					<include name="createSku" />
+					<include name="skuInList" />
+					<include name="GoodsTransfer" />
+					<include name="deleteSku" />
+				</methods>
+			</class-->
 		</classes>
 	</test> <!-- Test -->
 </suite> <!-- Suite -->

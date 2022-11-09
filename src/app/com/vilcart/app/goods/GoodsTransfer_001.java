@@ -1,18 +1,17 @@
-package app.com.vilcart.app.sku;
+package app.com.vilcart.app.goods;
 
+import org.testng.annotations.Test;
 
-
+import pom.com.vilcart.pom.goods.GoodsTransfer;
+import pom.com.vilcart.pom.login.Login;
 import pom.com.vilcart.pom.menu.Menu;
 import pom.com.vilcart.pom.sku.Sku;
-import pom.com.vilcart.pom.login.Login;
 import util.com.vilcart.util.AngularWait;
 import util.com.vilcart.util.BaseSuiteMethods;
 import util.com.vilcart.util.CurrentMethod;
-//import util.com.vilcart.util.Login;
 import util.com.vilcart.util.ReadPropertiesFile;
 import util.com.vilcart.util.TimeStamp;
 
-import org.testng.annotations.Test;
 import org.testng.annotations.BeforeClass;
 
 import java.io.IOException;
@@ -23,12 +22,13 @@ import org.testng.ITestContext;
 import org.testng.Reporter;
 import org.testng.annotations.AfterClass;
 
-public class Sku_001 extends BaseSuiteMethods {
+public class GoodsTransfer_001 extends BaseSuiteMethods {
 	private AngularWait aw;
 	private Login loginObj;
 	private Menu menu;
 	private Sku sku;
 	private String skuName;
+	private GoodsTransfer goodsTransfer;
 
 	@Test
 	public void createSku() {
@@ -46,6 +46,13 @@ public class Sku_001 extends BaseSuiteMethods {
 	}
 
 	@Test(priority = 3, dependsOnMethods = { "skuInList" })
+	public void GoodsTransfer() {
+		Reporter.log("=>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		menu.goToGoodsTransfer();;
+		goodsTransfer.transferGoods("", "");
+	}
+	
+	@Test(priority = 4, dependsOnMethods = { "skuInList" })
 	public void deleteSku() {
 		Reporter.log("=>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		menu.goToSKU();

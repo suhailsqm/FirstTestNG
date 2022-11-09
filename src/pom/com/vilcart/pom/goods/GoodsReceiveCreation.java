@@ -45,7 +45,11 @@ public class GoodsReceiveCreation {
 //	private FileOutputStream fos;
 	private DataFormatter formatter;
 	private XSSFWorkbook workbook;
-	private String[][] data;
+	private String DC;
+	private String vehicleArg;
+	private String challanNoArg;
+	public String[][] data;
+	public int itemsCount;
 
 	@FindBy(id = "searchItem")
 	private WebElement searchItem;
@@ -78,6 +82,10 @@ public class GoodsReceiveCreation {
 		this.driver = driver;
 		this.aw = aw;
 		this.js = ((JavascriptExecutor) this.driver);
+		this.DC = "";
+		this.vehicleArg = "";
+		this.challanNoArg = "";
+		this.itemsCount = 0;
 		PageFactory.initElements(driver, this);
 		try {
 			file = new File(ReadPropertiesFile.readPropertiesFile().getProperty("resources.goodsreceive"));
@@ -109,10 +117,19 @@ public class GoodsReceiveCreation {
 		XSSFCell cell2;
 		XSSFCell cell3;
 		XSSFCell cell4;
+		XSSFCell cell5;
+		XSSFCell cell6;
+		XSSFCell cell7;
 		int rowKey = 0;
 		sheet = workbook.getSheetAt(0);
+		cell5 = sheet.getRow(0).getCell(1);
+		DC = formatter.formatCellValue(cell5);
+		cell6 = sheet.getRow(1).getCell(1);
+		vehicleArg = formatter.formatCellValue(cell6);
+		cell7 = sheet.getRow(2).getCell(1);
+		challanNoArg = formatter.formatCellValue(cell7);
 		data = new String[sheet.getLastRowNum() + 1][4];
-		for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+		for (int i = 4; i <= sheet.getLastRowNum(); i++) {
 			cell1 = sheet.getRow(i).getCell(0);
 			data[rowKey][0] = formatter.formatCellValue(cell1);
 
@@ -124,11 +141,13 @@ public class GoodsReceiveCreation {
 
 			cell4 = sheet.getRow(i).getCell(3);
 			data[rowKey][3] = formatter.formatCellValue(cell4);
-			
+
 			rowKey++;
 		}
 		closeFileInputStream();
-		return sheet.getLastRowNum();
+//		return sheet.getLastRowNum();
+		this.itemsCount = rowKey;
+		return rowKey;
 	}
 
 	private void searchCreateReceiveGoods(String skuName) {
@@ -139,7 +158,7 @@ public class GoodsReceiveCreation {
 		aw.waitAllRequest();
 	}
 
-	public void createGoodsReceive(String dc, String vehicle, String challanNoArg) {
+	public String createGoodsReceive(String dc, String vehicle, String challanNoArg) {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		int items = fetchData();
 		if (items == 0)
@@ -147,15 +166,15 @@ public class GoodsReceiveCreation {
 		for (int i = 0; i < items; i++) {
 			searchCreateReceiveGoods(data[i][0]);
 			// only First tuple is considered.
-			String skuName = itemTuples.get(0).findElement(By.xpath("//td/div/div[1]/div[1]")).getText().split("\n")[0]
+			String skuName = itemTuples.get(0).findElement(By.xpath(".//td/div/div[1]/div[1]")).getText().split("\n")[0]
 					.trim();
 			assertThat(data[i][0]).withFailMessage("No tuple with search Criteria " + data[i][0])
 					.isEqualToIgnoringCase(skuName);
-			String xpath = "//td/div/div[1]/div[2]/div/button";
+			String xpath = ".//td/div/div[1]/div[2]/div/button";
 			WebElement list = itemTuples.get(0).findElement(By.xpath(xpath));
 			list.click();
 
-			String xpath1 = "//td/div/div[1]/div[2]/div/div/button";
+			String xpath1 = ".//td/div/div[1]/div[2]/div/div/button";
 			List<WebElement> listSelectDropDown = itemTuples.get(0).findElements(By.xpath(xpath1));
 			int numOfVariations = listSelectDropDown.size();
 			Reporter.log(xpath1 + "----" + numOfVariations, true);
@@ -174,7 +193,7 @@ public class GoodsReceiveCreation {
 					varInputCount.sendKeys("" + data[i][2]);
 					aw.waitAllRequest();
 
-					WebElement receivePrice = itemTuples.get(0).findElement(By.xpath("//td/div/div[2]/div[1]/input"));
+					WebElement receivePrice = itemTuples.get(0).findElement(By.xpath(".//td/div/div[2]/div[1]/input"));
 					receivePrice.clear();
 					receivePrice.sendKeys("" + data[i][3]);
 
@@ -192,51 +211,52 @@ public class GoodsReceiveCreation {
 		continueButton.click();
 		aw.waitAllRequest();
 
-		WebElement input = receiveFromDc.findElement(By.xpath("//div/div/div[3]/input"));
+		WebElement input = receiveFromDc.findElement(By.xpath(".//div/div/div[3]/input"));
 		input.click();
 		aw.waitAllRequest();
-		List<WebElement> input1 = receiveFromDc.findElements(By.xpath("//ng-dropdown-panel/div/div[2]/div"));
+		List<WebElement> input1 = receiveFromDc.findElements(By.xpath(".//ng-dropdown-panel/div/div[2]/div"));
 		for (int i = 0; i < input1.size(); i++) {
-			if (input1.get(i).findElement(By.xpath("//span")).getText().equalsIgnoreCase(dc)) {
-				input1.get(i).findElement(By.xpath("//span")).click();
+			if (input1.get(i).findElement(By.xpath(".//span")).getText().equalsIgnoreCase(this.DC)) {
+				input1.get(i).findElement(By.xpath(".//span")).click();
 				break;
 			}
 			if (i == input1.size() - 1) {
-				assertThat(false).withFailMessage("No specific '" + dc + "' in list.").isEqualTo(true);
+				assertThat(false).withFailMessage("No specific '" + this.DC + "' in list.").isEqualTo(true);
 			}
 		}
 		aw.waitAllRequest();
 
-		WebElement number = transferVehicle.findElement(By.xpath("//div/div/div[3]/input"));
+		WebElement number = transferVehicle.findElement(By.xpath(".//div/div/div[3]/input"));
 		number.click();
 		aw.waitAllRequest();
-		List<WebElement> number1 = transferVehicle.findElements(By.xpath("//ng-dropdown-panel/div/div[2]/div"));
+		List<WebElement> number1 = transferVehicle.findElements(By.xpath(".//ng-dropdown-panel/div/div[2]/div"));
 		for (int i = 0; i < number1.size(); i++) {
-			if (number1.get(i).findElement(By.xpath("//span")).getText().equalsIgnoreCase(vehicle)) {
-				number1.get(i).findElement(By.xpath("//span")).click();
+			if (number1.get(i).findElement(By.xpath(".//span")).getText().equalsIgnoreCase(this.vehicleArg)) {
+				number1.get(i).findElement(By.xpath(".//span")).click();
 				break;
 			}
 			if (i == number1.size() - 1) {
-				assertThat(false).withFailMessage("No specific '" + vehicle + "' in list.").isEqualTo(true);
+				assertThat(false).withFailMessage("No specific '" + this.vehicleArg + "' in list.").isEqualTo(true);
 			}
 		}
 		aw.waitAllRequest();
 
 		challanNo.clear();
-		challanNo.sendKeys(challanNoArg);
+		challanNo.sendKeys(this.challanNoArg);
 
-		String handle = driver.getWindowHandle();
+//		String handle = driver.getWindowHandle();
 		receiveBtn.click();
 		aw.waitAllRequest();
-		Set<String> handles = driver.getWindowHandles();
-		for (String actual : handles) {
-			if (0 != actual.compareToIgnoreCase(handle)) {
-				Reporter.log(LineNumber.getLineNumber() + "close " + actual, true);
-				driver.switchTo().window(actual).close();
-			}
-		}
-		driver.switchTo().window(handle);
-		aw.waitAllRequest();
+//		Set<String> handles = driver.getWindowHandles();
+//		for (String actual : handles) {
+//			if (0 != actual.compareToIgnoreCase(handle)) {
+//				Reporter.log(LineNumber.getLineNumber() + "close " + actual, true);
+//				driver.switchTo().window(actual).close();
+//			}
+//		}
+//		driver.switchTo().window(handle);
+//		aw.waitAllRequest();
+		return this.vehicleArg;
 	}
 
 }

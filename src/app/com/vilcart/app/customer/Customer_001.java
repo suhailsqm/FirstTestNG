@@ -68,7 +68,7 @@ public class Customer_001 extends BaseSuiteMethods {
 	}
 
 	@AfterClass
-	public void afterClassCustomerFlow() {
+	public void afterClassCustomerFlow() throws InterruptedException {
 		Reporter.log("=>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		loginObj.logout();
 	}

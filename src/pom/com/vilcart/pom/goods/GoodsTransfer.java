@@ -91,14 +91,14 @@ public class GoodsTransfer {
 	public void transferGoods(String dc, String vehicle) {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		createGoodsTransfer.click();
-		gtc.createGoodsTransfer(dc, vehicle);
+		vehicle = gtc.createGoodsTransfer(dc, vehicle);
 		getTuplesForCurrentDate();
 		searchInGoodsTransfer(vehicle);
 		// ToDo verifying with vehicle number should be a challan no which has to pop up in
 		// create Goods Transfer.
 		for (int i = 0; i < transferListTuples.size(); i++) {
-			if (transferListTuples.get(i).findElement(By.xpath("//td[4]")).getText().equalsIgnoreCase(vehicle)) {
-				transferListTuples.get(i).findElement(By.xpath("//td[11]/div/button[1]")).click();
+			if (transferListTuples.get(i).findElement(By.xpath(".//td[4]")).getText().equalsIgnoreCase(vehicle)) {
+				transferListTuples.get(i).findElement(By.xpath(".//td[11]/div/button[1]")).click();
 				aw.waitAllRequest();
 				//ToDo check if all order Items are present in the Goods Transfer.
 				break;

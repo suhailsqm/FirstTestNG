@@ -75,7 +75,7 @@ public class PlaceOrder_001 extends BaseSuiteMethods {
 	}
 
 	@AfterClass
-	public void afterClass() {
+	public void afterClass() throws InterruptedException {
 		Reporter.log("=>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		loginObj.logout();
 	}
