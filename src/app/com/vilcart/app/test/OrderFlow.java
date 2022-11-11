@@ -7,8 +7,6 @@ import util.com.vilcart.util.CurrentMethod;
 import util.com.vilcart.util.LineNumber;
 import pom.com.vilcart.pom.login.Login;
 import util.com.vilcart.util.TimeStamp;
-import util.com.vilcart.util.InventoryChangeStock;
-
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 import org.testng.annotations.BeforeClass;

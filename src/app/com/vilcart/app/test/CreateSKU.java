@@ -4,7 +4,6 @@ import org.testng.annotations.Test;
 
 //import com.paulhammant.ngwebdriver.NgWebDriver;
 import util.com.vilcart.util.AngularWait;
-import util.com.vilcart.util.LoginTemp;
 import util.com.vilcart.util.ReadPropertiesFile;
 import io.github.bonigarcia.wdm.WebDriverManager;
 

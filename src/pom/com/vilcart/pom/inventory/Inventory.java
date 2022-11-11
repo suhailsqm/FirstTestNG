@@ -115,6 +115,7 @@ public class Inventory {
 	}
 
 	public void updateStock(String sku, int count) throws InterruptedException {
+		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 
 		getTuplesForCurrentDate();
 
@@ -129,8 +130,6 @@ public class Inventory {
 
 		if (skuTuples.size() == 0) {
 			assertThat(false).withFailMessage("No sku with name:\'" + sku + "\' in search").isEqualTo(true);
-			Reporter.log("No sku with name:\'" + sku + "\' in search", true);
-			return;
 		}
 
 		boolean contains = false;
@@ -160,9 +159,61 @@ public class Inventory {
 		}
 		if (contains == false) {
 			assertThat(false).withFailMessage("SKU is not present with name:" + sku).isEqualTo(true);
-			Reporter.log("SKU is not present with name:" + sku, true);
-			return;
 		}
 		saveCacheInInventory();
+	}
+
+	public int getInventoryGoodsInCount(String skuName) {
+		searchInInventory(skuName);
+
+		if (skuTuples.size() == 0) {
+			assertThat(false).withFailMessage("No sku with name:\'" + skuName + "\' in search").isEqualTo(true);
+		}
+		boolean contains = false;
+		for (int i = 0; i < skuTuples.size(); i++) {
+			String xp = ".//td[5]";
+			WebElement name = skuTuples.get(i).findElement(By.xpath(xp));
+			Reporter.log(name.getAccessibleName(), true);
+			Reporter.log(name.getText(), true);
+			assertThat(name.getText().toLowerCase()).containsIgnoringCase(skuName);
+			if (name.getText().equalsIgnoreCase(skuName)) {
+				contains = true;
+				String xpath = ".//td[15]";
+				WebElement GoodsInCount = skuTuples.get(i).findElement(By.xpath(xpath));
+				return Integer.parseInt(GoodsInCount.getText().trim());
+			}
+		}
+		if (contains == false) {
+			assertThat(false).withFailMessage("SKU is not present with name:" + skuName).isEqualTo(true);
+		}
+		// It doesn't come here. assert will fail before reaching here.
+		return 0;
+	}
+
+	public int getInventoryGoodsOutCount(String skuName) {
+		searchInInventory(skuName);
+
+		if (skuTuples.size() == 0) {
+			assertThat(false).withFailMessage("No sku with name:\'" + skuName + "\' in search").isEqualTo(true);
+		}
+		boolean contains = false;
+		for (int i = 0; i < skuTuples.size(); i++) {
+			String xp = "//td[5]";
+			WebElement name = skuTuples.get(i).findElement(By.xpath(xp));
+			Reporter.log(name.getAccessibleName(), true);
+			Reporter.log(name.getText(), true);
+			assertThat(name.getText().toLowerCase()).containsIgnoringCase(skuName);
+			if (name.getText().equalsIgnoreCase(skuName)) {
+				contains = true;
+				String xpath = ".//td[14]";
+				WebElement GoodsInCount = skuTuples.get(i).findElement(By.xpath(xpath));
+				return Integer.parseInt(GoodsInCount.getText().trim());
+			}
+		}
+		if (contains == false) {
+			assertThat(false).withFailMessage("SKU is not present with name:" + skuName).isEqualTo(true);
+		}
+		// It doesn't come here. assert will fail before reaching here.
+		return 0;
 	}
 }

@@ -13,8 +13,8 @@ import java.io.IOException;
  *
  */
 public class ReadPropertiesFile {
-	
-	public static Properties readPropertiesFile() throws IOException {
+
+	public static Properties readPropertiesFile() {
 		FileInputStream fis = null;
 		Properties prop = null;
 		try {
@@ -26,7 +26,12 @@ public class ReadPropertiesFile {
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		} finally {
-			fis.close();
+			try {
+				fis.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return prop;
 	}

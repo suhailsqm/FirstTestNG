@@ -1,4 +1,4 @@
-package util.com.vilcart.util;
+package app.com.vilcart.app.test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -14,6 +14,10 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.testng.Reporter;
+
+import util.com.vilcart.util.AngularWait;
+import util.com.vilcart.util.CurrentMethod;
+import util.com.vilcart.util.TimeStamp;
 
 public class LoginTemp {
 

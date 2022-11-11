@@ -33,6 +33,7 @@ public class Sku_001 extends BaseSuiteMethods {
 	@Test
 	public void createSku() {
 		Reporter.log("=>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		sku = new Sku(driver, aw);
 		menu.goToSKU();
 		skuName = sku.createSku();
 
@@ -62,7 +63,6 @@ public class Sku_001 extends BaseSuiteMethods {
 		aw = new AngularWait(driver);
 		loginObj = new Login(driver, aw);
 		menu = new Menu(driver, aw);
-		sku = new Sku(driver, aw);
 		loginObj.login();
 	}
 

@@ -27,11 +27,6 @@ import pom.com.vilcart.pom.customer.NewCustomer;
 //import pom.com.vilcart.pom.login.Login;
 import util.com.vilcart.util.*;
 import pom.com.vilcart.pom.menu.Menu;
-import util.com.vilcart.util.AngularWait;
-import util.com.vilcart.util.CurrentMethod;
-import util.com.vilcart.util.InventoryChangeStock;
-import util.com.vilcart.util.LineNumber;
-import util.com.vilcart.util.TimeStamp;
 
 public class TestXpath {
 

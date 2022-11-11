@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
 <suite name="Suite">
-	<test thread-count="1" name="Test">
+	<test thread-count="1" name="Customer">
 		<classes>
 			<class name="app.com.vilcart.app.customer.Customer_001">
 				<methods>
@@ -10,13 +10,33 @@
 					<include name="deleteCustomerFlow" />
 				</methods>
 			</class>
-			<!--class name="app.com.vilcart.app.sku.Sku_001">
+		</classes>
+	</test>
+	<test thread-count="1" name="placeorder">
+		<classes>
+			<class name="app.com.vilcart.app.placeorder.PlaceOrder_001">
+				<methods>
+					<include name="createCustomerFlow" />
+					<include name="verifyCustomerListFlow" />
+					<include name="placeOrderFlow" />
+					<include name="deleteCustomerFlow" />
+				</methods>
+			</class>
+		</classes>
+	</test>
+	<test thread-count="1" name="sku">
+		<classes>
+			<class name="app.com.vilcart.app.sku.Sku_001">
 				<methods>
 					<exclude name="createSku" />
 					<exclude name="skuInList" />
 					<exclude name="deleteSku" />
 				</methods>
 			</class>
+		</classes>
+	</test>
+	<test thread-count="1" name="goods">
+		<classes>
 			<class name="app.com.vilcart.app.goods.GoodsReceive_001">
 				<methods>
 					<include name="createSku" />
@@ -32,7 +52,7 @@
 					<include name="GoodsTransfer" />
 					<include name="deleteSku" />
 				</methods>
-			</class-->
+			</class>
 		</classes>
 	</test> <!-- Test -->
 </suite> <!-- Suite -->

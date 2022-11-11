@@ -2,9 +2,8 @@ package app.com.vilcart.app.purchase;
 
 import org.testng.annotations.Test;
 
+import app.com.vilcart.app.test.LoginTemp;
 import util.com.vilcart.util.AngularWait;
-import util.com.vilcart.util.LoginTemp;
-
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 import org.testng.annotations.BeforeClass;

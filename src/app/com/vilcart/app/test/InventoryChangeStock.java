@@ -1,4 +1,4 @@
-package util.com.vilcart.util;
+package app.com.vilcart.app.test;
 
 import java.time.ZoneId;
 import static org.assertj.core.api.Assertions.assertThat;

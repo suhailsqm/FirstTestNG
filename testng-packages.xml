@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Suite">
+	<test thread-count="1" name="Customer">
+		<packages>
+			<package name="app.com.vilcart.app.customer" />
+		</packages>
+	</test>
+	<test thread-count="1" name="placeorder">
+		<packages>
+			<package name="app.com.vilcart.app.placeorder" />
+		</packages>
+	</test>
+	<test thread-count="1" name="sku">
+		<packages>
+			<package name="app.com.vilcart.app.sku" />
+		</packages>
+	</test>
+	<test thread-count="1" name="goods">
+		<packages>
+			<package name="app.com.vilcart.app.goods" />
+		</packages>
+	</test> <!-- Test -->
+</suite> <!-- Suite -->

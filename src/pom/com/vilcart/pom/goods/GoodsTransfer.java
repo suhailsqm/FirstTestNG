@@ -101,6 +101,27 @@ public class GoodsTransfer {
 				transferListTuples.get(i).findElement(By.xpath(".//td[11]/div/button[1]")).click();
 				aw.waitAllRequest();
 				//ToDo check if all order Items are present in the Goods Transfer.
+				for (int j = 0; j < gtc.itemsCount; j++) {
+					assertThat(orderListTuples.get(j).findElement(By.xpath(".//td[2]")).getText())
+							.withFailMessage("Doesn't Tally SKUName " + gtc.data[j][0])
+							.isEqualToIgnoringCase(gtc.data[j][0]);
+					assertThat(orderListTuples.get(j).findElement(By.xpath(".//td[5]")).getText())
+							.withFailMessage("Doesn't Tally SKU Vaiation Name " + gtc.data[j][1])
+							.isEqualToIgnoringCase(gtc.data[j][1]);
+					assertThat(orderListTuples.get(j).findElement(By.xpath(".//td[4]")).getText())
+							.withFailMessage("Doesn't Tally count " + gtc.data[j][2])
+							.isEqualToIgnoringCase(gtc.data[j][2]);
+					//TODO tally unit price/ GRN Price and Total price.
+//					assertThat(orderListTuples.get(j).findElement(By.xpath(".//td[6]")).getText())
+//							.withFailMessage("Doesn't Tally receive price " + gtc.data[j][3])
+//							.isEqualToIgnoringCase(gtc.data[j][3]);
+//					assertThat(Integer.parseInt(
+//							orderListTuples.get(j).findElement(By.xpath(".//td[7]")).getText()))
+//							.withFailMessage("Doesn't Tally total amount " + gtc.data[j][3])
+//							.isEqualTo(Integer.parseInt(gtc.data[j][2])
+//									* Integer.parseInt(gtc.data[j][3]));
+
+				}
 				break;
 			}
 			if (i == transferListTuples.size() - 1) {
