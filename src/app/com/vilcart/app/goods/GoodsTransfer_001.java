@@ -86,9 +86,9 @@ public class GoodsTransfer_001 extends BaseSuiteMethods {
 	public void checkGoodsTransferInventory() {
 		Reporter.log("=>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		menu.goToInventory();
-		;
 //		inventory.getInventoryGoodsOutCount(skuName);
 	}
+	
 
 	@Test(priority = 5, dependsOnMethods = { "skuInList" }, dataProvider = "excelSkuNameData")
 	public void deleteSku(String skuName) {

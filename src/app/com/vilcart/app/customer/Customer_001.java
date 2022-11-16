@@ -64,7 +64,6 @@ public class Customer_001 extends BaseSuiteMethods {
 		loginObj = new Login(driver, aw);
 		menu = new Menu(driver, aw);
 		loginObj.login();
-
 	}
 
 	@AfterClass
