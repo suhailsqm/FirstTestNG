@@ -17,88 +17,88 @@ public class Menu {
 	private AngularWait aw;
 
 	@FindBy(xpath = "//*[@id=\"main-menu-content\"]/div[1]/input")
-	private WebElement menuSearch;
+	public WebElement menuSearch;
 
 	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/a")
-	private WebElement customerMenu;
+	public WebElement customerMenu;
 
 	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/ul/li[1]/a")
-	private WebElement newCustomer;
+	public WebElement newCustomer;
 
 	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/ul/li[2]/a")
-	private WebElement customerList;
+	public WebElement customerList;
 
 	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/a/span")
-	private WebElement placeOrder;
+	public WebElement placeOrder;
 
 	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/a")
-	private WebElement ordersMenu;
+	public WebElement ordersMenu;
 
 	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/ul/li[1]/a")
-	private WebElement packing;
+	public WebElement packing;
 
 	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/ul/li[2]/a")
-	private WebElement invoice;
+	public WebElement invoice;
 
 	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/ul/li[3]/a")
-	private WebElement dispatch;
+	public WebElement dispatch;
 
 	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/ul/li[4]/a")
-	private WebElement delivery;
+	public WebElement delivery;
 
 	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/ul/li[5]/a")
-	private WebElement complete;
+	public WebElement complete;
 
 	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/a/span")
-	private WebElement skuMenu;
+	public WebElement skuMenu;
 
 	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/a")
-	private WebElement purchaseMenu;
+	public WebElement purchaseMenu;
 
 	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/ul/li[6]/a")
-	private WebElement autoPO;
+	public WebElement autoPO;
 
 	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/ul/li[5]/a")
-	private WebElement requestItem;
+	public WebElement requestItem;
 
 	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/ul/li[4]/a")
-	private WebElement poRequest;
+	public WebElement poRequest;
 
 	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/ul/li[3]/a")
-	private WebElement poApproved;
+	public WebElement poApproved;
 
 	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/ul/li[2]/a")
-	private WebElement purchaseReturnList;
+	public WebElement purchaseReturnList;
 
 	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/ul/li[1]/a")
-	private WebElement purchaseList;
+	public WebElement purchaseList;
 
 	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/a/span")
-	private WebElement inventory;
+	public WebElement inventory;
 
 	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/a/span")
-	private WebElement managementMenu;
+	public WebElement managementMenu;
 
 	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/ul/li[1]/a")
-	private WebElement assetsManagement;
+	public WebElement assetsManagement;
 
 	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/ul/li[2]/a")
-	private WebElement routeManagement;
+	public WebElement routeManagement;
 
 	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/ul/li[3]/a")
-	private WebElement masterManagement;
+	public WebElement masterManagement;
 
 	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/ul/li[4]/a")
-	private WebElement categoryManagement;
+	public WebElement categoryManagement;
 
 	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/a")
-	private WebElement goodsMenu;
+	public WebElement goodsMenu;
 	
 	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/ul/li[2]/a")
-	private WebElement goodsReceive;
+	public WebElement goodsReceive;
 	
 	@FindBy(xpath = "//*[@id=\"main-menu-navigation\"]/li/ul/li[1]/a")
-	private WebElement goodsTransfer;
+	public WebElement goodsTransfer;
 	
 	
 	public Menu(WebDriver driver, AngularWait aw) {

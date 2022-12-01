@@ -137,6 +137,26 @@ public class NewCustomer {
 		}
 	}
 
+	public NewCustomer(WebDriver driver, AngularWait aw, String skufile) {
+		this.driver = driver;
+		this.aw = aw;
+		this.js = ((JavascriptExecutor) this.driver);
+		PageFactory.initElements(driver, this);
+		try {
+			file = new File(skufile);
+			finput = new FileInputStream(file);
+			formatter = new DataFormatter();
+			workbook = new XSSFWorkbook(finput);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	
 	public void closeFileInputStream() {
 		try {
 			finput.close();

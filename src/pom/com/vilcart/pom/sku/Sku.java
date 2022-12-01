@@ -36,10 +36,10 @@ public class Sku {
 	private WebDriverWait wait;
 	private int[] numberOfVariations;
 	public static final int maxNumberOfVariations = 4;
-	public static final int dataLengthOn1Variation = 14;
-	public static final int dataLengthOn2Variation = 17;
-	public static final int dataLengthOn3Variation = 20;
-	public static final int dataLengthOn4Variation = 23;
+	public static final int dataLengthOn1Variation = 15;
+	public static final int dataLengthOn2Variation = 18;
+	public static final int dataLengthOn3Variation = 21;
+	public static final int dataLengthOn4Variation = 24;
 	public int numberOfSku = 0;
 	public String[][] data;
 	// data length is 0 indexed based value with sku as index
@@ -176,6 +176,7 @@ public class Sku {
 			if (field.contentEquals(value)) {
 				cell2 = sheet.getRow(i).getCell(1);
 				String value2 = formatter.formatCellValue(cell2);
+				Reporter.log(value2, true);
 				return value2;
 			}
 		}
@@ -203,6 +204,7 @@ public class Sku {
 				if (temp == index) {
 					cell2 = sheet.getRow(i).getCell(1);
 					String value2 = formatter.formatCellValue(cell2);
+					Reporter.log(value2, true);
 					return value2;
 				}
 			}
@@ -232,6 +234,7 @@ public class Sku {
 				if (temp == index) {
 					cell2 = sheet.getRow(i).getCell(skuIndex + 1);
 					String value2 = formatter.formatCellValue(cell2);
+					Reporter.log(value2, true);
 					return value2;
 				}
 			}
@@ -252,12 +255,13 @@ public class Sku {
 		}
 		numberOfSku = Integer.parseInt(value);
 		// 23 is the max number of Fields in the file from which SKU is read.
-		data = new String[Integer.parseInt(value)][23];
-		dataLength = new int[Integer.parseInt(value)];
-		skuNameArray = new String[Integer.parseInt(value)][1];
+		data = new String[numberOfSku][23 + 1];
+		dataLength = new int[numberOfSku];
+		skuNameArray = new String[numberOfSku][1];
+		numberOfVariations = new int[numberOfSku];
 
 		for (int i = 0; i < Integer.parseInt(value); i++) {
-			int key = 0;
+			int key = 1;
 			data[i][key++] = fetchField("itemHSNCode", 1, i);
 			data[i][key++] = fetchField("skuName", 1, i);
 			skuNameArray[i][0] = fetchField("skuName", 1, i);
@@ -271,6 +275,7 @@ public class Sku {
 			data[i][key++] = fetchField("amountType", 1, i);
 			data[i][key++] = fetchField("brandName", 1, i);
 			data[i][key] = fetchField("numberOfVariations", 1, i);
+			this.numberOfVariations[i] = Integer.parseInt(fetchField("numberOfVariations", 1, i));
 			variationIndex = key;
 			key++;
 
@@ -285,10 +290,12 @@ public class Sku {
 				data[i][key++] = fetchField("price", j + 1, i);
 				data[i][key++] = fetchField("valueText", j + 1, i);
 			}
-			dataLength[i] = key - 1;
+			data[i][0] = Integer.toString(key);
+			dataLength[i] = key;
 		}
 
 		for (int i = 0; i < numberOfSku; i++) {
+			Reporter.log("SKU id:\"" + (i + 1) + "\"", true);
 			switch (dataLength[i]) {
 			case Sku.dataLengthOn1Variation:
 				Reporter.log("dataLength of size \"" + Sku.dataLengthOn1Variation + "\"", true);
@@ -439,10 +446,10 @@ public class Sku {
 	}
 
 	// TODO update SKU's
-	public String createSku(String... tuples) {
+	public String createSku(String length, String... tuples) {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 
-		switch (tuples.length) {
+		switch (Integer.parseInt(length)) {
 		case Sku.dataLengthOn1Variation:
 			Reporter.log("dataLength of size \"" + Sku.dataLengthOn1Variation + "\"", true);
 			break;
@@ -456,128 +463,125 @@ public class Sku {
 			Reporter.log("dataLength of size \"" + Sku.dataLengthOn4Variation + "\"", true);
 			break;
 		default:
-			Reporter.log("dataLength of size \"" + tuples.length + "\" Which doesn't fit into standard", true);
+			Reporter.log("dataLength of size \"" + Integer.parseInt(length) + "\" Which doesn't fit into standard",
+					true);
 			assertThat(false)
-					.withFailMessage("dataLength of size \"" + tuples.length + "\" Which doesn't fit into standard")
+					.withFailMessage(
+							"dataLength of size \"" + Integer.parseInt(length) + "\" Which doesn't fit into standard")
 					.isEqualTo(true);
 		}
 
 		int NoOfSku = Integer.parseInt(fetchField("NoOfSku"));
-		for (int i = 0; i < NoOfSku; i++) {
-			int skuIndex = i;
+//		for (int i = 0; i < NoOfSku; i++) {
+//			int skuIndex = i;
 
-			addSKU.click();
-			aw.waitAllRequest();
+		addSKU.click();
+		aw.waitAllRequest();
 
-			itemHSNCode.clear();
-			itemHSNCode.sendKeys(fetchField("itemHSNCode", 1, i));
+		itemHSNCode.clear();
+		itemHSNCode.sendKeys(tuples[0]);
 
-			skuName.clear();
-			skuName.sendKeys(fetchField("skuName", 1, i));
+		skuName.clear();
+		skuName.sendKeys(tuples[1]);
 
-			localName.clear();
-			localName.sendKeys(fetchField("localName", 1, i));
+		localName.clear();
+		localName.sendKeys(tuples[2]);
 
-			description.clear();
-			description.sendKeys(fetchField("description", 1, i));
+		description.clear();
+		description.sendKeys(tuples[3]);
 
-			category.findElement(By.xpath(".//div/div/div[3]/input")).click();
-			List<WebElement> categoryList = category.findElements(By.xpath(".//ng-dropdown-panel/div/div[2]/div"));
-			for (int j = 0; j < categoryList.size(); j++) {
-				WebElement option = categoryList.get(j).findElement(By.xpath(".//span"));
-				if (option.getText().equalsIgnoreCase(fetchField("category", 1, i))) {
-					option.click();
-					break;
-				}
-				if (j == categoryList.size()) {
-					assertThat(false)
-							.withFailMessage(
-									"given category " + fetchField("category", 1, i) + " not present in category List")
-							.isEqualTo(true);
-				}
+		category.findElement(By.xpath(".//div/div/div[3]/input")).click();
+		List<WebElement> categoryList = category.findElements(By.xpath(".//ng-dropdown-panel/div/div[2]/div"));
+		for (int j = 0; j < categoryList.size(); j++) {
+			WebElement option = categoryList.get(j).findElement(By.xpath(".//span"));
+			if (option.getText().equalsIgnoreCase(tuples[4])) {
+				option.click();
+				break;
 			}
-			aw.waitAllRequest();
-
-			js.executeScript("arguments[0].scrollIntoViewIfNeeded();", subCategory);
-			subCategory.findElement(By.xpath(".//div/div/div[2]/input")).click();
-			List<WebElement> subCategoryList = subCategory
-					.findElements(By.xpath(".//ng-dropdown-panel/div/div[2]/div"));
-			int j;
-			for (j = 0; j < subCategoryList.size(); j++) {
-				WebElement option = subCategoryList.get(j).findElement(By.xpath(".//span"));
-				if (option.getText().equalsIgnoreCase(fetchField("subCategory", 1, i))) {
-					option.click();
-					break;
-				}
-			}
-			if (j == subCategoryList.size()) {
-				assertThat(false).withFailMessage(
-						"given subCategory " + fetchField("subCategory", 1, i) + " not present in subCategory List")
+			if (j == categoryList.size()) {
+				assertThat(false).withFailMessage("given category " + tuples[4] + " not present in category List")
 						.isEqualTo(true);
 			}
+		}
+		aw.waitAllRequest();
 
-			gstRate.clear();
-			gstRate.sendKeys(fetchField("gstRate", 1, i));
-
-			cessAmount.clear();
-			cessAmount.sendKeys(fetchField("cessAmount", 1, i));
-
-			amountType.findElement(By.xpath(".//div/div/div[3]/input")).click();
-			List<WebElement> subAmountType = amountType.findElements(By.xpath(".//ng-dropdown-panel/div/div[2]/div"));
-			for (j = 0; j < subAmountType.size(); j++) {
-				WebElement option = subAmountType.get(j).findElement(By.xpath(".//span"));
-				if (option.getText().equalsIgnoreCase(fetchField("amountType", 1, i))) {
-					option.click();
-					break;
-				}
+		js.executeScript("arguments[0].scrollIntoViewIfNeeded();", subCategory);
+		subCategory.findElement(By.xpath(".//div/div/div[2]/input")).click();
+		List<WebElement> subCategoryList = subCategory.findElements(By.xpath(".//ng-dropdown-panel/div/div[2]/div"));
+		int j;
+		for (j = 0; j < subCategoryList.size(); j++) {
+			WebElement option = subCategoryList.get(j).findElement(By.xpath(".//span"));
+			if (option.getText().equalsIgnoreCase(tuples[5])) {
+				option.click();
+				break;
 			}
-			if (j == subAmountType.size()) {
-				assertThat(false).withFailMessage(
-						"given amountType " + fetchField("amountType", 1, i) + " not present in amountType List")
-						.isEqualTo(true);
+		}
+		if (j == subCategoryList.size()) {
+			assertThat(false).withFailMessage("given subCategory " + tuples[5] + " not present in subCategory List")
+					.isEqualTo(true);
+		}
+
+		gstRate.clear();
+		gstRate.sendKeys(tuples[6]);
+
+		cessAmount.clear();
+		cessAmount.sendKeys(tuples[7]);
+
+		amountType.findElement(By.xpath(".//div/div/div[3]/input")).click();
+		List<WebElement> subAmountType = amountType.findElements(By.xpath(".//ng-dropdown-panel/div/div[2]/div"));
+		for (j = 0; j < subAmountType.size(); j++) {
+			WebElement option = subAmountType.get(j).findElement(By.xpath(".//span"));
+			if (option.getText().equalsIgnoreCase(tuples[8])) {
+				option.click();
+				break;
 			}
+		}
+		if (j == subAmountType.size()) {
+			assertThat(false).withFailMessage("given amountType " + tuples[8] + " not present in amountType List")
+					.isEqualTo(true);
+		}
 
-			brandName.findElement(By.xpath(".//div/div/div[2]/input"));
-			js.executeScript("arguments[0].value='" + fetchField("brandName", 1, i)
-					+ "';arguments[0].click();arguments[0].dispatchEvent(new Event('input', { bubbles: true }))",
-					brandName);
+		brandName.findElement(By.xpath(".//div/div/div[2]/input"));
+		js.executeScript(
+				"arguments[0].value='" + tuples[9]
+						+ "';arguments[0].click();arguments[0].dispatchEvent(new Event('input', { bubbles: true }))",
+				brandName);
 
-			this.numberOfVariations[skuIndex] = Integer.parseInt(fetchField("numberOfVariations", 1, i));
-			Reporter.log("Number of Variations " + numberOfVariations[skuIndex], true);
-			assertThat(this.numberOfVariations[skuIndex])
-					.withFailMessage("Number of variations cannot be greater than 4")
-					.isLessThanOrEqualTo(maxNumberOfVariations);
-			for (int k = 0; k < this.numberOfVariations[skuIndex]; k++) {
-				WebElement variationButton = driver.findElement(By.xpath("//*[@id=\"variationButton\"]"));
-				js.executeScript("arguments[0].scrollIntoViewIfNeeded();", variationButton);
-				variationButton.click();
+		Integer.parseInt(tuples[10]);
+//		Reporter.log("Number of Variations " + numberOfVariations[skuIndex], true);
+		assertThat(Integer.parseInt(tuples[10])).withFailMessage("Number of variations cannot be greater than 4")
+				.isLessThanOrEqualTo(maxNumberOfVariations);
+		for (int k = 0; k < Integer.parseInt(tuples[10]); k++) {
+			WebElement variationButton = driver.findElement(By.xpath("//*[@id=\"variationButton\"]"));
+			js.executeScript("arguments[0].scrollIntoViewIfNeeded();", variationButton);
+			variationButton.click();
 
-				variationName.get(k).clear();
-				variationName.get(k).sendKeys(fetchField("variationName", k + 1, i));
-				Reporter.log(variationName.get(k).getAttribute("value"), true);
+			variationName.get(k).clear();
+			variationName.get(k).sendKeys(tuples[10 + ((k * 3) + 1)]);
+			Reporter.log(variationName.get(k).getAttribute("value"), true);
 
-				js.executeScript("arguments[0].scrollIntoViewIfNeeded();", price.get(k));
-				price.get(k).clear();
-				price.get(k).sendKeys(fetchField("price", k + 1, i));
-				Reporter.log(variationName.get(k).getAttribute("value"), true);
-				// WebElement unit = driver.findElement(By.xpath("//*[@id=\"unitText\"]"));
-				// unit.sendKeys("1");
+			js.executeScript("arguments[0].scrollIntoViewIfNeeded();", price.get(k));
+			price.get(k).clear();
+			price.get(k).sendKeys(tuples[10 + (k * 3) + 2]);
+			Reporter.log(variationName.get(k).getAttribute("value"), true);
+			// WebElement unit = driver.findElement(By.xpath("//*[@id=\"unitText\"]"));
+			// unit.sendKeys("1");
 
-				js.executeScript("arguments[0].scrollIntoViewIfNeeded();", valueText.get(k));
-				valueText.get(k).clear();
-				valueText.get(k).sendKeys(fetchField("valueText", k + 1, i));
-				Reporter.log(valueText.get(k).getAttribute("value"), true);
-			}
+			js.executeScript("arguments[0].scrollIntoViewIfNeeded();", valueText.get(k));
+			valueText.get(k).clear();
+			valueText.get(k).sendKeys(tuples[10 + (k * 3) + 3]);
+			Reporter.log(valueText.get(k).getAttribute("value"), true);
+		}
 
 ////		FileOutputStream fos = new FileOutputStream("resources\\SKU.xlsx");
 ////		workbook.write(fos);
 //		fos.close();
 //		closeFileInputStream();
 
-			js.executeScript("arguments[0].scrollIntoViewIfNeeded();", saveButton);
-			saveButton.click();
-			aw.waitAllRequest();
-		}
+		js.executeScript("arguments[0].scrollIntoViewIfNeeded();", saveButton);
+		saveButton.click();
+		aw.waitAllRequest();
+//		}
 		return null;
 	}
 

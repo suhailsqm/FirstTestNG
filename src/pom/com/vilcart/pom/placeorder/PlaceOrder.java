@@ -123,14 +123,16 @@ public class PlaceOrder {
 		XSSFCell cell2;
 		XSSFCell cell3;
 		XSSFCell cell4;
+		int numberOfItems = 0;
 		int rowKey = 0;
 		sheet = workbook.getSheetAt(0);
-		data = new String[sheet.getLastRowNum() + 1][4];
-		cella = sheet.getRow(0).getCell(1);
+		numberOfItems = Integer.parseInt(formatter.formatCellValue(sheet.getRow(51).getCell(1)));
+		data = new String[numberOfItems][4];
+		cella = sheet.getRow(49).getCell(1);
 		customerName = formatter.formatCellValue(cella);
-		cellb = sheet.getRow(1).getCell(1);
+		cellb = sheet.getRow(50).getCell(1);
 		phoneNumber = formatter.formatCellValue(cellb);
-		for (int i = 3; i <= sheet.getLastRowNum(); i++) {
+		for (int i = 53; i <= sheet.getLastRowNum() && rowKey < numberOfItems; i++) {
 			cell1 = sheet.getRow(i).getCell(0);
 			data[rowKey][0] = formatter.formatCellValue(cell1);
 
@@ -146,7 +148,7 @@ public class PlaceOrder {
 			rowKey++;
 		}
 		closeFileInputStream();
-		return sheet.getLastRowNum() - 3 + 1;
+		return rowKey;
 	}
 
 	public void clickFirstCustomer() {
@@ -187,7 +189,7 @@ public class PlaceOrder {
 		Reporter.log("===>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		int items = fetchData();
 		if (items == 0)
-			throw new SkipException("Skipping this exception No data in resources\\PlaceOrder.xlsx");
+			throw new SkipException("Skipping this exception No data in resources\\PlaceOrder\\PlaceOrder.xlsx");
 
 		searchCustomer(phoneNumber);
 		clickFirstCustomer();

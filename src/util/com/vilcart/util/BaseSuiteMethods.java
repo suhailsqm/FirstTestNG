@@ -29,17 +29,18 @@ public class BaseSuiteMethods {
 //  }
 	@BeforeSuite
 	public void beforeSuite(ITestContext context) throws IOException {
-		//http://makeseleniumeasy.com/2020/01/06/testng-tutorials-68-sharing-data-between-tests-in-a-suite-using-isuite-itestcontext/
-		//https://stackoverflow.com/questions/50347922/how-to-get-the-current-class-driver-in-itestlistener
+		// http://makeseleniumeasy.com/2020/01/06/testng-tutorials-68-sharing-data-between-tests-in-a-suite-using-isuite-itestcontext/
+		// https://stackoverflow.com/questions/50347922/how-to-get-the-current-class-driver-in-itestlistener
 		Reporter.log("=>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		if (ReadPropertiesFile.readPropertiesFile().getProperty("vilcart.docker.enabled").contentEquals("true")) {
 			WebDriverManager.chromedriver().setup();
 			driver1 = new ChromeDriver();
+			Reporter.log("driver1 is " + driver1, true);
 			wdm = WebDriverManager.chromedriver().browserInDocker().enableVnc();
 			wdm.dockerShmSize("2g");
 			assumeThat(isDockerAvailable()).isTrue();
 			driver = wdm.create();
-
+			Reporter.log("driver is " + driver, true);
 			URL noVncUrl = wdm.getDockerNoVncUrl();
 			assertThat(noVncUrl).isNotNull();
 			Reporter.log(noVncUrl + "", true);
@@ -49,6 +50,7 @@ public class BaseSuiteMethods {
 		} else {
 			WebDriverManager.chromedriver().setup();
 			driver = new ChromeDriver();
+			Reporter.log("driver is " + driver, true);
 			context.setAttribute("WebDriver", driver);
 		}
 	}
