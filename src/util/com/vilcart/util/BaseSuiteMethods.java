@@ -15,6 +15,7 @@ import java.net.URL;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.ISuite;
 import org.testng.ITestContext;
 import org.testng.Reporter;
 import org.testng.annotations.AfterSuite;
@@ -46,12 +47,14 @@ public class BaseSuiteMethods {
 			Reporter.log(noVncUrl + "", true);
 
 			driver1.get(noVncUrl + "");
-			context.setAttribute("WebDriver", driver);
+			ISuite suite = context.getSuite();
+			suite.setAttribute("WebDriver", driver);
 		} else {
 			WebDriverManager.chromedriver().setup();
 			driver = new ChromeDriver();
 			Reporter.log("driver is " + driver, true);
-			context.setAttribute("WebDriver", driver);
+			ISuite suite = context.getSuite();
+			suite.setAttribute("WebDriver", driver);
 		}
 	}
 

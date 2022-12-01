@@ -406,7 +406,7 @@ public class Sku {
 				"arguments[0].value='" + fetchField("brandName")
 						+ "';arguments[0].click();arguments[0].dispatchEvent(new Event('input', { bubbles: true }))",
 				brandName);
-
+		this.numberOfVariations = new int[1];
 		this.numberOfVariations[skuIndex] = Integer.parseInt(fetchField("numberOfVariations"));
 		Reporter.log("Number of Variations " + numberOfVariations[skuIndex], true);
 		assertThat(this.numberOfVariations[skuIndex]).withFailMessage("Number of variations cannot be greater than 4")

@@ -14,6 +14,7 @@ import util.com.vilcart.util.TimeStamp;
 
 import org.testng.annotations.Test;
 import org.openqa.selenium.WebDriver;
+import org.testng.ISuite;
 import org.testng.ITestContext;
 import org.testng.Reporter;
 import org.testng.annotations.AfterClass;
@@ -54,8 +55,9 @@ public class Customer_001 extends BaseSuiteMethods {
 	@BeforeClass
 	public void beforeClassCustomerFlow(ITestContext context) throws IOException {
 		Reporter.log("=>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
-		Reporter.log(context.getAttribute("WebDriver")+"", true);
-		driver = (WebDriver) context.getAttribute("WebDriver");
+		ISuite suite = context.getSuite();
+		driver = (WebDriver) suite.getAttribute("WebDriver");
+		Reporter.log(suite.getAttribute("WebDriver")+"", true);
 		driver.get(ReadPropertiesFile.readPropertiesFile().getProperty("vilcart.deployed.url"));
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
