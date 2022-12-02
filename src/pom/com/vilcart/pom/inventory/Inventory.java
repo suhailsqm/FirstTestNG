@@ -163,7 +163,48 @@ public class Inventory {
 		saveCacheInInventory();
 	}
 
+	public int verifyOpeningStock(String skuName) throws InterruptedException {
+		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		fetchLiveDataInInventory();
+		searchInInventory(skuName);
+		if (skuTuples.size() == 0) {
+			assertThat(false).withFailMessage("No sku with name:\'" + skuName + "\' in search").isEqualTo(true);
+		}
+		for (int i = 0; i < skuTuples.size(); i++) {
+			WebElement we = skuTuples.get(i).findElement(By.xpath(".//td[8]"));// *[@id="skuTuple"]/td[8]
+			if (we.equals(null)) {
+				assertThat(false).withFailMessage("No sku with name:\'" + skuName + "\' in search for opening stock")
+						.isEqualTo(true);
+			}
+			return Integer.parseInt(we.getText());
+		}
+		assertThat(false).withFailMessage("No sku with name:\'" + skuName + "\' in search for opening stock")
+				.isEqualTo(true);
+		return 0;
+	}
+
+	public int verifyClosingBalance(String skuName) throws InterruptedException {
+		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		fetchLiveDataInInventory();
+		searchInInventory(skuName);
+		if (skuTuples.size() == 0) {
+			assertThat(false).withFailMessage("No sku with name:\'" + skuName + "\' in search").isEqualTo(true);
+		}
+		for (int i = 0; i < skuTuples.size(); i++) {
+			WebElement we = skuTuples.get(i).findElement(By.xpath(".//td[16]"));//*[@id="skuTuple"]/td[16]
+			if (we.equals(null)) {
+				assertThat(false).withFailMessage("No sku with name:\'" + skuName + "\' in search for opening stock")
+						.isEqualTo(true);
+			}
+			return Integer.parseInt(we.getText());
+		}
+		assertThat(false).withFailMessage("No sku with name:\'" + skuName + "\' in search for opening stock")
+				.isEqualTo(true);
+		return 0;
+	}
+
 	public int getInventoryGoodsInCount(String skuName) {
+		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		searchInInventory(skuName);
 
 		if (skuTuples.size() == 0) {
