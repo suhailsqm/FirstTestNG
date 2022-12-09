@@ -1,1 +1,1 @@
-SKU => Contains data for one SKU.
+SKU => Contains data for one SKU. Used in Inventory.

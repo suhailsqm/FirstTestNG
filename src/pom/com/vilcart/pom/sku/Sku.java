@@ -48,6 +48,7 @@ public class Sku {
 	public int variationIndex;
 	public String[][] skuNameArray;
 	public boolean dataCollected = false;
+	public String[][][] skuVarValueData;
 
 	private String fileName;
 	private File file;
@@ -259,13 +260,14 @@ public class Sku {
 		dataLength = new int[numberOfSku];
 		skuNameArray = new String[numberOfSku][1];
 		numberOfVariations = new int[numberOfSku];
-
+		skuVarValueData = new String[numberOfSku][maxNumberOfVariations][3];
+		
 		for (int i = 0; i < Integer.parseInt(value); i++) {
 			int key = 1;
 			data[i][key++] = fetchField("itemHSNCode", 1, i);
 			data[i][key++] = fetchField("skuName", 1, i);
 			skuNameArray[i][0] = fetchField("skuName", 1, i);
-
+			
 			data[i][key++] = fetchField("localName", 1, i);
 			data[i][key++] = fetchField("description", 1, i);
 			data[i][key++] = fetchField("category", 1, i);
@@ -289,6 +291,9 @@ public class Sku {
 				data[i][key++] = fetchField("variationName", j + 1, i);
 				data[i][key++] = fetchField("price", j + 1, i);
 				data[i][key++] = fetchField("valueText", j + 1, i);
+				skuVarValueData[i][j][0] = fetchField("skuName", 1, i);
+				skuVarValueData[i][j][1] = fetchField("variationName", j + 1, i);
+				skuVarValueData[i][j][2] = fetchField("valueText", j + 1, i);
 			}
 			data[i][0] = Integer.toString(key);
 			dataLength[i] = key;

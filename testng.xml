@@ -41,7 +41,7 @@
 			</class>
 		</classes>
 	</test>
-	-->
+	
 	<test thread-count="1" name="inventory">
 		<classes>
 			<class name="app.com.vilcart.app.inventory.Inventory_changeStock_001">
@@ -55,28 +55,31 @@
 			</class>
 		</classes>
 	</test>
+	
+	-->
 
-	<!--
 	<test thread-count="1" name="goods">
 		<classes>
 			<class name="app.com.vilcart.app.goods.GoodsReceive_001">
 				<methods>
-					<include name="createSku" />
-					<include name="skuInList" />
-					<include name="GoodsReceive" />
-					<include name="deleteSku" />
+					<exclude name="createSku" />
+					<exclude name="skuInList" />
+					<exclude name="GoodsReceive" />
+					<exclude name="deleteSku" />
 				</methods>
 			</class>
 			<class name="app.com.vilcart.app.goods.GoodsTransfer_001">
 				<methods>
 					<include name="createSku" />
-					<include name="skuInList" />
+					<exclude name="skuInList" />
+					<include name="updateInventory" />
 					<include name="GoodsTransfer" />
+					<include name="checkGoodsTransferInventory" />
 					<include name="deleteSku" />
 				</methods>
 			</class>
 		</classes>
-	</test> -->
+	</test>
 	<!-- Test -->
 
 </suite> <!-- Suite -->

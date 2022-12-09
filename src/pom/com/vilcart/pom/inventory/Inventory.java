@@ -75,6 +75,7 @@ public class Inventory {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		js.executeScript("arguments[0].scrollIntoViewIfNeeded();", cacheDropDown);
 		cacheDropDown.click();
+		aw.waitAllRequest();
 		fetchLiveData.click();
 		aw.waitAllRequest();
 	}
@@ -83,7 +84,19 @@ public class Inventory {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		js.executeScript("arguments[0].scrollIntoViewIfNeeded();", cacheDropDown);
 		cacheDropDown.click();
+		aw.waitAllRequest();
 		saveCache.click();
+		aw.waitAllRequest();
+	}
+
+	public void clearSearchTabInInventory() {
+		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		searchInput.clear();
+//		searchButton.click();
+//		Both input and keyup event trigger should be raised for proper working.
+		js.executeScript(
+				"arguments[0].dispatchEvent(new Event('input',{ bubbles : true}));arguments[0].dispatchEvent(new Event('keyup', { bubbles: true }))",
+				searchInput);
 		aw.waitAllRequest();
 	}
 
@@ -121,7 +134,7 @@ public class Inventory {
 
 		fetchLiveDataInInventory();
 
-		Thread.sleep(3000);
+//		Thread.sleep(3000);
 		// js.executeScript("arguments[0].click();arguments[0].value='" + sku
 		// + "';arguments[0].click();arguments[0].dispatchEvent(new Event('input', {
 		// bubbles: true }));arguments[0].dispatchEvent(new Event('keyup', { bubbles:
@@ -154,13 +167,16 @@ public class Inventory {
 
 				submitStock.click();
 				aw.waitAllRequest();
-				Thread.sleep(3000);
+//				Thread.sleep(3000);
 			}
 		}
 		if (contains == false) {
 			assertThat(false).withFailMessage("SKU is not present with name:" + sku).isEqualTo(true);
 		}
+		clearSearchTabInInventory();
 		saveCacheInInventory();
+		aw.waitAllRequest();
+//		Thread.sleep(3000);
 	}
 
 	public int verifyOpeningStock(String skuName) throws InterruptedException {
@@ -191,7 +207,7 @@ public class Inventory {
 			assertThat(false).withFailMessage("No sku with name:\'" + skuName + "\' in search").isEqualTo(true);
 		}
 		for (int i = 0; i < skuTuples.size(); i++) {
-			WebElement we = skuTuples.get(i).findElement(By.xpath(".//td[16]"));//*[@id="skuTuple"]/td[16]
+			WebElement we = skuTuples.get(i).findElement(By.xpath(".//td[16]"));// *[@id="skuTuple"]/td[16]
 			if (we.equals(null)) {
 				assertThat(false).withFailMessage("No sku with name:\'" + skuName + "\' in search for opening stock")
 						.isEqualTo(true);
@@ -203,8 +219,9 @@ public class Inventory {
 		return 0;
 	}
 
-	public int getInventoryGoodsInCount(String skuName) {
+	public double getInventoryGoodsInCount(String skuName) throws InterruptedException {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		fetchLiveDataInInventory();
 		searchInInventory(skuName);
 
 		if (skuTuples.size() == 0) {
@@ -221,7 +238,8 @@ public class Inventory {
 				contains = true;
 				String xpath = ".//td[15]";
 				WebElement GoodsInCount = skuTuples.get(i).findElement(By.xpath(xpath));
-				return Integer.parseInt(GoodsInCount.getText().trim());
+				Reporter.log("Goods In Stock in Inventory is " + GoodsInCount.getText().trim() + ".", contains);
+				return Double.parseDouble(GoodsInCount.getText().trim());
 			}
 		}
 		if (contains == false) {
@@ -231,7 +249,9 @@ public class Inventory {
 		return 0;
 	}
 
-	public int getInventoryGoodsOutCount(String skuName) {
+	public double getInventoryGoodsOutCount(String skuName) throws InterruptedException {
+		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		fetchLiveDataInInventory();
 		searchInInventory(skuName);
 
 		if (skuTuples.size() == 0) {
@@ -243,12 +263,14 @@ public class Inventory {
 			WebElement name = skuTuples.get(i).findElement(By.xpath(xp));
 			Reporter.log(name.getAccessibleName(), true);
 			Reporter.log(name.getText(), true);
-			assertThat(name.getText().toLowerCase()).containsIgnoringCase(skuName);
+			assertThat(name.getText().toLowerCase()).withFailMessage("SKU Name /'" + name.getText().toLowerCase()
+					+ "/' is not matching in inventory /'" + skuName + "/'.").containsIgnoringCase(skuName);
 			if (name.getText().equalsIgnoreCase(skuName)) {
 				contains = true;
 				String xpath = ".//td[14]";
 				WebElement GoodsInCount = skuTuples.get(i).findElement(By.xpath(xpath));
-				return Integer.parseInt(GoodsInCount.getText().trim());
+				Reporter.log("Goods Out Stock in Inventory is " + GoodsInCount.getText().trim() + ".", contains);
+				return Double.parseDouble(GoodsInCount.getText().trim());
 			}
 		}
 		if (contains == false) {
