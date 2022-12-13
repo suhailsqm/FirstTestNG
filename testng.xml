@@ -62,20 +62,22 @@
 		<classes>
 			<class name="app.com.vilcart.app.goods.GoodsReceive_001">
 				<methods>
-					<exclude name="createSku" />
-					<exclude name="skuInList" />
-					<exclude name="GoodsReceive" />
-					<exclude name="deleteSku" />
+					<include name="createSku" />
+					<include name="skuInList" />
+					<include name="updateInventory" />
+					<include name="GoodsReceive" />
+					<include name="checkGoodsReceiveInventory" />
+					<include name="deleteSku" />
 				</methods>
 			</class>
 			<class name="app.com.vilcart.app.goods.GoodsTransfer_001">
 				<methods>
-					<include name="createSku" />
+					<exclude name="createSku" />
 					<exclude name="skuInList" />
-					<include name="updateInventory" />
-					<include name="GoodsTransfer" />
-					<include name="checkGoodsTransferInventory" />
-					<include name="deleteSku" />
+					<exclude name="updateInventory" />
+					<exclude name="GoodsTransfer" />
+					<exclude name="checkGoodsTransferInventory" />
+					<exclude name="deleteSku" />
 				</methods>
 			</class>
 		</classes>

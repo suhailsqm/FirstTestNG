@@ -238,7 +238,8 @@ public class Inventory {
 				contains = true;
 				String xpath = ".//td[15]";
 				WebElement GoodsInCount = skuTuples.get(i).findElement(By.xpath(xpath));
-				Reporter.log("Goods In Stock in Inventory is " + GoodsInCount.getText().trim() + ".", contains);
+				Reporter.log(skuName + " Goods In Stock in Inventory is " + GoodsInCount.getText().trim() + ".",
+						contains);
 				return Double.parseDouble(GoodsInCount.getText().trim());
 			}
 		}
@@ -269,7 +270,8 @@ public class Inventory {
 				contains = true;
 				String xpath = ".//td[14]";
 				WebElement GoodsInCount = skuTuples.get(i).findElement(By.xpath(xpath));
-				Reporter.log("Goods Out Stock in Inventory is " + GoodsInCount.getText().trim() + ".", contains);
+				Reporter.log(skuName + " Goods Out Stock in Inventory is " + GoodsInCount.getText().trim() + ".",
+						contains);
 				return Double.parseDouble(GoodsInCount.getText().trim());
 			}
 		}

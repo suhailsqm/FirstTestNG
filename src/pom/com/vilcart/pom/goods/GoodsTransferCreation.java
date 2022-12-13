@@ -196,7 +196,7 @@ public class GoodsTransferCreation {
 //		int items = fetchData();
 		if (this.itemsCount == 0)
 			throw new SkipException("Skipping this exception No data in resources\\Goods\\GoodsTransfer.xlsx");
-		
+
 		try {
 			Thread.sleep(3000);
 		} catch (InterruptedException e2) {
@@ -245,7 +245,7 @@ public class GoodsTransferCreation {
 					break;
 				}
 				if (i1 == listSelectDropDown.size() - 1) {
-					assertThat(data[i][1]).withFailMessage("No variation with search Criteria " + data[i][1])
+					assertThat(data[i][2]).withFailMessage("No variation with search Criteria " + data[i][2])
 							.isEqualToIgnoringCase(varSelectDropDown.getText().trim());
 				}
 			}
@@ -293,9 +293,13 @@ public class GoodsTransferCreation {
 		}
 		aw.waitAllRequest();
 		String handle = driver.getWindowHandle();
-
+		Reporter.log("Window not supposed to close is " + handle, true);
 		transferButton.click();
+		handle = driver.getWindowHandle();
+		Reporter.log("Window not supposed to close is " + handle, true);
 		aw.waitAllRequest();
+		handle = driver.getWindowHandle();
+		Reporter.log("Window not supposed to close is " + handle, true);
 
 		WebDriverWait wait;
 		wait = new WebDriverWait(driver, Duration.ofSeconds(30));
@@ -318,7 +322,7 @@ public class GoodsTransferCreation {
 				Reporter.log(LineNumber.getLineNumber() + " close " + actual, true);
 				try {
 					driver.switchTo().window(actual);
-					Reporter.log(driver.getTitle(), true);
+					Reporter.log("title is " + driver.getTitle(), true);
 					driver.close();
 //					driver.switchTo().window(actual).close();
 
