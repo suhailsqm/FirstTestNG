@@ -77,19 +77,20 @@ public class Delivery {
 		return dtf.format(indiaDateTime);
 	}
 
-	public void evaluateOrderInDelivery(String orderNumber) {
+	public void evaluateOrderInDelivery(String invoiceNumber) {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 
 		assertThat(deliveryTuples.size()).withFailMessage("No Tuples in delivery").isGreaterThan(0).descriptionText();
 		for (int i = 0; i < deliveryTuples.size(); i++) {
 			WebElement orderElement = deliveryTuples.get(i).findElement(By.xpath("//td[4]"));
-			if (orderElement.getText().equalsIgnoreCase(orderNumber)) {
+			if (orderElement.getText().equalsIgnoreCase(invoiceNumber)) {
 				assertThat(orderElement.getText())
-						.withFailMessage("order Number doesn't tally" + orderElement.getText())
-						.isEqualToIgnoringCase(orderNumber);
+						.withFailMessage("invoice Number doesn't tally" + orderElement.getText())
+						.isEqualToIgnoringCase(invoiceNumber);
 				try {
 					WebElement action = deliveryTuples.get(i).findElement(By.xpath("//td[10]/div/button"));
 					action.click();
+					aw.waitAllRequest();
 				} catch (org.openqa.selenium.StaleElementReferenceException ex) {
 					WebElement action = deliveryTuples.get(i).findElement(By.xpath("//td[10]/div/button"));
 					action.click();

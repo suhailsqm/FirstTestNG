@@ -54,9 +54,9 @@ public class OrderFlow {
 	private String invoiceNumber;
 	private WebDriverManager wdm;
 
-	private boolean docker = true;
+	private boolean docker = false;
 
-	@Test(priority = 1)
+	@Test(priority = 1, enabled = true)
 	public void packing() throws IOException, InterruptedException {
 
 		Reporter.log("=>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
@@ -179,7 +179,7 @@ public class OrderFlow {
 		aw.waitAllRequest();
 	}
 
-	@Test(priority = 2, dependsOnMethods = { "packing" })
+	@Test(priority = 2, enabled = true, dependsOnMethods = { "packing" })
 	public void invoice() throws InterruptedException {
 		Reporter.log("=>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		WebElement menuInput = driver.findElement(By.xpath("//*[@id=\"main-menu-content\"]/div[1]/input"));
@@ -190,11 +190,11 @@ public class OrderFlow {
 		menuOrders.click();
 		WebElement menuPacking = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/ul/li[2]/a"));
 		menuPacking.click();
-		menuInput.clear();
-		menuInput.sendKeys("Orders");
-		menuInput.sendKeys(Keys.ENTER);
-		menuOrders = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/a"));
-		menuOrders.click();
+//		menuInput.clear();
+//		menuInput.sendKeys("Orders");
+//		menuInput.sendKeys(Keys.ENTER);
+//		menuOrders = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/a"));
+//		menuOrders.click();
 
 		WebElement startDate = driver.findElement(By.xpath("//*[@id=\"startDate\"]"));// *[@id="startDate"]
 		// DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
@@ -279,7 +279,7 @@ public class OrderFlow {
 					Reporter.log(driver.getTitle(), true);
 					driver.close();
 //					driver.switchTo().window(actual).close();
-					
+
 				} catch (org.openqa.selenium.WebDriverException e) {
 					Reporter.log("unknown error: failed to close window in 20 seconds Exception", true);
 					js.executeScript("window.close();");
@@ -308,13 +308,13 @@ public class OrderFlow {
 		menudispatch.click();
 		aw.waitAllRequest();
 
-		menuInput.clear();
-		menuInput.sendKeys("Orders");
-		menuInput.sendKeys(Keys.ENTER);
+//		menuInput.clear();
+//		menuInput.sendKeys("Orders");
+//		menuInput.sendKeys(Keys.ENTER);
 
-		menuOrders = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/a"));
-		menuOrders.click();
-		aw.waitAllRequest();
+//		menuOrders = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/a"));
+//		menuOrders.click();
+//		aw.waitAllRequest();
 
 		WebElement startDate = driver.findElement(By.xpath("//*[@id=\"startDate\"]"));// *[@id="startDate"]
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu-MM-dd");
@@ -350,7 +350,7 @@ public class OrderFlow {
 //			Reporter.log("actual " + text + " " + i + " " + listTuples.size() + " " + orderNumber, true);
 //			if (text.equalsIgnoreCase(orderNumber)) {
 			Reporter.log("invoice Found " + text, true);
-			String xpath1 = "//*[@id=\"dispatchTuple\"][" + (i + 1) + "]/td[9]/ng-select/div/div/div[2]/input";
+			String xpath1 = "//*[@id=\"selectVehicle\"]/div/div/div[3]/input";
 			WebElement vehicleNumber = driver.findElement(By.xpath(xpath1));
 			vehicleNumber.click();
 			String xpath2 = "//*[@id=\"selectVehicle\"]/ng-dropdown-panel/div/div[2]/div";
@@ -393,11 +393,12 @@ public class OrderFlow {
 		menuInput.clear();
 		menuInput.sendKeys("Orders");
 		menuInput.sendKeys(Keys.ENTER);
-		
-		  WebElement menuOrders; /*=
-		  driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/a"));
-		  menuOrders.click();*/
-		 
+
+		WebElement menuOrders; /*
+								 * = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li/a"));
+								 * menuOrders.click();
+								 */
+
 		WebElement menuDelivery = driver.findElement(By.xpath(" //*[@id=\"main-menu-navigation\"]/li/ul/li[4]/a"));
 		menuDelivery.click();
 		menuInput.clear();
@@ -564,7 +565,8 @@ public class OrderFlow {
 			WebDriverManager.chromedriver().setup();
 			driver = new ChromeDriver();
 		}
-		driver.get("http://192.168.1.48:4200");
+		driver.get("http://localhost:4200");
+//		driver.get("http://192.168.1.48:4200");
 		// driver.get("https://vilcart-buy.web.app");
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));

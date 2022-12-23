@@ -36,6 +36,7 @@ public class PlaceOrder {
 	private DataFormatter formatter;
 	private XSSFWorkbook workbook;
 	private String[][] data;
+	public String orderNumber;
 
 	@FindBy(xpath = "//*[@id=\"iconLeft1\"]")
 	private WebElement searchCustomer;
@@ -80,12 +81,36 @@ public class PlaceOrder {
 	@FindBy(className = "swal2-confirm")
 	WebElement buyAllButton;
 
+	@FindBy(xpath = "//*[@id=\"swal2-title\"]")
+	WebElement orderNumText;
+
+	@FindBy(xpath = "//button[normalize-space()='OK']")
+	WebElement orderOk;
+
 	public PlaceOrder(WebDriver driver, AngularWait aw) {
 		this.driver = driver;
 		this.aw = aw;
 		PageFactory.initElements(this.driver, this);
 		try {
 			file = new File(ReadPropertiesFile.readPropertiesFile().getProperty("resources.PlaceOrder"));
+			finput = new FileInputStream(file);
+			formatter = new DataFormatter();
+			workbook = new XSSFWorkbook(finput);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public PlaceOrder(WebDriver driver, AngularWait aw, String skufile) {
+		this.driver = driver;
+		this.aw = aw;
+		PageFactory.initElements(this.driver, this);
+		try {
+			file = new File(skufile);
 			finput = new FileInputStream(file);
 			formatter = new DataFormatter();
 			workbook = new XSSFWorkbook(finput);
@@ -151,10 +176,10 @@ public class PlaceOrder {
 		return rowKey;
 	}
 
-	public void clickFirstCustomer() {
+	private void clickFirstCustomer() {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		assertThat(currCustomer.size()).withFailMessage("Customer Count is 0").isGreaterThan(0);
 		currCustomer.get(0).click();
-		;
 		aw.waitAllRequest();
 	}
 
@@ -238,7 +263,13 @@ public class PlaceOrder {
 		assertThat(totalPrice).withFailMessage("Total Price Doesn't Tally")
 				.isEqualTo(Integer.parseInt(cartTotal.getText().trim()));
 		placeOrderButton.click();
+		aw.waitAllRequest();
 		remarksInput.sendKeys("placing order");
 		buyAllButton.click();
+		aw.waitAllRequest();
+
+		orderNumber = orderNumText.getText().split(":")[1].trim();
+		orderOk.click();
+		aw.waitAllRequest();
 	}
 }

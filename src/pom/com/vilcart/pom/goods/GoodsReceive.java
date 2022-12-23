@@ -100,6 +100,8 @@ public class GoodsReceive {
 		// ToDo verifying with vehicle number should be a challan no which has to pop up
 		// in
 		// create Goods receive.
+		assertThat(receiveListTuples.size()).withFailMessage("No tuple with challan no " + grc.challanNo)
+				.isGreaterThan(0);
 		for (int i = 0; i < receiveListTuples.size(); i++) {
 			if (receiveListTuples.get(i).findElement(By.xpath(".//td[4]")).getText().equalsIgnoreCase(grc.challanNo)) {
 				assertThat(receiveListTuples.get(i).findElement(By.xpath(".//td[4]")).getText()).withFailMessage(

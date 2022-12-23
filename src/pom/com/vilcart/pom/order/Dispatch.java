@@ -78,46 +78,50 @@ public class Dispatch {
 		aw.waitAllRequest();
 	}
 
-	public void evaluateOrderInDispatch(String orderNumber, String vehicleNumber) {
+	public String evaluateOrderInDispatch(String orderNumber, String vehicleNumber) {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		getTuplesForCurrentDate();
+		searchInDispatch(orderNumber.substring(7));
+		String invoiceNumber = "";
 		assertThat(dispatchTuples.size()).withFailMessage("No Tuples in dispatch").isGreaterThan(0);
 		for (int i = 0; i < dispatchTuples.size(); i++) {
 			String xpath = "//td[3]";
 			WebElement orderElement = dispatchTuples.get(i).findElement(By.xpath(xpath));
-			String text = orderElement.getText();
-			assertThat(text).withFailMessage("Order Number doesn't tally" + text).isEqualToIgnoringCase(orderNumber);
-			if (text.equalsIgnoreCase(orderNumber)) {
-				String xpath1 = "//td[9]/ng-select/div/div/div[2]/input";
-				WebElement vehicleNumberWE = dispatchTuples.get(i).findElement(By.xpath(xpath1));
-				vehicleNumberWE.click();
-				String xpath2 = "//ng-dropdown-panel/div/div[2]/div";
-				List<WebElement> listVehicles = selectVehicleInTuples.get(i).findElements(By.xpath(xpath2));
-				assertThat(listVehicles.size()).withFailMessage("No vehicles in dispatch dropdown").isGreaterThan(0);
-				for (int j = 0; j < listVehicles.size(); j++) {
-					String xpath3 = "//ng-dropdown-panel/div/div[2]/div[" + (j + 1) + "]/span";
-					Reporter.log(selectVehicleInTuples.get(i).findElement(By.xpath(xpath3)).getText(), true);
-					if (selectVehicleInTuples.get(i).findElement(By.xpath(xpath3)).getText()
-							.equalsIgnoreCase(vehicleNumber)) {
-						selectVehicleInTuples.get(i).findElement(By.xpath(xpath3)).click();
-						break;
-					}
-					if (j == (listVehicles.size() - 1)) {
-						Reporter.log("No option for vehicle Number in dispatch, " + vehicleNumber, true);
-						assertThat(false)
-								.withFailMessage(
-										"No Vehicle option in dispatch for this vehicle Number" + vehicleNumber)
-								.isEqualTo(true);
-					}
-				}
-				// vehicleNumber.sendKeys("KA 02 EA 3333");
-				update.click();
-				ok.click();
-				String xpath3 = "//td[10]/div/button";
-				dispatchTuples.get(i).findElement(By.xpath(xpath3)).click();
-				aw.waitAllRequest();
-				break;
-			}
+			invoiceNumber = orderElement.getText();
+//			assertThat(text).withFailMessage("Order Number doesn't tally" + text).isEqualToIgnoringCase(orderNumber);
+//			if (text.equalsIgnoreCase(orderNumber)) {
+//				String xpath1 = "//td[9]/ng-select/div/div/div[2]/input";
+//				WebElement vehicleNumberWE = dispatchTuples.get(i).findElement(By.xpath(xpath1));
+//				vehicleNumberWE.click();
+//				String xpath2 = "//ng-dropdown-panel/div/div[2]/div";
+//				List<WebElement> listVehicles = selectVehicleInTuples.get(i).findElements(By.xpath(xpath2));
+//				assertThat(listVehicles.size()).withFailMessage("No vehicles in dispatch dropdown").isGreaterThan(0);
+//				for (int j = 0; j < listVehicles.size(); j++) {
+//					String xpath3 = "//ng-dropdown-panel/div/div[2]/div[" + (j + 1) + "]/span";
+//					Reporter.log(selectVehicleInTuples.get(i).findElement(By.xpath(xpath3)).getText(), true);
+//					if (selectVehicleInTuples.get(i).findElement(By.xpath(xpath3)).getText()
+//							.equalsIgnoreCase(vehicleNumber)) {
+//						selectVehicleInTuples.get(i).findElement(By.xpath(xpath3)).click();
+//						break;
+//					}
+//					if (j == (listVehicles.size() - 1)) {
+//						Reporter.log("No option for vehicle Number in dispatch, " + vehicleNumber, true);
+//						assertThat(false)
+//								.withFailMessage(
+//										"No Vehicle option in dispatch for this vehicle Number" + vehicleNumber)
+//								.isEqualTo(true);
+//					}
+//				}
+			// vehicleNumber.sendKeys("KA 02 EA 3333");
+//				update.click();
+//				ok.click();
+			String xpath3 = "//td[10]/div/button";
+			dispatchTuples.get(i).findElement(By.xpath(xpath3)).click();
+			aw.waitAllRequest();
+			break;
+//			}
 		}
+		return invoiceNumber;
 	}
 
 	private String getDate() {

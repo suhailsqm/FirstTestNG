@@ -23,6 +23,7 @@ public class Invoice {
 	private WebDriver driver;
 	private AngularWait aw;
 	private JavascriptExecutor js;
+	private Order or;
 
 	@FindBy(xpath = "//*[@id=\"searchInput\"]")
 	private WebElement searchInput;
@@ -50,6 +51,7 @@ public class Invoice {
 		this.aw = aw;
 		this.js = ((JavascriptExecutor) this.driver);
 		PageFactory.initElements(driver, this);
+		or = new Order(driver, aw);
 	}
 
 	private String getDate() {
@@ -95,6 +97,8 @@ public class Invoice {
 
 	public void evaluateOrderInInvoice(String orderNumber) {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		getTuplesForCurrentDate();
+		searchInInvoice(orderNumber.substring(7));
 		assertThat(invoiceTuples.size()).withFailMessage("No Tuples in invoice").isGreaterThan(0);
 		for (int i = 0; i < invoiceTuples.size(); i++) {
 			WebElement orderElement = invoiceTuples.get(i).findElement(By.xpath("//td[3]"));
@@ -106,5 +110,6 @@ public class Invoice {
 				break;
 			}
 		}
+		or.evaluateOrderInInvoice("KA 01 XE 6692");
 	}
 }

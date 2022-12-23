@@ -100,6 +100,8 @@ public class GoodsTransfer {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		getTuplesForCurrentDate();
 		searchInGoodsTransfer(gtc.challanNo);
+		assertThat(transferListTuples.size()).withFailMessage("No tuple with challan no " + gtc.challanNo)
+				.isGreaterThan(0);
 		for (int i = 0; i < transferListTuples.size(); i++) {
 			if (transferListTuples.get(i).findElement(By.xpath(".//td[5]")).getText().equalsIgnoreCase(gtc.challanNo)) {
 

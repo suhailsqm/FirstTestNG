@@ -148,9 +148,17 @@ public class Menu {
 		ordersMenu.click();
 		aw.waitAllRequest();
 		packing.click();
+//			Reporter.log("Packing is clicked", true);
 		aw.waitAllRequest();
-		ordersMenu.click();
-		aw.waitAllRequest();
+//		ordersMenu.click();
+//		aw.waitAllRequest();
+//			Reporter.log("go To Packing has ended", true);
+//			try {
+//				Thread.sleep(3000);
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 	}
 
 	public void goToInvoice() {

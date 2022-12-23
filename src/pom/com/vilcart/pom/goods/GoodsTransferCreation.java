@@ -315,26 +315,29 @@ public class GoodsTransferCreation {
 			js.executeScript("window.stop();");
 			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
 		}
-
-		Set<String> handles = driver.getWindowHandles();
-		for (String actual : handles) {
-			if (0 != actual.compareToIgnoreCase(handle)) {
-				Reporter.log(LineNumber.getLineNumber() + " close " + actual, true);
-				try {
-					driver.switchTo().window(actual);
-					Reporter.log("title is " + driver.getTitle(), true);
-					driver.close();
+		try {
+			Set<String> handles = driver.getWindowHandles();
+			for (String actual : handles) {
+				if (0 != actual.compareToIgnoreCase(handle)) {
+					Reporter.log(LineNumber.getLineNumber() + " close " + actual, true);
+					try {
+						driver.switchTo().window(actual);
+						Reporter.log("title is " + driver.getTitle(), true);
+						driver.close();
 //					driver.switchTo().window(actual).close();
 
-				} catch (org.openqa.selenium.WebDriverException e) {
-					Reporter.log("unknown error: failed to close window in 20 seconds Exception", true);
-					js.executeScript("window.close();");
+					} catch (org.openqa.selenium.WebDriverException e) {
+						Reporter.log("unknown error: failed to close window in 20 seconds Exception", true);
+						js.executeScript("window.close();");
+					}
 				}
 			}
+			driver.switchTo().window(handle);
+			aw.waitAllRequest();
+		} catch (org.openqa.selenium.NoSuchWindowException e) {
+			driver.switchTo().window(handle);
+			aw.waitAllRequest();
 		}
-		driver.switchTo().window(handle);
-		aw.waitAllRequest();
-
 		challanNo = challanNoText.getText().split(":")[1].trim();
 		challanOk.click();
 		aw.waitAllRequest();

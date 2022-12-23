@@ -47,7 +47,7 @@ public class Packing {
 
 	private By orderCount = By.xpath("//*[@id=\"orderCount\"]");
 
-	@FindBy(xpath = "(//*[@id=\\\"packingTuple\\\"])[1]")
+	@FindBy(xpath = "(//*[@id=\"packingTuple\"])[1]")
 	private WebElement firstTuple;
 
 	public Packing(WebDriver driver, AngularWait aw) {
@@ -86,6 +86,7 @@ public class Packing {
 	}
 
 	public void searchInPacking(String keyword) {
+		Reporter.log("===>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		searchInput.clear();
 		searchInput.sendKeys(keyword);
 		searchBtn.click();
@@ -93,6 +94,7 @@ public class Packing {
 	}
 
 	public void evaluateOrderCount() {
+		Reporter.log("===>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
 		WebElement orderCountWE = null;
 		try {
 			orderCountWE = wait.withMessage("No Orders in packing")
@@ -117,12 +119,46 @@ public class Packing {
 
 	}
 
-	public String evaluateFirstTuple() {
+	public void evaluateFirstTuple(String orderNumber) {
 		Reporter.log("==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp(), true);
+		Reporter.log("orderNumber:" + orderNumber, true);
+//		try {
+//			Thread.sleep(3000);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		getTuplesForCurrentDate();
+		searchInPacking(orderNumber.substring(7));
+		WebElement orderCount = null;
+		try {
+			orderCount = wait.withMessage("No Orders in packing")
+					.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"orderCount\"]")));
+		} catch (org.openqa.selenium.TimeoutException e) {
+			Reporter.log(LineNumber.getLineNumber() + " " + "No Orders in Packing", true);
+			assertTrue(false);
+			return;
+		} catch (Exception e) {
+			System.out.println("Some problem occured!!");
+			Reporter.log(LineNumber.getLineNumber() + " ", true);
+			assertTrue(false);
+			return;
+		}
+
+		String temp = orderCount.getText();
+		String[] tempIndex = temp.split(":");
+		int count = Integer.parseInt(tempIndex[1].trim());
+		Reporter.log(LineNumber.getLineNumber() + " " + "order count: " + count, true);
+		if (count == 0) {
+			Reporter.log(LineNumber.getLineNumber() + " " + "No orders to dispatch in Packing", true);
+			assertTrue(false);
+			return;
+		}
+		assertThat(count).withFailMessage("No orders in Packing").isGreaterThan(0);
+
 		firstTuple.findElement(By.xpath("//td[9]/div/button[1]")).click();
 		aw.waitAllRequest();
-		or.evaluateOrderInPacking();
-		return or.getOrderNumber();
+		or.evaluateOrderInPacking(orderNumber);
 	}
 
 }

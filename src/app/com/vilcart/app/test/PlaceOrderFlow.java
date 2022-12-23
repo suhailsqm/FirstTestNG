@@ -50,7 +50,7 @@ public class PlaceOrderFlow {
 
 		loginObj.login();
 
-		WebElement placeOrder = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li[11]/a/span"));// *[@id="main-menu-navigation"]/li[11]/a/span
+		WebElement placeOrder = driver.findElement(By.xpath("//*[@id=\"main-menu-navigation\"]/li[15]/a/span"));// *[@id="main-menu-navigation"]/li[11]/a/span
 		js.executeScript("arguments[0].scrollIntoViewIfNeeded();", placeOrder);
 		placeOrder.click();
 
@@ -60,7 +60,7 @@ public class PlaceOrderFlow {
 		WebElement testCustomer = driver.findElement(By.xpath("//*[@id=\"currCustomer\"]/h2"));
 		testCustomer.click();
 		WebElement searchItem = driver.findElement(By.xpath("//*[@id=\"itemName\"]"));
-		searchItem.sendKeys("208 test sku");
+		searchItem.sendKeys("239 Test Sku");
 
 		List<WebElement> liList = driver.findElements(By.id("liList"));// *[@id="liList"]
 		for (int i1 = 0; i1 < liList.size() && i1 < 2; i1++) {
@@ -121,8 +121,8 @@ public class PlaceOrderFlow {
 		 * The following command should be run to see this. ng serve --host=0.0.0.0
 		 * --disable-host-check
 		 */
-
-		driver.get("http://192.168.1.48:4200");
+		driver.get("http://localhost:4200");
+//		driver.get("http://192.168.1.48:4200");
 		// driver.get("https://vilcart-buy.web.app");
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));

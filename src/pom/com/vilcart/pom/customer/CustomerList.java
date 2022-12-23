@@ -47,7 +47,7 @@ public class CustomerList {
 
 	private void searchCustomer(String phoneNumber) {
 		Reporter.log(
-				"==>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp() + " " + LineNumber.getLineNumber(),
+				"===>" + CurrentMethod.methodName() + " " + TimeStamp.CurTimeStamp() + " " + LineNumber.getLineNumber(),
 				true);
 		searchBtn.clear();
 		searchBtn.sendKeys(phoneNumber);
@@ -62,9 +62,8 @@ public class CustomerList {
 
 		WebElement temp1 = customerTuples.get(0).findElement(By.xpath("//td[7]"));
 		Reporter.log(LineNumber.getLineNumber() + " " + "" + temp1.getText());
-		assertThat(temp1.getText())
-				.withFailMessage("First entry for the search of the phone Number (" + phoneNumber + ") Doesn't match")
-				.isEqualTo(phoneNumber);
+		assertThat(temp1.getText()).withFailMessage("First entry for the search of the phone Number (" + phoneNumber
+				+ ") Doesn't match to actual (" + temp1.getText() + ").").isEqualTo(phoneNumber);
 		if (temp1.getText().equalsIgnoreCase(phoneNumber)) {
 			return true;
 		} else {
@@ -87,11 +86,12 @@ public class CustomerList {
 					.withFailMessage(
 							"First entry for the search of the phone Number (" + phoneNumber + ") Doesn't match")
 					.isEqualTo(phoneNumber);
-			String xpath = "//td[10]/div/button[2]/i";
+			String xpath = "//td[13]/div/button[2]";
 			WebElement btn = customerTuples.get(i).findElement(By.xpath(xpath));
 			btn.click();
 			aw.waitAllRequest();
 			delete.click();
+			aw.waitAllRequest();
 			ok.click();
 		}
 	}
